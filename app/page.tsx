@@ -454,7 +454,7 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer id="ubicacion" className="bg-foreground text-background pt-32 pb-16 relative z-10 overflow-hidden">
+      <footer id="ubicacion" className="bg-foreground text-background pt-16 pb-12 relative z-10 overflow-hidden">
         {/* Drip Texture Background overlay */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           {/* Repeating drip svg for texture */}
@@ -462,14 +462,14 @@ export default function LandingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="flex flex-col items-center text-center space-y-10">
+          <div className="flex flex-col items-center text-center space-y-8">
             <Image 
               src="/images/logo-transparent.png" 
               unoptimized
               alt="Avita Logo" 
               width={200} 
               height={80}
-              className="h-24 w-auto object-contain brightness-0 invert" // Make logo white if needed, or leave colored
+              className="h-12 md:h-16 w-auto object-contain"
             />
             
             <div className="flex items-center gap-2 font-medium bg-background/10 backdrop-blur-sm px-8 py-4 rounded-full border border-white/10">
