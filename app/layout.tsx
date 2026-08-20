@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+import { MeltFilters } from "@/components/ui/MeltFilters";
+import { CustomCursor } from "@/components/ui/CustomCursor";
 
-const nunito = Nunito({
-  variable: "--font-nunito",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  axes: ["opsz", "SOFT", "WONK"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -26,9 +34,11 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${nunito.variable} h-full antialiased scroll-smooth`}
+      className={`${fraunces.variable} ${inter.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground overflow-x-hidden">
+        <MeltFilters />
+        <CustomCursor />
         {children}
       </body>
     </html>

@@ -1,51 +1,96 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #FFFFFF; /* White base for most of the page */
-  --color-background-pink: #FFF0F5; /* Pink base for the hero section */
-  --color-foreground: #3A2E39; /* Dark text for readability */
-  --color-accent: #E52E63; /* The primary bright pink/fuchsia from the button */
-  --color-accent-hover: #C21D4D; /* Darker pink for hover states */
-  --color-surface: #FFFFFF; /* Pure white backgrounds for cards */
-  --color-surface-border: #F0E4E8; /* Light pink border */
-  --font-nunito: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --color-background: #FDF6EC; /* Fondo Crema */
+  --color-foreground: #7A1620; /* Marrón Vino */
+  --color-accent: #E4536B; /* Acento Fresa */
+  --color-accent-hover: #c4455a;
+  --color-secondary: #A97A4E; /* Dorado */
+  --color-tertiary: #8FAE7A; /* Pistacho */
+  --color-surface: #FFFFFF;
+  --color-surface-border: #f0e6da;
+  
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --background: #FFFFFF;
-  --background-pink: #FFF0F5;
-  --foreground: #3A2E39;
-  --accent: #E52E63;
-  --accent-hover: #C21D4D;
+  --background: #FDF6EC;
+  --foreground: #7A1620;
+  --accent: #E4536B;
+  --accent-hover: #c4455a;
+  --secondary: #A97A4E;
+  --tertiary: #8FAE7A;
   --surface: #FFFFFF;
-  --surface-border: #F0E4E8;
+  --surface-border: #f0e6da;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-nunito), system-ui, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   @apply antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html {
   scroll-behavior: smooth;
+  font-size: clamp(14px, 1vw + 10px, 18px); /* Escala fluida */
 }
 
-/* Custom styles for the dripping effect divider */
-.drip-divider {
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Custom Cursor default hidden on touch */
+@media (pointer: coarse) {
+  .custom-cursor {
+    display: none !important;
+  }
+}
+
+/* Hide default cursor in areas where custom cursor is active */
+.hide-cursor {
+  cursor: none !important;
+}
+.hide-cursor * {
+  cursor: none !important;
+}
+
+/* Drip Divider Styles */
+.drip-divider-container {
   position: absolute;
-  bottom: 0;
   left: 0;
   width: 100%;
   overflow: hidden;
   line-height: 0;
-  transform: translateY(99%);
   z-index: 10;
 }
-
-.drip-divider svg {
+.drip-divider-bottom {
+  bottom: -1px;
+  transform: translateY(100%);
+}
+.drip-divider-top {
+  top: -1px;
+  transform: translateY(-100%) rotate(180deg);
+}
+.drip-divider-container svg {
   display: block;
   width: calc(100% + 1.3px);
-  height: 120px;
+  height: clamp(60px, 10vw, 120px);
+}
+
+/* Scrollbar hiding for horizontal gallery */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
