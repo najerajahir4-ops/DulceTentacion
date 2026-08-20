@@ -215,34 +215,6 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Safe DOM non-passive wheel event for horizontal mapping
-  useEffect(() => {
-    const el = galleryRef.current;
-    if (!el) return;
-
-    const onWheel = (e: WheelEvent) => {
-      // Map vertical scroll to horizontal scroll if mainly vertical movement (mouse wheel)
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        const isAtStart = el.scrollLeft <= 0;
-        const isAtEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
-        
-        // Use smooth scrolling and jump by a larger, consistent amount for better animation feel
-        const scrollAmount = Math.sign(e.deltaY) * (window.innerWidth > 768 ? 400 : window.innerWidth * 0.8);
-
-        if (!isAtStart && e.deltaY < 0) {
-          e.preventDefault();
-          el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        } else if (!isAtEnd && e.deltaY > 0) {
-          e.preventDefault();
-          el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-        }
-      }
-    };
-    
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
-  }, []);
-
   // React state for Dragging
   const isDown = useRef(false);
   const startX = useRef(0);
