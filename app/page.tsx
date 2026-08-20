@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { motion, useSpring } from "framer-motion";
 import Image from "next/image";
 import { 
   IceCream2, 
@@ -174,11 +174,18 @@ export default function LandingPage() {
   const [activeCategory, setActiveCategory] = useState("Helados Artesanales");
   const [isScrolled, setIsScrolled] = useState(false);
   
+  const [scrollProgress, setScrollProgress] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
   
-  // Progress bar logic mapped to gallery scroll
-  const { scrollXProgress } = useScroll({ container: galleryRef });
-  const scaleX = useSpring(scrollXProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  // Custom progress bar logic
+  const handleGalleryScroll = useCallback(() => {
+    if (galleryRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = galleryRef.current;
+      const maxScroll = scrollWidth - clientWidth;
+      const progress = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+      setScrollProgress(progress);
+    }
+  }, []);
 
   useGSAP(() => {
     // Hero slow viscosity loop
@@ -192,6 +199,15 @@ export default function LandingPage() {
   });
 
   useEffect(() => {
+    // Force scroll to top on reload
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    // Initial check for navbar
+    setIsScrolled(window.scrollY > 20);
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -260,6 +276,7 @@ export default function LandingPage() {
     const x = e.pageX - galleryRef.current.offsetLeft;
     const walk = (x - startX.current) * 2; // scroll-fast multiplier
     galleryRef.current.scrollLeft = scrollLeft.current - walk;
+    handleGalleryScroll();
   };
 
   const scrollGallery = (direction: 'left' | 'right') => {
@@ -449,9 +466,9 @@ export default function LandingPage() {
 
         {/* Syrup Thread Progress Indicator */}
         <div className="max-w-xs mx-auto mb-8 h-1 bg-surface-border rounded-full overflow-hidden relative">
-           <motion.div 
-             className="absolute top-0 left-0 bottom-0 bg-secondary rounded-full"
-             style={{ width: '100%', scaleX, transformOrigin: '0%' }}
+           <div 
+             className="absolute top-0 left-0 bottom-0 bg-secondary rounded-full transition-transform duration-100 ease-out"
+             style={{ width: '100%', transform: `scaleX(${scrollProgress})`, transformOrigin: '0%' }}
            />
         </div>
 
@@ -477,6 +494,7 @@ export default function LandingPage() {
 
           <div 
             ref={galleryRef}
+            onScroll={handleGalleryScroll}
             onMouseDown={handleMouseDown}
             onMouseLeave={handleMouseLeave}
             onMouseUp={handleMouseUp}
