@@ -394,12 +394,12 @@ export default function LandingPage() {
             </div>
           </motion.div>
         </div>
+        
+        <DripDivider color="var(--surface)" position="bottom-inside" />
       </section>
 
       {/* FEATURES */}
       <section className="py-24 bg-surface relative z-20">
-        <DripDivider color="var(--surface)" position="overlap-top" />
-        
         <div className="max-w-6xl mx-auto px-6">
           <motion.div 
             className="grid md:grid-cols-3 gap-12"

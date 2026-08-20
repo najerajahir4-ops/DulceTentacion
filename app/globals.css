@@ -76,6 +76,10 @@ p {
   top: -1px;
   transform: translateY(-100%);
 }
+.drip-divider-bottom-inside {
+  bottom: -1px;
+  transform: rotate(180deg);
+}
 .drip-divider-overlap-bottom {
   bottom: -1px;
   transform: translateY(100%);
