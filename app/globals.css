@@ -72,6 +72,14 @@ p {
   top: -1px;
   transform: translateY(-100%) rotate(180deg);
 }
+.drip-divider-overlap-top {
+  top: -1px;
+  transform: translateY(-100%);
+}
+.drip-divider-overlap-bottom {
+  bottom: -1px;
+  transform: translateY(100%);
+}
 .drip-divider-container svg {
   display: block;
   width: calc(100% + 1.3px);

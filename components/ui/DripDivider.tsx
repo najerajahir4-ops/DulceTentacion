@@ -11,7 +11,7 @@ if (typeof window !== "undefined") {
 
 interface DripDividerProps {
   color?: string;
-  position?: "top" | "bottom";
+  position?: "top" | "bottom" | "overlap-top" | "overlap-bottom";
   opacity?: number;
 }
 
@@ -31,10 +31,16 @@ export function DripDivider({ color = "var(--background)", position = "bottom", 
         scrub: 1,
       },
       scaleY: 1.5,
-      transformOrigin: "top",
+      transformOrigin: position.includes("overlap") ? "bottom" : "top",
       ease: "power1.inOut"
     });
   }, { scope: container });
+
+  // If we are overlapping to mask a complex background, we use the inverted path (solid at bottom, wavy at top)
+  const isOverlap = position.includes("overlap");
+  const pathData = isOverlap
+    ? "M0,120V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V120Z"
+    : "M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z";
 
   return (
     <div 
@@ -49,7 +55,7 @@ export function DripDivider({ color = "var(--background)", position = "bottom", 
       >
         <path 
           className="drip-path"
-          d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" 
+          d={pathData}
         />
       </svg>
     </div>
