@@ -108,8 +108,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
         gsap.set(cardRef.current, { 
           scale: scaleValue, 
           opacity: opacityValue,
-          filter: `blur(${blurValue}px)`,
-          boxShadow: `0 30px 60px rgba(122, 22, 32, ${shadowOpacity})`
+          filter: `blur(${blurValue}px) drop-shadow(0 20px 30px rgba(122, 22, 32, ${shadowOpacity}))`
         });
       }
       animationFrameId = requestAnimationFrame(animate);
@@ -137,30 +136,30 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
 
       <div 
         ref={cardRef} 
-        className="bg-surface rounded-3xl overflow-hidden flex flex-col h-full transform-gpu will-change-transform"
+        className="bg-transparent flex flex-col h-full transform-gpu will-change-transform items-center"
       >
-        <div className="relative w-full h-[300px]">
+        <div className="relative w-full h-[300px] flex items-center justify-center p-4">
           <img 
             src={item.image} 
             alt={item.name} 
             loading="lazy"
-            className="w-full h-full object-cover bg-surface-border"
+            className="w-full h-full object-contain drop-shadow-xl"
             style={{ filter: `url(#melt-${item.id})` }}
           />
         </div>
-        <div className="p-8 flex flex-col flex-grow text-center">
-          <h3 className="text-2xl font-serif text-foreground mb-3">{item.name}</h3>
-          <p className="text-sm text-foreground/70 mb-6 flex-grow">
+        <div className="p-4 flex flex-col flex-grow text-center w-full">
+          <h3 className="text-2xl font-serif text-foreground mb-3 font-bold">{item.name}</h3>
+          <p className="text-sm text-foreground/60 mb-6 flex-grow leading-relaxed">
             {item.description}
           </p>
-          <div className="text-3xl font-serif text-secondary mb-6">
+          <div className="text-3xl font-serif text-foreground font-bold mb-6">
             {item.price}
           </div>
           <a 
             href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola,%20quisiera%20pedir%20un%20${encodeURIComponent(item.name)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block w-full py-4 bg-accent text-white rounded-full font-bold hover:bg-accent-hover transition-colors shadow-md shadow-accent/20"
+            className="inline-block w-full max-w-[200px] mx-auto py-4 bg-accent text-white rounded-full font-bold hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20 hover:-translate-y-1"
           >
             Comprar
           </a>
@@ -426,12 +425,10 @@ export default function LandingPage() {
             })}
           </motion.div>
         </div>
-        
-        <DripDivider color="var(--surface)" position="bottom" />
       </section>
 
       {/* MENU / MELTING GALLERY */}
-      <section id="menu" className="py-32 bg-background relative z-20">
+      <section id="menu" className="py-32 bg-surface relative z-20">
         <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
           <motion.div 
             className="space-y-4"
@@ -510,7 +507,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <DripDivider color="var(--background)" position="bottom" />
+        <DripDivider color="var(--surface)" position="bottom" />
       </section>
 
       {/* FOOTER */}
