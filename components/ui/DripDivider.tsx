@@ -43,10 +43,10 @@ export function DripDivider({ color = "var(--background)", position = "bottom", 
       ref={container} 
       className={`absolute left-0 w-full overflow-hidden leading-none z-10 ${
         position === 'bottom-inside' ? '-bottom-[1px] rotate-180' : 
-        position === 'bottom' ? '-bottom-[1px] translate-y-full' :
-        position === 'top' ? '-top-[1px] -translate-y-full rotate-180' :
-        position === 'overlap-top' ? '-top-[1px] -translate-y-full' :
-        position === 'overlap-bottom' ? '-bottom-[1px] translate-y-full' : ''
+        position === 'bottom' ? 'bottom-[1px] translate-y-full' :
+        position === 'top' ? 'top-[1px] -translate-y-full rotate-180' :
+        position === 'overlap-top' ? 'top-[1px] -translate-y-full' :
+        position === 'overlap-bottom' ? 'bottom-[1px] translate-y-full' : ''
       }`}
       style={{ opacity }}
     >

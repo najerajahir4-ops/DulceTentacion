@@ -317,7 +317,7 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 bg-background z-10">
+      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 bg-background z-20">
         
         {/* Animated Background Blobs (Melt System Aura) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -399,7 +399,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section className="py-24 bg-surface relative z-20">
+      <section className="py-24 bg-surface relative z-10">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div 
             className="grid md:grid-cols-3 gap-12"
