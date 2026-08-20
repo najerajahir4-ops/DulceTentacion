@@ -23,7 +23,7 @@ if (typeof window !== "undefined") {
 // --- Mock Data ---
 const MENU_CATEGORIES = ["Helados Artesanales", "Waffles", "Frappés", "Crepes"];
 const MENU_ITEMS = [
-  { id: 1, name: "Helado de Frutos Rojos", category: "Helados Artesanales", description: "Cremoso helado artesanal con trozos de fresas y frambuesas naturales.", price: "$3.50", image: "https://images.unsplash.com/photo-1570197781417-0a52375c020b?auto=format&fit=crop&q=80&w=600" },
+  { id: 1, name: "Helado de Frutos Rojos", category: "Helados Artesanales", description: "Cremoso helado artesanal con trozos de fresas y frambuesas naturales.", price: "$3.50", image: "/images/concepto-plato.png" },
   { id: 2, name: "Cono Doble Choco-Vainilla", category: "Helados Artesanales", description: "Clásico cono artesanal con chocolate belga y vainilla de Madagascar.", price: "$4.00", image: "https://images.unsplash.com/photo-1558500664-5a21e42a9fb9?auto=format&fit=crop&q=80&w=600" },
   { id: 3, name: "Waffle Supremo", category: "Waffles", description: "Waffle recién horneado con helado, fresas frescas y sirope de chocolate.", price: "$5.50", image: "https://images.unsplash.com/photo-1562376552-0d160a2f9fa4?auto=format&fit=crop&q=80&w=600" },
   { id: 4, name: "Waffle Clásico", category: "Waffles", description: "Waffle crujiente con miel de maple y mantequilla.", price: "$3.50", image: "https://images.unsplash.com/photo-1598214886806-c87b84b7078b?auto=format&fit=crop&q=80&w=600" },
@@ -62,7 +62,7 @@ const buildThresholdList = () => {
 };
 
 // --- Melting Card Component ---
-function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: string }) {
+function MeltingCard({ item, WHATSAPP_NUMBER, rootRef }: { item: any, WHATSAPP_NUMBER: string, rootRef: React.RefObject<HTMLDivElement> }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const dispMapRef = useRef<SVGFEDisplacementMapElement>(null);
   
@@ -92,8 +92,9 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
         }
       });
     }, { 
+      root: rootRef.current,
       threshold: buildThresholdList(),
-      rootMargin: "-10% -10% -10% -10%" 
+      rootMargin: "0px" 
     });
 
     if (cardRef.current) observer.observe(cardRef.current);
@@ -102,8 +103,8 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
 
   return (
     <div className="shrink-0 w-[85vw] md:w-[400px] h-auto snap-center relative py-12">
-      <svg className="absolute pointer-events-none w-0 h-0">
-        <filter id={`melt-${item.id}`} x="-20%" y="-20%" width="140%" height="140%">
+      <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
+        <filter id={`melt-${item.id}`} x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" result="warp" />
           <feDisplacementMap 
             ref={dispMapRef}
@@ -440,7 +441,7 @@ export default function LandingPage() {
           }}
         >
           {filteredMenu.map((item) => (
-            <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} />
+            <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} rootRef={galleryRef} />
           ))}
         </div>
       </section>
