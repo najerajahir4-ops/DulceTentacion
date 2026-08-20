@@ -415,7 +415,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section id="nosotros" className="py-24 bg-surface relative z-30">
+      <section id="nosotros" className="py-24 bg-surface relative z-30 scroll-mt-24">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div 
             className="grid md:grid-cols-3 gap-12"
@@ -445,8 +445,8 @@ export default function LandingPage() {
       </section>
 
       {/* MENU / MELTING GALLERY */}
-      <section id="menu" className="py-32 bg-surface relative z-20">
-        <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
+      <section className="py-32 bg-surface relative z-20">
+        <div id="menu" className="max-w-7xl mx-auto px-6 mb-16 text-center scroll-mt-28">
           <motion.div 
             className="space-y-4"
             initial="hidden"
