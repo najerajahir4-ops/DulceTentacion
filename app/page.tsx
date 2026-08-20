@@ -514,7 +514,7 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer id="ubicacion" className="bg-foreground text-background pt-16 pb-12 relative z-10 overflow-hidden">
+      <footer id="ubicacion" className="bg-foreground text-background pt-36 pb-12 relative z-10 overflow-hidden">
         {/* Drip Texture Background overlay */}
         <div 
           className="absolute inset-0 opacity-5 pointer-events-none"
