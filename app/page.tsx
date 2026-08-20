@@ -64,6 +64,7 @@ const fadeUp: any = {
 // --- Melting Card Component ---
 function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: string }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const dispMapRef = useRef<SVGFEDisplacementMapElement>(null);
   
   useEffect(() => {
@@ -108,15 +109,21 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
         gsap.set(cardRef.current, { 
           scale: scaleValue, 
           opacity: opacityValue,
-          filter: `blur(${blurValue}px) drop-shadow(0 20px 30px rgba(122, 22, 32, ${shadowOpacity}))`
+          filter: `blur(${blurValue}px)`
         });
+        
+        if (imgRef.current) {
+          gsap.set(imgRef.current, {
+            filter: `url(#melt-${item.id}) drop-shadow(0 20px 30px rgba(122, 22, 32, ${shadowOpacity}))`
+          });
+        }
       }
       animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
     return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+  }, [item.id]);
 
   return (
     <div className="shrink-0 w-[85vw] md:w-[400px] h-auto snap-center relative py-12">
@@ -140,10 +147,11 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
       >
         <div className="relative w-full h-[300px] flex items-center justify-center p-4">
           <img 
+            ref={imgRef}
             src={item.image} 
             alt={item.name} 
             loading="lazy"
-            className="w-full h-full object-contain drop-shadow-xl"
+            className="w-full h-full object-contain"
             style={{ filter: `url(#melt-${item.id})` }}
           />
         </div>
