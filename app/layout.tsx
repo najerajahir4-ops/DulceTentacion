@@ -38,7 +38,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground overflow-x-hidden">
         <MeltFilters />
-        <CustomCursor />
         {children}
       </body>
     </html>

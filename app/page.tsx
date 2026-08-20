@@ -104,7 +104,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
   }, []);
 
   return (
-    <div className="shrink-0 w-[85vw] md:w-[400px] h-auto snap-center relative py-12 hide-cursor">
+    <div className="shrink-0 w-[85vw] md:w-[400px] h-auto snap-center relative py-12">
       {/* Unique SVG Filter per card to animate independently */}
       <svg className="fixed pointer-events-none w-0 h-0" style={{ position: 'absolute' }}>
         <filter id={`melt-${item.id}`} x="-20%" y="-20%" width="140%" height="140%">
@@ -210,9 +210,9 @@ export default function LandingPage() {
           </a>
 
           <div className="hidden md:flex items-center gap-8">
-            <a href="#menu" className="text-foreground font-semibold hover:text-accent transition-colors">Menú</a>
-            <a href="#ingredientes" className="text-foreground font-semibold hover:text-accent transition-colors">Ingredientes</a>
-            <a href="#ubicacion" className="text-foreground font-semibold hover:text-accent transition-colors">Ubicación</a>
+            <a href="#menu" className="text-sm text-foreground font-semibold hover:text-accent transition-colors">Menú</a>
+            <a href="#ingredientes" className="text-sm text-foreground font-semibold hover:text-accent transition-colors">Ingredientes</a>
+            <a href="#ubicacion" className="text-sm text-foreground font-semibold hover:text-accent transition-colors">Ubicación</a>
           </div>
           
           <div className="flex items-center gap-4">
@@ -240,7 +240,7 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 overflow-hidden hide-cursor">
+      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -321,7 +321,7 @@ export default function LandingPage() {
       </section>
 
       {/* MENU / MELTING GALLERY */}
-      <section id="menu" className="py-32 bg-background relative hide-cursor overflow-hidden">
+      <section id="menu" className="py-32 bg-background relative overflow-hidden">
         <DripDivider position="top" color="var(--surface)" />
         
         <div className="max-w-7xl mx-auto px-6 mb-16 text-center">

@@ -55,14 +55,6 @@ p {
   }
 }
 
-/* Hide default cursor in areas where custom cursor is active */
-.hide-cursor {
-  cursor: none !important;
-}
-.hide-cursor * {
-  cursor: none !important;
-}
-
 /* Drip Divider Styles */
 .drip-divider-container {
   position: absolute;
