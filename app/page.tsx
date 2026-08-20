@@ -317,7 +317,7 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 bg-background z-20">
+      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 bg-background z-40">
         
         {/* Animated Background Blobs (Melt System Aura) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -399,7 +399,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section className="py-24 bg-surface relative z-10">
+      <section className="py-24 bg-surface relative z-30">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div 
             className="grid md:grid-cols-3 gap-12"
@@ -431,7 +431,7 @@ export default function LandingPage() {
       </section>
 
       {/* MENU / MELTING GALLERY */}
-      <section id="menu" className="py-32 bg-background relative z-10">
+      <section id="menu" className="py-32 bg-background relative z-20">
         <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
           <motion.div 
             className="space-y-4"
@@ -514,7 +514,7 @@ export default function LandingPage() {
       </section>
 
       {/* INGREDIENTES / SECRETO */}
-      <section id="ingredientes" className="py-40 relative bg-foreground z-0">
+      <section id="ingredientes" className="py-40 relative bg-foreground z-10">
         
         {/* Background Image with Glassmorphism overlay */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
@@ -579,12 +579,17 @@ export default function LandingPage() {
             </a>
           </div>
         </div>
+
+        <DripDivider color="var(--foreground)" position="bottom-inside" />
       </section>
 
       {/* FOOTER */}
-      <footer id="ubicacion" className="bg-foreground text-background pt-16 pb-12 relative z-10 overflow-hidden">
+      <footer id="ubicacion" className="bg-foreground text-background pt-16 pb-12 relative z-0 overflow-hidden">
         {/* Drip Texture Background overlay */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div 
+          className="absolute inset-0 opacity-5 pointer-events-none"
+          style={{ maskImage: 'linear-gradient(to bottom, transparent, black 150px)', WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 150px)' }}
+        >
           {/* Repeating drip svg for texture */}
           <div className="w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCAwQzI1IDI1IDI1IDUwIDUwIDUwQzc1IDUwIDc1IDI1IDEwMCAwWiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=')] bg-[length:100px_100px] repeat" />
         </div>
