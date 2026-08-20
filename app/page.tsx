@@ -87,19 +87,27 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
         const normalizedDist = Math.min(dist / (window.innerWidth / 1.5), 1);
         
         // Map normalized distance to filter scale (0 to 45 max distortion)
-        // Math.pow ensures a smooth exponential curve (snaps into clarity when close to center)
         const meltValue = Math.pow(normalizedDist, 2) * 45; 
         
-        // Scale down slightly when out of focus
-        const scaleValue = 1 - (normalizedDist * 0.05);
+        // Scale: Center is 1.1, edges are 0.85
+        const scaleValue = 1.1 - (normalizedDist * 0.25);
+        
+        // Blur: Center is 0px, edges up to 8px
+        const blurValue = normalizedDist * 8;
+        
+        // Opacity: Center is 1, edges is 0.4
+        const opacityValue = 1 - (normalizedDist * 0.6);
+
         // Shadow fades in when centered
-        const shadowOpacity = Math.max(0, 0.15 - (normalizedDist * 0.15));
+        const shadowOpacity = Math.max(0, 0.2 - (normalizedDist * 0.2));
 
         // Use gsap.set for instant updates on every frame without lagging
         gsap.set(dispMapRef.current, { attr: { scale: meltValue } });
         gsap.set(cardRef.current, { 
           scale: scaleValue, 
-          boxShadow: `0 20px 40px rgba(122, 22, 32, ${shadowOpacity})`
+          opacity: opacityValue,
+          filter: `blur(${blurValue}px)`,
+          boxShadow: `0 30px 60px rgba(122, 22, 32, ${shadowOpacity})`
         });
       }
       animationFrameId = requestAnimationFrame(animate);
@@ -195,17 +203,20 @@ export default function LandingPage() {
     if (!el) return;
 
     const onWheel = (e: WheelEvent) => {
-      // Map vertical scroll to horizontal scroll if holding no modifier keys and not a trackpad swipe
-      if (e.deltaY !== 0 && e.deltaX === 0) {
+      // Map vertical scroll to horizontal scroll if mainly vertical movement (mouse wheel)
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         const isAtStart = el.scrollLeft <= 0;
         const isAtEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
         
+        // Use smooth scrolling and jump by a larger, consistent amount for better animation feel
+        const scrollAmount = Math.sign(e.deltaY) * (window.innerWidth > 768 ? 400 : window.innerWidth * 0.8);
+
         if (!isAtStart && e.deltaY < 0) {
           e.preventDefault();
-          el.scrollBy({ left: e.deltaY, behavior: 'auto' });
+          el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         } else if (!isAtEnd && e.deltaY > 0) {
           e.preventDefault();
-          el.scrollBy({ left: e.deltaY, behavior: 'auto' });
+          el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
       }
     };
