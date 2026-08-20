@@ -72,17 +72,15 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        // High intersection ratio = in focus = scale 1.08, melt 0
-        // Low intersection ratio = out of focus = scale 1, melt 35
         const ratio = entry.intersectionRatio; 
         
-        // Map ratio to melt scale (non-linear for better visual)
-        const meltValue = Math.pow(1 - ratio, 2) * 35; 
+        // Map ratio to melt scale
+        const meltValue = Math.pow(1 - ratio, 2) * 40; 
         const scaleValue = 1 + (ratio * 0.05);
         const shadowOpacity = ratio * 0.15;
 
         if (dispMapRef.current) {
-          gsap.to(dispMapRef.current, { attr: { scale: meltValue }, duration: 0.2, overwrite: "auto", ease: "power1.out" });
+          gsap.to(dispMapRef.current, { attr: { scale: meltValue }, duration: 0.1, overwrite: "auto" });
         }
         if (cardRef.current) {
           gsap.to(cardRef.current, { 
@@ -95,7 +93,6 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
       });
     }, { 
       threshold: buildThresholdList(),
-      // Adjust rootMargin to trigger earlier or later based on container
       rootMargin: "-10% -10% -10% -10%" 
     });
 
@@ -105,15 +102,14 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
 
   return (
     <div className="shrink-0 w-[85vw] md:w-[400px] h-auto snap-center relative py-12">
-      {/* Unique SVG Filter per card to animate independently */}
-      <svg className="fixed pointer-events-none w-0 h-0" style={{ position: 'absolute' }}>
+      <svg className="absolute pointer-events-none w-0 h-0">
         <filter id={`melt-${item.id}`} x="-20%" y="-20%" width="140%" height="140%">
           <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" result="warp" />
           <feDisplacementMap 
             ref={dispMapRef}
             in="SourceGraphic" 
             in2="warp" 
-            scale="35" // Starts melted if out of view
+            scale="40" 
             xChannelSelector="R" 
             yChannelSelector="G" 
           />
@@ -123,7 +119,6 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
       <div 
         ref={cardRef} 
         className="bg-surface rounded-3xl overflow-hidden flex flex-col h-full transform-gpu will-change-transform"
-        style={{ filter: `url(#melt-${item.id})` }}
       >
         <div className="relative w-full h-[300px]">
           <img 
@@ -131,6 +126,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
             alt={item.name} 
             loading="lazy"
             className="w-full h-full object-cover"
+            style={{ filter: `url(#melt-${item.id})` }}
           />
         </div>
         <div className="p-8 flex flex-col flex-grow text-center">
@@ -183,6 +179,71 @@ export default function LandingPage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Gallery Drag and Wheel Scroll Logic
+  useEffect(() => {
+    const el = galleryRef.current;
+    if (!el) return;
+
+    let isDown = false;
+    let startX: number;
+    let scrollLeft: number;
+
+    const onMouseDown = (e: MouseEvent) => {
+      isDown = true;
+      el.style.cursor = 'grabbing';
+      el.style.scrollSnapType = 'none'; // Disable snap while dragging
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    };
+    const onMouseLeave = () => {
+      isDown = false;
+      el.style.cursor = '';
+      el.style.scrollSnapType = ''; 
+    };
+    const onMouseUp = () => {
+      isDown = false;
+      el.style.cursor = '';
+      el.style.scrollSnapType = ''; 
+    };
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 2; // scroll-fast
+      el.scrollLeft = scrollLeft - walk;
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      // Map vertical scroll to horizontal scroll if holding no modifier keys and not a trackpad swipe
+      if (e.deltaY !== 0 && e.deltaX === 0) {
+        const isAtStart = el.scrollLeft === 0;
+        const isAtEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+        
+        if (!isAtStart && e.deltaY < 0) {
+          e.preventDefault();
+          el.scrollLeft += e.deltaY;
+        } else if (!isAtEnd && e.deltaY > 0) {
+          e.preventDefault();
+          el.scrollLeft += e.deltaY;
+        }
+      }
+    };
+
+    el.addEventListener('mousedown', onMouseDown);
+    el.addEventListener('mouseleave', onMouseLeave);
+    el.addEventListener('mouseup', onMouseUp);
+    el.addEventListener('mousemove', onMouseMove);
+    el.addEventListener('wheel', onWheel, { passive: false });
+
+    return () => {
+      el.removeEventListener('mousedown', onMouseDown);
+      el.removeEventListener('mouseleave', onMouseLeave);
+      el.removeEventListener('mouseup', onMouseUp);
+      el.removeEventListener('mousemove', onMouseMove);
+      el.removeEventListener('wheel', onWheel);
+    };
+  }, [activeCategory]);
 
   const filteredMenu = MENU_ITEMS.filter(item => item.category === activeCategory);
 
