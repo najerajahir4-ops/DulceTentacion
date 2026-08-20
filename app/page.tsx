@@ -280,8 +280,8 @@ export default function LandingPage() {
       <nav 
         className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-background/90 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-6'}`}
       >
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <a href="#" className="flex items-center">
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative">
+          <a href="#" className="flex items-center z-10">
             <Image 
               src="/images/logo-transparent.png" 
               unoptimized
@@ -293,10 +293,19 @@ export default function LandingPage() {
             />
           </a>
 
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#menu" className="text-sm text-foreground font-semibold hover:text-accent transition-colors">Menú</a>
-            <a href="#ingredientes" className="text-sm text-foreground font-semibold hover:text-accent transition-colors">Ingredientes</a>
-            <a href="#ubicacion" className="text-sm text-foreground font-semibold hover:text-accent transition-colors">Ubicación</a>
+          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-10">
+            <a href="#nosotros" className="group flex items-center gap-2 text-sm text-foreground font-semibold hover:text-accent transition-colors">
+              <Heart className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" />
+              Nosotros
+            </a>
+            <a href="#menu" className="group flex items-center gap-2 text-sm text-foreground font-semibold hover:text-accent transition-colors">
+              <IceCream2 className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" />
+              Menú
+            </a>
+            <a href="#ubicacion" className="group flex items-center gap-2 text-sm text-foreground font-semibold hover:text-accent transition-colors">
+              <MapPin className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" />
+              Ubicación
+            </a>
           </div>
           
           <div className="flex items-center gap-4">
@@ -406,7 +415,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section className="py-24 bg-surface relative z-30">
+      <section id="nosotros" className="py-24 bg-surface relative z-30">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div 
             className="grid md:grid-cols-3 gap-12"
