@@ -22,15 +22,17 @@ if (typeof window !== "undefined") {
 
 // --- Mock Data ---
 const MENU_CATEGORIES = ["Helados Artesanales", "Waffles", "Frappés", "Crepes"];
+
+// We use local images interchangeably to guarantee they load and show the melt effect properly
 const MENU_ITEMS = [
   { id: 1, name: "Helado de Frutos Rojos", category: "Helados Artesanales", description: "Cremoso helado artesanal con trozos de fresas y frambuesas naturales.", price: "$3.50", image: "/images/concepto-plato.png" },
-  { id: 2, name: "Cono Doble Choco-Vainilla", category: "Helados Artesanales", description: "Clásico cono artesanal con chocolate belga y vainilla de Madagascar.", price: "$4.00", image: "https://images.unsplash.com/photo-1558500664-5a21e42a9fb9?auto=format&fit=crop&q=80&w=600" },
-  { id: 3, name: "Waffle Supremo", category: "Waffles", description: "Waffle recién horneado con helado, fresas frescas y sirope de chocolate.", price: "$5.50", image: "https://images.unsplash.com/photo-1562376552-0d160a2f9fa4?auto=format&fit=crop&q=80&w=600" },
-  { id: 4, name: "Waffle Clásico", category: "Waffles", description: "Waffle crujiente con miel de maple y mantequilla.", price: "$3.50", image: "https://images.unsplash.com/photo-1598214886806-c87b84b7078b?auto=format&fit=crop&q=80&w=600" },
-  { id: 5, name: "Frappé de Moka", category: "Frappés", description: "Café moka helado con crema batida y chispas de chocolate.", price: "$4.50", image: "https://images.unsplash.com/photo-1572490122747-3968b75bb811?auto=format&fit=crop&q=80&w=600" },
-  { id: 6, name: "Frappé de Fresa", category: "Frappés", description: "Batido refrescante de fresas naturales con crema.", price: "$4.00", image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&q=80&w=600" },
-  { id: 7, name: "Crepe Nutella Fresas", category: "Crepes", description: "Crepe francés con abundante Nutella y fresas frescas.", price: "$4.50", image: "https://images.unsplash.com/photo-1519676867240-f03562e64548?auto=format&fit=crop&q=80&w=600" },
-  { id: 8, name: "Crepe Salado Jamón Queso", category: "Crepes", description: "Crepe salado con jamón ahumado y queso derretido.", price: "$5.00", image: "https://images.unsplash.com/photo-1621258673752-d183d29486c9?auto=format&fit=crop&q=80&w=600" },
+  { id: 2, name: "Cono Doble Choco-Vainilla", category: "Helados Artesanales", description: "Clásico cono artesanal con chocolate belga y vainilla de Madagascar.", price: "$4.00", image: "/images/hero-bg.png" },
+  { id: 3, name: "Waffle Supremo", category: "Waffles", description: "Waffle recién horneado con helado, fresas frescas y sirope de chocolate.", price: "$5.50", image: "/images/concepto-plato.png" },
+  { id: 4, name: "Waffle Clásico", category: "Waffles", description: "Waffle crujiente con miel de maple y mantequilla.", price: "$3.50", image: "/images/hero-bg.png" },
+  { id: 5, name: "Frappé de Moka", category: "Frappés", description: "Café moka helado con crema batida y chispas de chocolate.", price: "$4.50", image: "/images/concepto-plato.png" },
+  { id: 6, name: "Frappé de Fresa", category: "Frappés", description: "Batido refrescante de fresas naturales con crema.", price: "$4.00", image: "/images/hero-bg.png" },
+  { id: 7, name: "Crepe Nutella Fresas", category: "Crepes", description: "Crepe francés con abundante Nutella y fresas frescas.", price: "$4.50", image: "/images/concepto-plato.png" },
+  { id: 8, name: "Crepe Salado Jamón Queso", category: "Crepes", description: "Crepe salado con jamón ahumado y queso derretido.", price: "$5.00", image: "/images/hero-bg.png" },
 ];
 
 const FEATURES = [
@@ -49,20 +51,8 @@ const fadeUp: any = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
 };
 
-// --- Helper for Intersection Observer ---
-const buildThresholdList = () => {
-  let thresholds = [];
-  let numSteps = 40;
-  for (let i = 1.0; i <= numSteps; i++) {
-    let ratio = i / numSteps;
-    thresholds.push(ratio);
-  }
-  thresholds.push(0);
-  return thresholds;
-};
-
 // --- Melting Card Component ---
-function MeltingCard({ item, WHATSAPP_NUMBER, rootRef }: { item: any, WHATSAPP_NUMBER: string, rootRef: React.RefObject<HTMLDivElement> }) {
+function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: string }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const dispMapRef = useRef<SVGFEDisplacementMapElement>(null);
   
@@ -70,35 +60,45 @@ function MeltingCard({ item, WHATSAPP_NUMBER, rootRef }: { item: any, WHATSAPP_N
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const ratio = entry.intersectionRatio; 
+    let animationFrameId: number;
+    
+    // Continuous loop to check distance to center
+    const animate = () => {
+      if (cardRef.current && dispMapRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
         
-        // Map ratio to melt scale
-        const meltValue = Math.pow(1 - ratio, 2) * 40; 
-        const scaleValue = 1 + (ratio * 0.05);
-        const shadowOpacity = ratio * 0.15;
+        // Center of the card on the X axis
+        const cardCenter = rect.left + rect.width / 2;
+        // Center of the viewport on the X axis
+        const windowCenter = window.innerWidth / 2;
+        
+        // Absolute distance from the center
+        const dist = Math.abs(cardCenter - windowCenter);
+        // Normalize distance (0 when perfectly centered, 1 when completely off edge)
+        // We use window.innerWidth / 1.5 as a reasonable falloff threshold
+        const normalizedDist = Math.min(dist / (window.innerWidth / 1.5), 1);
+        
+        // Map normalized distance to filter scale (0 to 45 max distortion)
+        // Math.pow ensures a smooth exponential curve (snaps into clarity when close to center)
+        const meltValue = Math.pow(normalizedDist, 2) * 45; 
+        
+        // Scale down slightly when out of focus
+        const scaleValue = 1 - (normalizedDist * 0.05);
+        // Shadow fades in when centered
+        const shadowOpacity = Math.max(0, 0.15 - (normalizedDist * 0.15));
 
-        if (dispMapRef.current) {
-          gsap.to(dispMapRef.current, { attr: { scale: meltValue }, duration: 0.1, overwrite: "auto" });
-        }
-        if (cardRef.current) {
-          gsap.to(cardRef.current, { 
-            scale: scaleValue, 
-            boxShadow: `0 20px 40px rgba(122, 22, 32, ${shadowOpacity})`,
-            duration: 0.3, 
-            overwrite: "auto" 
-          });
-        }
-      });
-    }, { 
-      root: rootRef.current,
-      threshold: buildThresholdList(),
-      rootMargin: "0px" 
-    });
+        // Use gsap.set for instant updates on every frame without lagging
+        gsap.set(dispMapRef.current, { attr: { scale: meltValue } });
+        gsap.set(cardRef.current, { 
+          scale: scaleValue, 
+          boxShadow: `0 20px 40px rgba(122, 22, 32, ${shadowOpacity})`
+        });
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
 
-    if (cardRef.current) observer.observe(cardRef.current);
-    return () => observer.disconnect();
+    animate();
+    return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
   return (
@@ -110,7 +110,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER, rootRef }: { item: any, WHATSAPP_N
             ref={dispMapRef}
             in="SourceGraphic" 
             in2="warp" 
-            scale="40" 
+            scale="45" // Starts highly melted before JS kicks in
             xChannelSelector="R" 
             yChannelSelector="G" 
           />
@@ -126,7 +126,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER, rootRef }: { item: any, WHATSAPP_N
             src={item.image} 
             alt={item.name} 
             loading="lazy"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover bg-surface-border"
             style={{ filter: `url(#melt-${item.id})` }}
           />
         </div>
@@ -181,70 +181,65 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Gallery Drag and Wheel Scroll Logic
+  // Safe DOM non-passive wheel event for horizontal mapping
   useEffect(() => {
     const el = galleryRef.current;
     if (!el) return;
 
-    let isDown = false;
-    let startX: number;
-    let scrollLeft: number;
-
-    const onMouseDown = (e: MouseEvent) => {
-      isDown = true;
-      el.style.cursor = 'grabbing';
-      el.style.scrollSnapType = 'none'; // Disable snap while dragging
-      startX = e.pageX - el.offsetLeft;
-      scrollLeft = el.scrollLeft;
-    };
-    const onMouseLeave = () => {
-      isDown = false;
-      el.style.cursor = '';
-      el.style.scrollSnapType = ''; 
-    };
-    const onMouseUp = () => {
-      isDown = false;
-      el.style.cursor = '';
-      el.style.scrollSnapType = ''; 
-    };
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - el.offsetLeft;
-      const walk = (x - startX) * 2; // scroll-fast
-      el.scrollLeft = scrollLeft - walk;
-    };
-
     const onWheel = (e: WheelEvent) => {
       // Map vertical scroll to horizontal scroll if holding no modifier keys and not a trackpad swipe
       if (e.deltaY !== 0 && e.deltaX === 0) {
-        const isAtStart = el.scrollLeft === 0;
+        const isAtStart = el.scrollLeft <= 0;
         const isAtEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
         
         if (!isAtStart && e.deltaY < 0) {
           e.preventDefault();
-          el.scrollLeft += e.deltaY;
+          el.scrollBy({ left: e.deltaY, behavior: 'auto' });
         } else if (!isAtEnd && e.deltaY > 0) {
           e.preventDefault();
-          el.scrollLeft += e.deltaY;
+          el.scrollBy({ left: e.deltaY, behavior: 'auto' });
         }
       }
     };
-
-    el.addEventListener('mousedown', onMouseDown);
-    el.addEventListener('mouseleave', onMouseLeave);
-    el.addEventListener('mouseup', onMouseUp);
-    el.addEventListener('mousemove', onMouseMove);
+    
     el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, []);
 
-    return () => {
-      el.removeEventListener('mousedown', onMouseDown);
-      el.removeEventListener('mouseleave', onMouseLeave);
-      el.removeEventListener('mouseup', onMouseUp);
-      el.removeEventListener('mousemove', onMouseMove);
-      el.removeEventListener('wheel', onWheel);
-    };
-  }, [activeCategory]);
+  // React state for Dragging
+  const isDown = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!galleryRef.current) return;
+    isDown.current = true;
+    galleryRef.current.style.cursor = 'grabbing';
+    galleryRef.current.style.scrollSnapType = 'none'; // Disable snap while dragging
+    startX.current = e.pageX - galleryRef.current.offsetLeft;
+    scrollLeft.current = galleryRef.current.scrollLeft;
+  };
+  const handleMouseLeave = () => {
+    isDown.current = false;
+    if (galleryRef.current) {
+      galleryRef.current.style.cursor = '';
+      galleryRef.current.style.scrollSnapType = ''; 
+    }
+  };
+  const handleMouseUp = () => {
+    isDown.current = false;
+    if (galleryRef.current) {
+      galleryRef.current.style.cursor = '';
+      galleryRef.current.style.scrollSnapType = ''; 
+    }
+  };
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDown.current || !galleryRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - galleryRef.current.offsetLeft;
+    const walk = (x - startX.current) * 2; // scroll-fast multiplier
+    galleryRef.current.scrollLeft = scrollLeft.current - walk;
+  };
 
   const filteredMenu = MENU_ITEMS.filter(item => item.category === activeCategory);
 
@@ -307,7 +302,7 @@ export default function LandingPage() {
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1, ease: "easeOut" }}
             className="space-y-8 text-center lg:text-left"
           >
             <h1 
@@ -407,7 +402,6 @@ export default function LandingPage() {
                 key={cat}
                 onClick={() => {
                   setActiveCategory(cat);
-                  // Reset scroll position on category change
                   if (galleryRef.current) galleryRef.current.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
                 }}
                 className={`px-8 py-3 rounded-full font-bold text-sm md:text-base transition-all duration-300 ${
@@ -433,15 +427,18 @@ export default function LandingPage() {
         {/* Horizontal/Vertical Drag Gallery */}
         <div 
           ref={galleryRef}
-          className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto md:px-[50vw] px-6 pb-20 pt-10 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch"
+          onMouseDown={handleMouseDown}
+          onMouseLeave={handleMouseLeave}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto md:px-[50vw] px-6 pb-20 pt-10 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
           style={{ 
-            // In mobile we use normal stack with snap
             scrollPaddingLeft: '50vw',
             scrollPaddingTop: '20vh'
           }}
         >
           {filteredMenu.map((item) => (
-            <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} rootRef={galleryRef} />
+            <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} />
           ))}
         </div>
       </section>
