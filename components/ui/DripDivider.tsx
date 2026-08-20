@@ -30,7 +30,7 @@ export function DripDivider({ color = "var(--background)", position = "bottom", 
         end: "bottom top",
         scrub: 1,
       },
-      scaleY: 1.5,
+      scaleY: position.includes("overlap") ? 0.6 : 1.5,
       transformOrigin: position.includes("overlap") ? "bottom" : "top",
       ease: "power1.inOut"
     });
