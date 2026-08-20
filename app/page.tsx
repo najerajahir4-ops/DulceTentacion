@@ -317,7 +317,38 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 overflow-hidden">
+      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 overflow-hidden bg-background">
+        
+        {/* Animated Background Blobs (Melt System Aura) */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <motion.div 
+            animate={{ 
+              x: [0, 60, 0], 
+              y: [0, 40, 0],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -top-[10%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-accent/15 blur-[120px] mix-blend-multiply"
+          />
+          <motion.div 
+            animate={{ 
+              x: [0, -50, 0], 
+              y: [0, 60, 0],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            className="absolute top-[20%] -right-[15%] w-[50vw] h-[50vw] rounded-full bg-secondary/15 blur-[130px] mix-blend-multiply"
+          />
+          <motion.div 
+            animate={{ 
+              x: [0, 40, 0], 
+              y: [0, -40, 0],
+            }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+            className="absolute -bottom-[20%] left-[20%] w-[70vw] h-[70vw] rounded-full bg-[#8FAE7A]/15 blur-[140px] mix-blend-multiply"
+          />
+        </div>
+
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center relative z-10">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
