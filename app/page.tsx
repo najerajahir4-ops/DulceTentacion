@@ -10,7 +10,9 @@ import {
   Leaf,
   Cherry,
   Milk,
-  Cookie
+  Cookie,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -260,6 +262,16 @@ export default function LandingPage() {
     galleryRef.current.scrollLeft = scrollLeft.current - walk;
   };
 
+  const scrollGallery = (direction: 'left' | 'right') => {
+    if (galleryRef.current) {
+      const scrollAmount = window.innerWidth > 768 ? 400 : window.innerWidth * 0.8;
+      galleryRef.current.scrollBy({ 
+        left: direction === 'left' ? -scrollAmount : scrollAmount, 
+        behavior: 'smooth' 
+      });
+    }
+  };
+
   const filteredMenu = MENU_ITEMS.filter(item => item.category === activeCategory);
 
   const WHATSAPP_NUMBER = "593997338788";
@@ -443,22 +455,42 @@ export default function LandingPage() {
            />
         </div>
 
-        {/* Horizontal/Vertical Drag Gallery */}
-        <div 
-          ref={galleryRef}
-          onMouseDown={handleMouseDown}
-          onMouseLeave={handleMouseLeave}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
-          className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto md:px-[50vw] px-6 pb-20 pt-10 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
-          style={{ 
-            scrollPaddingLeft: '50vw',
-            scrollPaddingTop: '20vh'
-          }}
-        >
-          {filteredMenu.map((item) => (
-            <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} />
-          ))}
+        {/* Horizontal/Vertical Drag Gallery Container */}
+        <div className="relative group max-w-[100vw]">
+          {/* Left Arrow */}
+          <button 
+            onClick={() => scrollGallery('left')}
+            className="absolute left-4 md:left-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
+            aria-label="Anterior"
+          >
+            <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+          </button>
+
+          {/* Right Arrow */}
+          <button 
+            onClick={() => scrollGallery('right')}
+            className="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
+            aria-label="Siguiente"
+          >
+            <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
+          </button>
+
+          <div 
+            ref={galleryRef}
+            onMouseDown={handleMouseDown}
+            onMouseLeave={handleMouseLeave}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto md:px-[50vw] px-6 pb-20 pt-10 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
+            style={{ 
+              scrollPaddingLeft: '50vw',
+              scrollPaddingTop: '20vh'
+            }}
+          >
+            {filteredMenu.map((item) => (
+              <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} />
+            ))}
+          </div>
         </div>
       </section>
 
