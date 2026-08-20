@@ -445,7 +445,7 @@ export default function LandingPage() {
       </section>
 
       {/* MENU / MELTING GALLERY */}
-      <section className="py-32 bg-surface relative z-20">
+      <section className="pt-32 pb-12 bg-surface relative z-20">
         <div id="menu" className="max-w-7xl mx-auto px-6 mb-16 text-center scroll-mt-28">
           <motion.div 
             className="space-y-4"
@@ -454,39 +454,36 @@ export default function LandingPage() {
             viewport={{ once: true }}
             variants={fadeUp}
           >
-            <h2 className="text-4xl md:text-6xl font-serif text-accent tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-serif text-accent tracking-tight">
               TÚ SOLO MIRA ESTOS POSTRES
             </h2>
-            <p className="text-foreground/60 font-medium text-lg">Elige tu categoría favorita</p>
+            <p className="text-foreground/70 text-lg">
+              Elige tu categoría favorita
+            </p>
           </motion.div>
 
-          {/* Categorías Pills */}
-          <div className="flex flex-wrap justify-center gap-3 mt-12">
-            {MENU_CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  setActiveCategory(cat);
-                  if (galleryRef.current) galleryRef.current.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-                }}
-                className={`px-8 py-3 rounded-full font-bold text-sm md:text-base transition-all duration-300 ${
-                  activeCategory === cat 
-                    ? 'bg-foreground text-background shadow-md' 
-                    : 'bg-surface-border text-foreground hover:bg-foreground/10'
+          <motion.div 
+            className="flex flex-wrap justify-center gap-3 mt-10"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+          >
+            {MENU_CATEGORIES.map((category) => (
+              <motion.button
+                key={category}
+                variants={fadeUp}
+                onClick={() => setActiveCategory(category)}
+                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                  activeCategory === category 
+                    ? 'bg-foreground text-surface shadow-md scale-105'
+                    : 'bg-surface-border/50 text-foreground/80 hover:bg-surface-border hover:text-foreground'
                 }`}
               >
-                {cat}
-              </button>
+                {category}
+              </motion.button>
             ))}
-          </div>
-        </div>
-
-        {/* Syrup Thread Progress Indicator */}
-        <div className="max-w-xs mx-auto mb-8 h-1 bg-surface-border rounded-full overflow-hidden relative">
-           <div 
-             className="absolute top-0 left-0 bottom-0 bg-secondary rounded-full transition-transform duration-100 ease-out"
-             style={{ width: '100%', transform: `scaleX(${scrollProgress})`, transformOrigin: '0%' }}
-           />
+          </motion.div>
         </div>
 
         {/* Horizontal/Vertical Drag Gallery Container */}
@@ -516,7 +513,7 @@ export default function LandingPage() {
             onMouseLeave={handleMouseLeave}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
-            className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto px-[7.5vw] md:px-[calc(50vw-200px)] pb-20 pt-10 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
+            className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto px-[7.5vw] md:px-[calc(50vw-200px)] pb-4 pt-10 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
           >
             {filteredMenu.map((item) => (
               <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} />

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { MeltFilters } from "@/components/ui/MeltFilters";
-import { CustomCursor } from "@/components/ui/CustomCursor";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
