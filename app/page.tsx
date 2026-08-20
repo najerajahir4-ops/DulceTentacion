@@ -317,7 +317,7 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 overflow-hidden bg-background">
+      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 bg-background z-20">
         
         {/* Animated Background Blobs (Melt System Aura) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -395,7 +395,7 @@ export default function LandingPage() {
           </motion.div>
         </div>
 
-        <DripDivider color="var(--surface)" />
+        <DripDivider color="var(--background)" position="bottom" />
       </section>
 
       {/* FEATURES */}
@@ -426,12 +426,12 @@ export default function LandingPage() {
             })}
           </motion.div>
         </div>
+        
+        <DripDivider color="var(--surface)" position="bottom" />
       </section>
 
       {/* MENU / MELTING GALLERY */}
-      <section id="menu" className="py-32 bg-background relative overflow-hidden">
-        <DripDivider position="top" color="var(--surface)" />
-        
+      <section id="menu" className="py-32 bg-background relative z-0">
         <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
           <motion.div 
             className="space-y-4"
@@ -509,14 +509,15 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
+
+        <DripDivider color="var(--background)" position="bottom" />
       </section>
 
       {/* INGREDIENTES / SECRETO */}
-      <section id="ingredientes" className="py-40 relative overflow-hidden bg-foreground">
-        <DripDivider position="top" color="var(--background)" />
+      <section id="ingredientes" className="py-40 relative bg-foreground z-10">
         
         {/* Background Image with Glassmorphism overlay */}
-        <div className="absolute inset-0 w-full h-full">
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
            <Image 
               src="/images/concepto-plato.png" 
               alt="Background" 
