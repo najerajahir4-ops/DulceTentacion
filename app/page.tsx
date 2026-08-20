@@ -513,78 +513,8 @@ export default function LandingPage() {
         <DripDivider color="var(--background)" position="bottom" />
       </section>
 
-      {/* INGREDIENTES / SECRETO */}
-      <section id="ingredientes" className="py-40 relative bg-foreground z-10">
-        
-        {/* Background Image with Glassmorphism overlay */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden">
-           <Image 
-              src="/images/concepto-plato.png" 
-              alt="Background" 
-              fill
-              className="object-cover object-center opacity-40 mix-blend-overlay"
-            />
-            {/* Heavy Glass blur */}
-            <div className="absolute inset-0 backdrop-blur-xl bg-foreground/70" />
-        </div>
-
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <motion.div 
-            className="text-center mb-24 space-y-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-          >
-            <h2 className="text-4xl md:text-6xl font-serif text-background tracking-tight">
-              EL SECRETO DE NUESTRO SABOR
-            </h2>
-            <p className="text-background/80 font-medium text-xl max-w-2xl mx-auto">
-              El respeto absoluto por el ingrediente real.
-            </p>
-          </motion.div>
-
-          <motion.div 
-            className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-          >
-            <motion.div variants={fadeUp} className="bg-background/10 backdrop-blur-md border border-white/10 p-8 rounded-3xl text-center text-background">
-               <Cherry className="w-12 h-12 mx-auto mb-6 text-accent" />
-               <h3 className="text-xl font-bold mb-3">Fruta 100% Natural</h3>
-               <p className="text-background/70 text-sm">Sin jarabes artificiales ni colorantes. Solo fruta real y fresca de temporada.</p>
-            </motion.div>
-            <motion.div variants={fadeUp} className="bg-background/10 backdrop-blur-md border border-white/10 p-8 rounded-3xl text-center text-background">
-               <Milk className="w-12 h-12 mx-auto mb-6 text-background" />
-               <h3 className="text-xl font-bold mb-3">Lácteos Frescos</h3>
-               <p className="text-background/70 text-sm">Leche y crema enteras pasteurizadas diariamente para lograr esa textura sedosa única.</p>
-            </motion.div>
-            <motion.div variants={fadeUp} className="bg-background/10 backdrop-blur-md border border-white/10 p-8 rounded-3xl text-center text-background">
-               <Cookie className="w-12 h-12 mx-auto mb-6 text-secondary" />
-               <h3 className="text-xl font-bold mb-3">Chocolate Premium</h3>
-               <p className="text-background/70 text-sm">Cacao de origen ecuatoriano de alta gama para fundir y crear nuestros rizos perfectos.</p>
-            </motion.div>
-          </motion.div>
-          
-          <div className="mt-24 text-center">
-            <a 
-              href={WHATSAPP_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex px-10 py-4 bg-background text-foreground rounded-full font-bold text-lg hover:bg-surface transition-all shadow-xl hover:-translate-y-1"
-            >
-              Escríbenos
-            </a>
-          </div>
-        </div>
-
-        <DripDivider color="var(--foreground)" position="bottom-inside" />
-      </section>
-
       {/* FOOTER */}
-      <footer id="ubicacion" className="bg-foreground text-background pt-16 pb-12 relative z-0 overflow-hidden">
+      <footer id="ubicacion" className="bg-foreground text-background pt-16 pb-12 relative z-10 overflow-hidden">
         {/* Drip Texture Background overlay */}
         <div 
           className="absolute inset-0 opacity-5 pointer-events-none"
