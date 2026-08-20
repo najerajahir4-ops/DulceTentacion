@@ -1,23 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Nunito } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Antoniette | Rooftop & Cucina Italiana",
-  description: "Cucina Italiana con vista a la ciudad en Río Yamboya y Caracas. Reserva tu experiencia gastronómica.",
+  title: "Avita | Ice Cream & Waffles",
+  description: "El sabor que te hará volver. Frappés, waffles y helados artesanales.",
   openGraph: {
-    title: "Antoniette | Rooftop & Cucina Italiana",
-    description: "Cucina Italiana con vista a la ciudad. Reserva tu experiencia gastronómica.",
+    title: "Avita | Ice Cream & Waffles",
+    description: "El sabor que te hará volver. Frappés, waffles y helados artesanales.",
     type: "website",
     locale: "es_EC",
   }
@@ -31,7 +26,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${inter.variable} ${playfair.variable} h-full antialiased scroll-smooth`}
+      className={`${nunito.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground overflow-x-hidden">
         {children}

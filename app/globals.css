@@ -1,32 +1,51 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #1A1D18;
-  --color-foreground: #F4F0EB;
-  --color-accent: #C9A961;
-  --color-accent-hover: #B49653;
-  --color-surface: #232720;
-  --color-surface-border: #3A4035;
-  --font-inter: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-playfair: var(--font-playfair), ui-serif, Georgia, serif;
+  --color-background: #FFFFFF; /* White base for most of the page */
+  --color-background-pink: #FFF0F5; /* Pink base for the hero section */
+  --color-foreground: #3A2E39; /* Dark text for readability */
+  --color-accent: #E52E63; /* The primary bright pink/fuchsia from the button */
+  --color-accent-hover: #C21D4D; /* Darker pink for hover states */
+  --color-surface: #FFFFFF; /* Pure white backgrounds for cards */
+  --color-surface-border: #F0E4E8; /* Light pink border */
+  --font-nunito: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --background: #1A1D18;
-  --foreground: #F4F0EB;
-  --accent: #C9A961;
-  --accent-hover: #B49653;
-  --surface: #232720;
-  --surface-border: #3A4035;
+  --background: #FFFFFF;
+  --background-pink: #FFF0F5;
+  --foreground: #3A2E39;
+  --accent: #E52E63;
+  --accent-hover: #C21D4D;
+  --surface: #FFFFFF;
+  --surface-border: #F0E4E8;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-nunito), system-ui, sans-serif;
   @apply antialiased;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Custom styles for the dripping effect divider */
+.drip-divider {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: translateY(99%);
+  z-index: 10;
+}
+
+.drip-divider svg {
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
 }
