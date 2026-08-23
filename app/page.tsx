@@ -840,21 +840,37 @@ export default function LandingPage() {
               Frente al Parque Helen Tenka
             </div>
             
-            <div className="w-full max-w-lg h-[250px] rounded-3xl overflow-hidden shadow-xl border border-surface-border relative group">
-              <div className="absolute inset-0 bg-background/10 backdrop-blur-[1px] group-hover:opacity-0 transition-opacity duration-300 pointer-events-none z-10 flex items-center justify-center">
-                <span className="bg-foreground text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
-                  <MapPin className="w-4 h-4" /> Ver en Mapa
-                </span>
+            <div className="w-full max-w-4xl flex flex-col md:flex-row gap-6 justify-center">
+              
+              {/* MAPA */}
+              <div className="w-full md:w-1/2 h-[300px] md:h-[400px] rounded-3xl overflow-hidden shadow-xl border border-surface-border relative group">
+                <div className="absolute inset-0 bg-background/10 backdrop-blur-[1px] group-hover:opacity-0 transition-opacity duration-300 pointer-events-none z-10 flex items-center justify-center">
+                  <span className="bg-foreground text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
+                    <MapPin className="w-4 h-4" /> Ver en Mapa
+                  </span>
+                </div>
+                <iframe 
+                  src="https://maps.google.com/maps?q=-0.244889,-79.163583&t=&z=17&ie=UTF8&iwloc=&output=embed" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen={false} 
+                  loading="lazy" 
+                  className="w-full h-full opacity-90 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-500"
+                />
               </div>
-              <iframe 
-                src="https://maps.google.com/maps?q=-0.244889,-79.163583&t=&z=17&ie=UTF8&iwloc=&output=embed" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={false} 
-                loading="lazy" 
-                className="w-full h-full opacity-90 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-500"
-              />
+
+              {/* VIDEO COMO LLEGAR */}
+              <div className="w-full md:w-1/2 h-[300px] md:h-[400px] rounded-3xl overflow-hidden shadow-xl border border-surface-border relative bg-black flex items-center justify-center">
+                <video 
+                  src="/images/como_llegar.mp4" 
+                  controls 
+                  playsInline
+                  preload="metadata"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+
             </div>
           </div>
         </div>
