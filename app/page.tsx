@@ -803,7 +803,7 @@ export default function LandingPage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="py-12 md:py-16 bg-surface relative z-10">
+      <section className="pt-24 pb-12 md:pt-32 md:pb-16 bg-surface relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
