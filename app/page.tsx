@@ -854,7 +854,7 @@ export default function LandingPage() {
       </section>
 
       {/* LOCATION / UBICACION */}
-      <section id="ubicacion" className="py-12 md:py-16 bg-background relative z-10">
+      <section id="ubicacion" className="pt-24 pb-12 md:pt-32 md:pb-16 bg-background relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col items-center text-center space-y-6">
             <h2 className="text-3xl md:text-4xl font-serif text-foreground font-bold mb-2">Encuéntranos</h2>
