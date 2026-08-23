@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
 import { motion, useSpring } from "framer-motion";
 import Image from "next/image";
 import { 
@@ -150,7 +150,7 @@ const fadeUp: any = {
 };
 
 // --- Melting Card Component ---
-function MeltingCard({ item, WHATSAPP_NUMBER, onAddToCart }: { item: any, WHATSAPP_NUMBER: string, onAddToCart: (item: any) => void }) {
+const MeltingCard = memo(function MeltingCard({ item, WHATSAPP_NUMBER, onAddToCart }: { item: any, WHATSAPP_NUMBER: string, onAddToCart: (item: any) => void }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const dispMapRef = useRef<SVGFEDisplacementMapElement>(null);
@@ -266,7 +266,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER, onAddToCart }: { item: any, WHATSA
       </div>
     </div>
   );
-}
+});
 
 export default function LandingPage() {
   const { cartCount, toggleCart, addToCart } = useCart();
@@ -406,23 +406,25 @@ export default function LandingPage() {
     }
   };
 
-  const filteredMenu = shuffledMenu.filter(item => {
-    const matchesCategory = activeCategory === "Todo" || item.category === activeCategory;
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filteredMenu = useMemo(() => {
+    return shuffledMenu.filter(item => {
+      const matchesCategory = activeCategory === "Todo" || item.category === activeCategory;
+      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [shuffledMenu, activeCategory, searchQuery]);
 
   const WHATSAPP_NUMBER = "593997338788";
   const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=Hola,%20quisiera%20más%20información%20sobre%20sus%20helados`;
 
-  const handleAddToCartClick = (item: any) => {
+  const handleAddToCartClick = useCallback((item: any) => {
     if (item.hasOptions) {
       setSelectedItemForOptions(item);
     } else {
       addToCart(item);
     }
-  };
+  }, [addToCart]);
 
   return (
     <main className="min-h-screen selection:bg-accent selection:text-white">
@@ -446,7 +448,6 @@ export default function LandingPage() {
           <a href="#" className="flex items-center z-10">
             <Image 
               src="/images/logo-transparent.png" 
-              unoptimized
               alt="Avita Logo" 
               width={180} 
               height={50}
@@ -514,7 +515,8 @@ export default function LandingPage() {
             src="/images/como_llegar.mp4#t=24"
             autoPlay 
             muted 
-            playsInline 
+            playsInline
+            preload="metadata"
             onTimeUpdate={handleHeroVideoTimeUpdate}
             className="w-full h-full object-cover blur-[30px] opacity-40 scale-110"
           />
@@ -590,7 +592,6 @@ export default function LandingPage() {
               <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 w-[55%] h-[8%] bg-black/25 rounded-[100%] blur-xl z-0 pointer-events-none" />
               <Image 
                 src="/images/helado_transparente.png" 
-                unoptimized
                 alt="Helado en Vaso" 
                 fill
                 priority
@@ -609,8 +610,8 @@ export default function LandingPage() {
         
         {/* REALISTIC BACKGROUND ACCENTS (MENU) */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-          <img src="/images/strawberry_float.png" alt="" className="absolute top-[5%] right-[2%] w-32 h-32 md:w-48 md:h-48 object-contain rotate-12 blur-[2px] opacity-50" />
-          <img src="/images/chocolate_float.png" alt="" className="absolute top-[25%] left-[2%] w-24 h-24 md:w-36 md:h-36 object-contain -rotate-12 blur-[1px] opacity-60" />
+          <img src="/images/strawberry_float.png" alt="" loading="lazy" decoding="async" className="absolute top-[5%] right-[2%] w-32 h-32 md:w-48 md:h-48 object-contain rotate-12 blur-[2px] opacity-50" />
+          <img src="/images/chocolate_float.png" alt="" loading="lazy" decoding="async" className="absolute top-[25%] left-[2%] w-24 h-24 md:w-36 md:h-36 object-contain -rotate-12 blur-[1px] opacity-60" />
         </div>
 
         <div id="menu" className="max-w-7xl mx-auto px-6 mb-16 text-center scroll-mt-28 relative z-10">
@@ -777,7 +778,7 @@ export default function LandingPage() {
                             </div>
                           )}
                           <div className="w-24 h-24 md:w-28 md:h-28 bg-surface rounded-[20px] flex-shrink-0 relative flex items-center justify-center p-3 group-hover:scale-105 transition-transform duration-500">
-                            <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                            <img src={item.image} alt={item.name} loading="lazy" decoding="async" className="w-full h-full object-contain" />
                           </div>
                           
                           <div className="flex-1 min-w-0 py-1 flex flex-col h-full justify-center">
@@ -923,7 +924,6 @@ export default function LandingPage() {
             <div className="flex-shrink-0">
               <Image 
                 src="/images/logo-transparent.png" 
-                unoptimized
                 alt="Avita Logo" 
                 width={160} 
                 height={60}
