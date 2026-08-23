@@ -862,7 +862,7 @@ export default function LandingPage() {
                 </span>
               </div>
               <iframe 
-                src="https://maps.google.com/maps?q=Parque%20Helen%20Tenka&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                src="https://maps.google.com/maps?q=-0.244889,-79.163583&t=&z=17&ie=UTF8&iwloc=&output=embed" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
