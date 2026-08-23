@@ -277,6 +277,14 @@ export default function LandingPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"gallery" | "list">("gallery");
+  
+  useEffect(() => {
+    // Default to list view on mobile for better UX
+    if (window.innerWidth < 768) {
+      setViewMode("list");
+    }
+  }, []);
+
   const [selectedItemForOptions, setSelectedItemForOptions] = useState<any>(null);
   
   const [scrollProgress, setScrollProgress] = useState(0);
