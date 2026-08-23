@@ -593,24 +593,24 @@ export default function LandingPage() {
               
               {/* Collage Images (Behind) */}
               <motion.img 
-                animate={{ y: [0, -15, 0], rotate: [-15, -10, -15] }} 
+                animate={{ y: [0, -10, 0], rotate: [-15, -10, -15] }} 
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                 src="/images/new_waffle-bgless.png" 
-                className="absolute top-[10%] -left-[25%] w-[50%] h-[50%] object-contain drop-shadow-xl z-0 blur-[1px]"
+                className="absolute top-[25%] -left-[10%] w-[60%] h-[60%] object-contain drop-shadow-xl z-0"
                 alt=""
               />
               <motion.img 
-                animate={{ y: [0, 15, 0], rotate: [10, 15, 10] }} 
+                animate={{ y: [0, 10, 0], rotate: [10, 15, 10] }} 
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                 src="/images/new_frappe-bgless.png" 
-                className="absolute top-[5%] -right-[20%] w-[45%] h-[45%] object-contain drop-shadow-xl z-0 blur-[1px]"
+                className="absolute -top-[5%] right-[5%] w-[55%] h-[55%] object-contain drop-shadow-xl z-0"
                 alt=""
               />
               <motion.img 
                 animate={{ y: [0, -10, 0], rotate: [-5, 0, -5] }} 
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
                 src="/images/crepe-bgless.png" 
-                className="absolute bottom-[15%] -right-[15%] w-[55%] h-[55%] object-contain drop-shadow-xl z-0 blur-[2px]"
+                className="absolute bottom-[5%] -right-[10%] w-[65%] h-[65%] object-contain drop-shadow-xl z-0"
                 alt=""
               />
 
