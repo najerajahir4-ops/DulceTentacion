@@ -470,7 +470,7 @@ export default function LandingPage() {
                 </span>
                 {isOpen ? 'Abierto Ahora' : 'Cerrado'}
               </div>
-              <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="p-2 bg-surface rounded-full text-foreground hover:text-white hover:bg-accent transition-colors">
+              <a href="https://www.facebook.com/share/1XQsEULYRm/" target="_blank" rel="noopener noreferrer" className="p-2 bg-surface rounded-full text-foreground hover:text-white hover:bg-accent transition-colors">
                 <FacebookIcon className="w-4 h-4" />
               </a>
               <a href="https://www.instagram.com/avita_ice_cream/" target="_blank" rel="noopener noreferrer" className="p-2 bg-surface rounded-full text-foreground hover:text-white hover:bg-accent transition-colors">
@@ -887,16 +887,47 @@ export default function LandingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="flex flex-col items-center text-center space-y-4">
-            <Image 
-              src="/images/logo-transparent.png" 
-              unoptimized
-              alt="Avita Logo" 
-              width={200} 
-              height={80}
-              className="h-12 md:h-16 w-auto object-contain"
-            />
-            <div className="flex gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-4">
+            
+            {/* LOGO */}
+            <div className="flex-shrink-0">
+              <Image 
+                src="/images/logo-transparent.png" 
+                unoptimized
+                alt="Avita Logo" 
+                width={160} 
+                height={60}
+                className="h-10 md:h-12 w-auto object-contain"
+              />
+            </div>
+
+            {/* ÍNDICE DE NAVEGACIÓN EN FOOTER */}
+            <ul className="flex flex-col md:flex-row items-center gap-3 md:gap-8 text-sm font-bold">
+              <li>
+                <a href="#" className="flex items-center gap-1 hover:text-accent transition-colors group">
+                  <span className="text-accent opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">→</span> 
+                  Inicio
+                </a>
+              </li>
+              <li>
+                <a href="#menu" className="flex items-center gap-1 hover:text-accent transition-colors group">
+                  <span className="text-accent opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">→</span> 
+                  Menú
+                </a>
+              </li>
+              <li>
+                <a href="#ubicacion" className="flex items-center gap-1 hover:text-accent transition-colors group">
+                  <span className="text-accent opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">→</span> 
+                  Ubicación
+                </a>
+              </li>
+            </ul>
+
+            {/* REDES SOCIALES */}
+            <div className="flex gap-4 flex-shrink-0">
+              <a href="https://www.facebook.com/share/1XQsEULYRm/" target="_blank" rel="noopener noreferrer" className="p-2 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
+                <FacebookIcon className="w-5 h-5" />
+              </a>
               <a href="https://www.instagram.com/avita_ice_cream/" target="_blank" rel="noopener noreferrer" className="p-2 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
                 <InstagramIcon className="w-5 h-5" />
               </a>
@@ -904,15 +935,10 @@ export default function LandingPage() {
                 <TikTokIcon className="w-5 h-5" />
               </a>
             </div>
+            
+          </div>
 
-            {/* ÍNDICE DE NAVEGACIÓN EN FOOTER */}
-            <ul className="flex flex-col items-center gap-2 text-sm font-bold mt-2">
-              <li><a href="#" className="hover:text-accent transition-colors">Inicio</a></li>
-              <li><a href="#menu" className="hover:text-accent transition-colors">Menú</a></li>
-              <li><a href="#ubicacion" className="hover:text-accent transition-colors">Ubicación</a></li>
-            </ul>
-
-            <div className="w-full h-px bg-white/10 max-w-lg mx-auto my-2" />
+          <div className="w-full h-px bg-white/10 mt-8 mb-6" />
 
             <p className="text-sm text-background/50 font-medium font-sans">
               &copy; {new Date().getFullYear()} Avita Ice Cream & Waffles. Todos los derechos reservados.
