@@ -283,16 +283,12 @@ export default function LandingPage() {
   const galleryRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    // Check if everything is loaded
-    const handleLoad = () => {
-      setTimeout(() => setIsLoading(false), 800);
-    };
-    if (document.readyState === 'complete') {
-      handleLoad();
-    } else {
-      window.addEventListener('load', handleLoad);
-      return () => window.removeEventListener('load', handleLoad);
-    }
+    // Show splash screen for 2 seconds to ensure fonts and images hydrate smoothly
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const heroVideoRef = useRef<HTMLVideoElement>(null);
