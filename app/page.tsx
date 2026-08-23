@@ -876,7 +876,7 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-foreground text-background pt-16 pb-24 md:pb-12 relative z-10 overflow-hidden">
+      <footer className="bg-foreground text-background pt-8 pb-20 md:pb-8 relative z-10 overflow-hidden">
         {/* Drip Texture Background overlay */}
         <div 
           className="absolute inset-0 opacity-5 pointer-events-none"
@@ -887,7 +887,7 @@ export default function LandingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="flex flex-col items-center text-center space-y-8">
+          <div className="flex flex-col items-center text-center space-y-6">
             <Image 
               src="/images/logo-transparent.png" 
               unoptimized
@@ -896,16 +896,16 @@ export default function LandingPage() {
               height={80}
               className="h-12 md:h-16 w-auto object-contain"
             />
-            <div className="flex gap-6">
-              <a href="https://www.instagram.com/avita_ice_cream/" target="_blank" rel="noopener noreferrer" className="p-4 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
-                <InstagramIcon className="w-6 h-6" />
+            <div className="flex gap-4">
+              <a href="https://www.instagram.com/avita_ice_cream/" target="_blank" rel="noopener noreferrer" className="p-3 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
+                <InstagramIcon className="w-5 h-5" />
               </a>
-              <a href="https://www.tiktok.com/@heladeriaavita" target="_blank" rel="noopener noreferrer" className="p-4 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
-                <TikTokIcon className="w-6 h-6" />
+              <a href="https://www.tiktok.com/@heladeriaavita" target="_blank" rel="noopener noreferrer" className="p-3 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
+                <TikTokIcon className="w-5 h-5" />
               </a>
             </div>
 
-            <div className="w-full h-px bg-white/10 max-w-2xl mx-auto my-6" />
+            <div className="w-full h-px bg-white/10 max-w-lg mx-auto my-4" />
 
             <p className="text-sm text-background/50 font-medium font-sans">
               &copy; {new Date().getFullYear()} Avita Ice Cream & Waffles. Todos los derechos reservados.
