@@ -631,7 +631,7 @@ export default function LandingPage() {
           </motion.div>
 
           <motion.div 
-            className="flex overflow-x-auto [justify-content:safe_center] snap-x snap-mandatory hide-scrollbar gap-3 mt-10 pb-4 px-2 w-full"
+            className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-3 mt-10 pb-4 px-2 w-full before:content-[''] before:m-auto after:content-[''] after:m-auto"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
