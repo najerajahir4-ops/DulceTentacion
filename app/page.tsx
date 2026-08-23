@@ -605,13 +605,12 @@ export default function LandingPage() {
 
 
       {/* MENU / MELTING GALLERY */}
-      <section className="pt-8 pb-12 bg-surface relative z-20 overflow-hidden">
+      <section className="pt-8 pb-12 bg-surface relative z-30 overflow-hidden">
         
         {/* REALISTIC BACKGROUND ACCENTS (MENU) */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <img src="/images/strawberry_float.png" alt="" className="absolute top-[5%] right-[2%] w-32 h-32 md:w-48 md:h-48 object-contain rotate-12 blur-[2px] opacity-50" />
           <img src="/images/chocolate_float.png" alt="" className="absolute top-[25%] left-[2%] w-24 h-24 md:w-36 md:h-36 object-contain -rotate-12 blur-[1px] opacity-60" />
-          <img src="/images/mint_float.png" alt="" className="absolute bottom-[15%] right-[8%] w-28 h-28 md:w-40 md:h-40 object-contain -rotate-45 blur-[3px] opacity-40" />
         </div>
 
         <div id="menu" className="max-w-7xl mx-auto px-6 mb-16 text-center scroll-mt-28 relative z-10">
@@ -808,7 +807,7 @@ export default function LandingPage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="pt-24 pb-12 md:pt-32 md:pb-16 bg-surface relative z-10">
+      <section className="pt-24 pb-12 md:pt-32 md:pb-16 bg-surface relative z-20">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -850,6 +849,8 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
+
+        <DripDivider color="var(--surface)" position="bottom" />
       </section>
 
       {/* LOCATION / UBICACION */}
