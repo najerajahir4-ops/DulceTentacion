@@ -840,12 +840,12 @@ export default function LandingPage() {
               Frente al Parque Helen Tenka
             </div>
             
-            <div className="w-full max-w-4xl flex flex-col md:flex-row gap-6 justify-center">
+            <div className="w-full max-w-5xl bg-white rounded-[2.5rem] p-4 md:p-6 shadow-2xl shadow-accent/5 border border-surface-border flex flex-col md:flex-row gap-4 md:gap-6">
               
               {/* MAPA */}
-              <div className="w-full md:w-1/2 h-[300px] md:h-[400px] rounded-3xl overflow-hidden shadow-xl border border-surface-border relative group">
-                <div className="absolute inset-0 bg-background/10 backdrop-blur-[1px] group-hover:opacity-0 transition-opacity duration-300 pointer-events-none z-10 flex items-center justify-center">
-                  <span className="bg-foreground text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
+              <div className="w-full md:w-3/5 h-[350px] md:h-[500px] rounded-[1.5rem] overflow-hidden relative group bg-surface">
+                <div className="absolute inset-0 bg-background/5 backdrop-blur-[1px] group-hover:opacity-0 transition-opacity duration-500 pointer-events-none z-10 flex items-center justify-center">
+                  <span className="bg-foreground text-white text-sm font-bold px-5 py-2.5 rounded-full flex items-center gap-2 shadow-xl">
                     <MapPin className="w-4 h-4" /> Ver en Mapa
                   </span>
                 </div>
@@ -856,19 +856,23 @@ export default function LandingPage() {
                   style={{ border: 0 }} 
                   allowFullScreen={false} 
                   loading="lazy" 
-                  className="w-full h-full opacity-90 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-500"
+                  className="w-full h-full opacity-90 group-hover:opacity-100 transition-all duration-500 grayscale group-hover:grayscale-0"
                 />
               </div>
 
               {/* VIDEO COMO LLEGAR */}
-              <div className="w-full md:w-1/2 h-[300px] md:h-[400px] rounded-3xl overflow-hidden shadow-xl border border-surface-border relative bg-black flex items-center justify-center">
+              <div className="w-full md:w-2/5 h-[400px] md:h-[500px] rounded-[1.5rem] overflow-hidden relative bg-black flex items-center justify-center group">
                 <video 
                   src="/images/como_llegar.mp4" 
                   controls 
                   playsInline
                   preload="metadata"
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
                 />
+                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-lg z-10 pointer-events-none flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                  Ruta al local
+                </div>
               </div>
 
             </div>
