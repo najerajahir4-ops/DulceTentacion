@@ -561,7 +561,10 @@ export default function LandingPage() {
             transition={{ duration: 1, ease: "easeOut" }}
             className="space-y-8 text-center lg:text-left"
           >
-            <h1 className="text-5xl lg:text-7xl font-serif text-accent leading-tight">
+            <h1 
+              className="text-5xl lg:text-7xl font-serif text-accent leading-tight transform-gpu will-change-transform"
+              style={{ filter: "url(#melt-hero)" }}
+            >
               EL SABOR QUE <br/>
               <span className="text-foreground">TE HARÁ VOLVER</span>
             </h1>
