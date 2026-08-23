@@ -188,7 +188,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
 }
 
 export default function LandingPage() {
-  const { cartCount, toggleCart } = useCart();
+  const { cartCount, toggleCart, addToCart } = useCart();
   const [activeCategory, setActiveCategory] = useState("Todo");
   const [searchQuery, setSearchQuery] = useState("");
   const [shuffledMenu, setShuffledMenu] = useState(MENU_ITEMS);
