@@ -876,18 +876,9 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-foreground text-background py-8 relative z-10 overflow-hidden">
-        {/* Drip Texture Background overlay */}
-        <div 
-          className="absolute inset-0 opacity-5 pointer-events-none"
-          style={{ maskImage: 'linear-gradient(to bottom, transparent, black 150px)', WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 150px)' }}
-        >
-          {/* Repeating drip svg for texture */}
-          <div className="w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCAwQzI1IDI1IDI1IDUwIDUwIDUwQzc1IDUwIDc1IDI1IDEwMCAwWiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=')] bg-[length:100px_100px] repeat" />
-        </div>
-
+      <footer className="bg-foreground text-background py-4 relative z-10 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             
             {/* LOGO */}
             <div className="flex-shrink-0">
@@ -938,9 +929,9 @@ export default function LandingPage() {
             
           </div>
 
-          <div className="w-full h-px bg-white/10 mt-8 mb-6" />
+          <div className="w-full h-px bg-white/10 my-4" />
 
-            <p className="text-sm text-background/50 font-medium font-sans">
+            <p className="text-sm text-background/50 font-medium font-sans text-center md:text-left">
               &copy; {new Date().getFullYear()} Avita Ice Cream & Waffles. Todos los derechos reservados.
             </p>
           </div>
