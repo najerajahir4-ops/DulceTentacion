@@ -944,7 +944,6 @@ export default function LandingPage() {
               &copy; {new Date().getFullYear()} Avita Ice Cream & Waffles. Todos los derechos reservados.
             </p>
           </div>
-        </div>
       </footer>
 
 
