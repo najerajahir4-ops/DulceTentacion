@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
-import { motion, useSpring } from "framer-motion";
+import { motion, useSpring, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { 
   IceCream2, 
@@ -275,12 +275,26 @@ export default function LandingPage() {
   const [shuffledMenu, setShuffledMenu] = useState(MENU_ITEMS);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"gallery" | "list">("gallery");
   const [selectedItemForOptions, setSelectedItemForOptions] = useState<any>(null);
   
   const [scrollProgress, setScrollProgress] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
   
+  useEffect(() => {
+    // Check if everything is loaded
+    const handleLoad = () => {
+      setTimeout(() => setIsLoading(false), 800);
+    };
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+      return () => window.removeEventListener('load', handleLoad);
+    }
+  }, []);
+
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const handleHeroVideoTimeUpdate = useCallback(() => {
     if (heroVideoRef.current && heroVideoRef.current.currentTime >= 30) {
@@ -428,6 +442,42 @@ export default function LandingPage() {
 
   return (
     <main className="min-h-screen selection:bg-accent selection:text-white">
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div 
+            key="loader"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-[999] bg-background flex flex-col items-center justify-center"
+          >
+            <motion.div
+              animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Image 
+                src="/images/logo-transparent.png" 
+                alt="Cargando Avita..." 
+                width={200} 
+                height={80} 
+                className="drop-shadow-2xl object-contain mb-8" 
+                priority
+              />
+            </motion.div>
+            <div className="w-48 h-1.5 bg-surface-border rounded-full overflow-hidden relative">
+              <motion.div 
+                className="absolute inset-y-0 left-0 bg-accent rounded-full"
+                animate={{ width: ["0%", "100%"] }}
+                transition={{ duration: 1.5, ease: "easeInOut", repeat: Infinity }}
+              />
+            </div>
+            <p className="mt-4 text-sm font-semibold text-accent animate-pulse tracking-widest uppercase">
+              Preparando tus postres...
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {selectedItemForOptions && (
         <CustomizationModal 
           item={selectedItemForOptions}
@@ -457,10 +507,6 @@ export default function LandingPage() {
           </a>
 
           <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-10">
-            <a href="#nosotros" className="group flex items-center gap-2 text-sm text-foreground font-semibold hover:text-accent transition-colors">
-              <Heart className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" />
-              Nosotros
-            </a>
             <a href="#menu" className="group flex items-center gap-2 text-sm text-foreground font-semibold hover:text-accent transition-colors">
               <IceCream2 className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" />
               Menú
