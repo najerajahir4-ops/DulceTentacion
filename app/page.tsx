@@ -630,13 +630,14 @@ export default function LandingPage() {
             </p>
           </motion.div>
 
-          <motion.div 
-            className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-3 mt-10 pb-4 px-2 w-max max-w-full mx-auto"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-          >
+          <div className="w-full flex justify-start md:justify-center mt-10 overflow-hidden">
+            <motion.div 
+              className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-3 pb-4 px-2 max-w-full"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+            >
             {MENU_CATEGORIES.map((category) => (
               <motion.button
                 key={category}
@@ -651,7 +652,8 @@ export default function LandingPage() {
                 {category}
               </motion.button>
             ))}
-          </motion.div>
+            </motion.div>
+          </div>
 
           {/* Search Bar & View Toggle */}
           <motion.div 
