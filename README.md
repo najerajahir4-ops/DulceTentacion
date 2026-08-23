@@ -38,6 +38,11 @@ Toda la página está optimizada para la fricción cero. Los botones de "Pedir A
 2. **Sombras de GSAP Bounding Box:** Inicialmente, el filtro `drop-shadow` de GSAP se aplicaba a todo el contenedor `div` de la tarjeta, lo que en algunos navegadores creaba una ilusión de "cuadro blanco" debido a la creación de un nuevo contexto de renderizado (`transform-gpu`). Se solucionó aislando el `drop-shadow` exclusivamente a la etiqueta `<img>` usando un `ref` secundario, manteniendo el fondo de la galería 100% puro.
 3. **Scroll Margins:** Para evitar que la barra de navegación fija tapara los títulos al navegar mediante las anclas (`#menu`, `#nosotros`), se integró `scroll-mt-28` y `scroll-mt-24` para calcular un frenado anticipado del scroll.
 4. **Dependencias:** Se limpiaron componentes sin uso (como el cursor personalizado `CustomCursor`) para asegurar compilaciones exitosas y rápidas en Vercel.
+5. **Centrado del Menú de Categorías:** Se utilizó un layout inteligente (`inline-flex` en contenedor `text-center`) para mantener centrados los botones de categorías (Waffles, Crepes, etc.) en pantallas grandes, garantizando su perfecta alineación.
+6. **Loader Animado (Splash Screen):** Se implementó una pantalla de carga a pantalla completa con `framer-motion` (`AnimatePresence`) para garantizar una hidratación visual perfecta de fuentes y assets pesados durante al menos 2 segundos en el primer renderizado.
+7. **Marquee Infinito:** Se añadió una cinta dinámica infinita ("EL SABOR QUE TE HARÁ VOLVER") como separador elegante entre el menú y los testimonios. Se ajustó su grosor (padding) y tamaño tipográfico para mantener un perfil estético sutil y premium.
+8. **Collage Flotante:** Se optimizó la disposición de las imágenes flotantes secundarias detrás del producto principal (Hero). Se eliminó el desenfoque artificial (blur) para máxima nitidez y se expandieron radialmente para evitar traslapes.
+9. **UX Móvil Responsivo:** Se agregó una regla en la carga de la página (`useEffect`) que detecta dispositivos móviles (`window.innerWidth < 768`) para forzar la "Vista de Lista" (catálogo) por defecto, ofreciendo una navegación de compra mucho más ágil y amigable para pulgares.
 
 ---
-*Este documento ha sido generado como un checkpoint mental definitivo para mantener la coherencia absoluta del diseño y la estructura en iteraciones futuras.*
+*Este documento ha sido actualizado tras la última iteración de diseño y performance, sirviendo como registro maestro de las decisiones estéticas de Avita.*
