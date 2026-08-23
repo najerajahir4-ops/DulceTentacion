@@ -125,19 +125,9 @@ export function CartSidebar({ whatsappNumber }: { whatsappNumber: string }) {
                   <span className="text-foreground/70 font-medium">Total Estimado</span>
                   <span className="text-3xl font-serif font-bold text-foreground">${cartTotal.toFixed(2)}</span>
                 </div>
-                {cartTotal < 5.00 && (
-                  <p className="text-center text-accent text-sm font-bold mb-3">
-                    El pedido mínimo para domicilio es de $5.00
-                  </p>
-                )}
                 <button 
                   onClick={handleCheckout}
-                  disabled={cartTotal < 5.00}
-                  className={`w-full py-4 rounded-full font-bold text-lg transition-all shadow-lg ${
-                    cartTotal >= 5.00 
-                      ? 'bg-accent text-white hover:bg-accent-hover shadow-accent/30 hover:shadow-xl hover:-translate-y-1' 
-                      : 'bg-surface-border text-foreground/50 cursor-not-allowed shadow-none'
-                  }`}
+                  className="w-full py-4 rounded-full font-bold text-lg transition-all shadow-lg bg-accent text-white hover:bg-accent-hover shadow-accent/30 hover:shadow-xl hover:-translate-y-1"
                 >
                   Pedir por WhatsApp
                 </button>

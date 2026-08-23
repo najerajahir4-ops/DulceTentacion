@@ -813,10 +813,20 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-16 relative"
           >
-            <h2 className="text-4xl md:text-5xl font-serif text-foreground font-bold mb-4">Lo que dicen nuestros clientes</h2>
-            <p className="text-foreground/60 max-w-2xl mx-auto font-medium">Cientos de familias ya disfrutan de la calidad de Avita. ¡Únete a ellos!</p>
+            {/* Decorative Quote */}
+            <div className="absolute -top-12 md:-top-20 left-1/2 -translate-x-1/2 text-[120px] md:text-[180px] font-serif text-accent/5 leading-none select-none pointer-events-none flex items-center justify-center">
+              &ldquo;
+            </div>
+            
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent font-bold text-xs mb-4 md:mb-6 uppercase tracking-widest relative z-10 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+              Voces de la comunidad
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground font-bold mb-4 relative z-10">Lo que dicen nuestros clientes</h2>
+            <p className="text-foreground/60 max-w-2xl mx-auto font-medium relative z-10">Cientos de familias ya disfrutan de la calidad de Avita. ¡Únete a ellos!</p>
           </motion.div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
