@@ -579,35 +579,6 @@ export default function LandingPage() {
         <DripDivider color="var(--surface)" position="bottom-inside" />
       </section>
 
-      {/* FEATURES */}
-      <section id="nosotros" className="pt-24 pb-8 bg-surface relative z-30 scroll-mt-24">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div 
-            className="grid md:grid-cols-3 gap-12"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-          >
-            {FEATURES.map((feature, idx) => {
-              const Icon = feature.icon;
-              return (
-                <motion.div 
-                  key={idx}
-                  variants={fadeUp}
-                  className="group flex flex-col items-center text-center space-y-4 p-6 rounded-3xl hover:bg-background transition-colors duration-500"
-                >
-                  <div className="w-20 h-20 rounded-full bg-background text-accent flex items-center justify-center mb-2 shadow-sm transition-transform duration-500 group-hover:scale-110 group-hover:shadow-md">
-                    <Icon className="w-10 h-10 transition-all duration-500" style={{ filter: "url(#melt-hover)" }} />
-                  </div>
-                  <h3 className="text-xl font-serif text-foreground">{feature.title}</h3>
-                  <p className="text-foreground/70">{feature.desc}</p>
-                </motion.div>
-              )
-            })}
-          </motion.div>
-        </div>
-      </section>
 
       {/* MENU / MELTING GALLERY */}
       <section className="pt-8 pb-12 bg-surface relative z-20">
