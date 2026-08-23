@@ -906,11 +906,11 @@ export default function LandingPage() {
             </div>
 
             {/* ÍNDICE DE NAVEGACIÓN EN FOOTER */}
-            <div className="flex items-center gap-6 text-sm font-bold mt-2">
-              <a href="#" className="hover:text-accent transition-colors">Inicio</a>
-              <a href="#menu" className="hover:text-accent transition-colors">Menú</a>
-              <a href="#ubicacion" className="hover:text-accent transition-colors">Ubicación</a>
-            </div>
+            <ul className="flex flex-col items-center gap-2 text-sm font-bold mt-2">
+              <li><a href="#" className="hover:text-accent transition-colors">Inicio</a></li>
+              <li><a href="#menu" className="hover:text-accent transition-colors">Menú</a></li>
+              <li><a href="#ubicacion" className="hover:text-accent transition-colors">Ubicación</a></li>
+            </ul>
 
             <div className="w-full h-px bg-white/10 max-w-lg mx-auto my-2" />
 
@@ -921,21 +921,7 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* FLOATING NAVIGATION INDEX (Visible en todas las pantallas) */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-6 bg-background/90 backdrop-blur-md px-6 py-3 rounded-full border border-surface-border shadow-2xl">
-        <a href="#" className="flex flex-col items-center text-foreground hover:text-accent transition-colors">
-          <Heart className="w-5 h-5 mb-1" />
-          <span className="text-[10px] font-bold">Inicio</span>
-        </a>
-        <a href="#menu" className="flex flex-col items-center text-foreground hover:text-accent transition-colors">
-          <IceCream2 className="w-5 h-5 mb-1" />
-          <span className="text-[10px] font-bold">Menú</span>
-        </a>
-        <a href="#ubicacion" className="flex flex-col items-center text-foreground hover:text-accent transition-colors">
-          <MapPin className="w-5 h-5 mb-1" />
-          <span className="text-[10px] font-bold">Local</span>
-        </a>
-      </div>
+
     </main>
   );
 }
