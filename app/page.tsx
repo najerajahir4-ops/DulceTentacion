@@ -505,7 +505,7 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 bg-background z-40 overflow-hidden">
+      <section className="relative pt-24 pb-24 lg:pt-40 lg:pb-40 bg-background z-40 overflow-hidden">
         
         {/* Background Video (Store Interior) */}
         <div className="absolute inset-0 z-0 overflow-hidden opacity-10 pointer-events-none">
@@ -560,7 +560,7 @@ export default function LandingPage() {
             className="space-y-8 text-center lg:text-left"
           >
             <h1 
-              className="text-5xl lg:text-7xl font-serif text-accent leading-[1.1] tracking-tight transform-gpu will-change-transform"
+              className="text-[clamp(3rem,9vw,5.5rem)] font-serif text-accent leading-[1.05] tracking-tight transform-gpu will-change-transform"
               style={{ filter: "url(#melt-hero)" }}
             >
               EL SABOR QUE <br/>
@@ -630,7 +630,7 @@ export default function LandingPage() {
           </motion.div>
 
           <motion.div 
-            className="flex flex-wrap justify-center gap-3 mt-10"
+            className="flex overflow-x-auto md:justify-center snap-x snap-mandatory hide-scrollbar gap-3 mt-10 pb-4 px-2"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -641,7 +641,7 @@ export default function LandingPage() {
                 key={category}
                 variants={fadeUp}
                 onClick={() => handleCategoryClick(category)}
-                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 flex-shrink-0 snap-center ${
                   activeCategory === category 
                     ? 'bg-foreground text-surface shadow-md scale-105'
                     : 'bg-surface-border/50 text-foreground/80 hover:bg-surface-border hover:text-foreground'
@@ -828,7 +828,8 @@ export default function LandingPage() {
             <h2 className="text-4xl md:text-5xl font-serif text-foreground font-bold mb-4 relative z-10">Lo que dicen nuestros clientes</h2>
             <p className="text-foreground/60 max-w-2xl mx-auto font-medium relative z-10">Cientos de familias ya disfrutan de la calidad de Avita. ¡Únete a ellos!</p>
           </motion.div>
-          <div className="grid md:grid-cols-3 gap-8">
+          
+          <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar pb-6 px-2 -mx-2 md:mx-0">
             {[
               { name: "María F.", text: "Los mejores waffles que he probado, la masa es súper crujiente y la atención de primera.", stars: 5 },
               { name: "Carlos J.", text: "El helado de pistacho es increíble, se nota que usan ingredientes reales y no saborizantes.", stars: 5 },
@@ -840,7 +841,7 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-background p-8 rounded-3xl border border-surface-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden"
+                className="bg-background p-8 rounded-3xl border border-surface-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex-shrink-0 w-[85vw] md:w-auto snap-center"
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-bl-full" />
                 <div className="flex text-yellow-400 mb-4 text-xl">
@@ -876,7 +877,7 @@ export default function LandingPage() {
             <div className="w-full max-w-5xl bg-white rounded-[2.5rem] p-4 md:p-6 shadow-2xl shadow-accent/5 border border-surface-border flex flex-col md:flex-row gap-4 md:gap-6">
               
               {/* MAPA */}
-              <div className="w-full md:w-3/5 h-[350px] md:h-[500px] rounded-[1.5rem] overflow-hidden relative group bg-surface">
+              <div className="w-full md:w-3/5 aspect-square md:aspect-auto md:h-[500px] rounded-[1.5rem] overflow-hidden relative group bg-surface">
                 <div className="absolute inset-0 bg-background/5 backdrop-blur-[1px] group-hover:opacity-0 transition-opacity duration-500 pointer-events-none z-10 flex items-center justify-center">
                   <span className="bg-foreground text-white text-sm font-bold px-5 py-2.5 rounded-full flex items-center gap-2 shadow-xl">
                     <MapPin className="w-4 h-4" /> Ver en Mapa
@@ -894,7 +895,7 @@ export default function LandingPage() {
               </div>
 
               {/* VIDEO COMO LLEGAR */}
-              <div className="w-full md:w-2/5 h-[400px] md:h-[500px] rounded-[1.5rem] overflow-hidden relative bg-black flex items-center justify-center group">
+              <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto md:h-[500px] rounded-[1.5rem] overflow-hidden relative bg-black flex items-center justify-center group">
                 <video 
                   src="/images/como_llegar.mp4" 
                   controls 
