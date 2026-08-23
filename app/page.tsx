@@ -686,7 +686,9 @@ export default function LandingPage() {
               </button>
             </div>
           </motion.div>
+        </div>
 
+        <div className="w-full relative">
           {viewMode === 'gallery' && (
             <>
               {/* Custom Scroll Progress Indicator */}
@@ -746,7 +748,7 @@ export default function LandingPage() {
           )}
 
           {viewMode === 'list' && (
-            <div className="max-w-5xl mx-auto mt-12 text-left space-y-16 pb-12">
+            <div className="max-w-5xl mx-auto mt-12 px-6 text-left space-y-16 pb-12">
               {MENU_CATEGORIES.filter(cat => cat !== "Todo").map(category => {
                 const itemsInCategory = filteredMenu.filter(item => item.category === category);
                 if (itemsInCategory.length === 0) return null;
