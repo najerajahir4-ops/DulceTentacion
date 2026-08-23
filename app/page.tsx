@@ -801,7 +801,7 @@ export default function LandingPage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="py-24 bg-surface relative z-10">
+      <section className="py-12 md:py-16 bg-surface relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -845,8 +845,38 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* LOCATION / UBICACION */}
+      <section id="ubicacion" className="py-12 md:py-16 bg-background relative z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col items-center text-center space-y-6">
+            <h2 className="text-3xl md:text-4xl font-serif text-foreground font-bold mb-2">Encuéntranos</h2>
+            <div className="flex items-center gap-2 font-medium bg-surface px-8 py-4 rounded-full border border-surface-border w-full max-w-lg justify-center shadow-sm">
+              <MapPin className="w-5 h-5 text-accent" />
+              Frente al Parque Helen Tenka
+            </div>
+            
+            <div className="w-full max-w-lg h-[250px] rounded-3xl overflow-hidden shadow-xl border border-surface-border relative group">
+              <div className="absolute inset-0 bg-background/10 backdrop-blur-[1px] group-hover:opacity-0 transition-opacity duration-300 pointer-events-none z-10 flex items-center justify-center">
+                <span className="bg-foreground text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
+                  <MapPin className="w-4 h-4" /> Ver en Mapa
+                </span>
+              </div>
+              <iframe 
+                src="https://maps.google.com/maps?q=Parque%20Helen%20Tenka&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen={false} 
+                loading="lazy" 
+                className="w-full h-full opacity-90 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-500"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FOOTER */}
-      <footer id="ubicacion" className="bg-foreground text-background pt-36 pb-12 relative z-10 overflow-hidden">
+      <footer className="bg-foreground text-background pt-16 pb-24 md:pb-12 relative z-10 overflow-hidden">
         {/* Drip Texture Background overlay */}
         <div 
           className="absolute inset-0 opacity-5 pointer-events-none"
@@ -866,31 +896,6 @@ export default function LandingPage() {
               height={80}
               className="h-12 md:h-16 w-auto object-contain"
             />
-            
-            <div className="flex flex-col items-center gap-4 w-full max-w-lg">
-              <div className="flex items-center gap-2 font-medium bg-background/10 backdrop-blur-sm px-8 py-4 rounded-full border border-white/10 w-full justify-center">
-                <MapPin className="w-5 h-5 text-accent" />
-                Frente al Parque Helen Tenka
-              </div>
-              
-              <div className="w-full h-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl relative group">
-                <div className="absolute inset-0 bg-background/20 backdrop-blur-[2px] group-hover:opacity-0 transition-opacity duration-300 pointer-events-none z-10 flex items-center justify-center">
-                  <span className="bg-foreground text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> Ver en Mapa
-                  </span>
-                </div>
-                <iframe 
-                  src="https://maps.google.com/maps?q=Parque%20Helen%20Tenka&t=&z=16&ie=UTF8&iwloc=&output=embed" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen={false} 
-                  loading="lazy" 
-                  className="w-full h-full opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-500"
-                />
-              </div>
-            </div>
-
             <div className="flex gap-6">
               <a href="https://www.instagram.com/avita_ice_cream/" target="_blank" rel="noopener noreferrer" className="p-4 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
                 <InstagramIcon className="w-6 h-6" />
@@ -908,6 +913,22 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* FLOATING MOBILE NAVIGATION INDEX */}
+      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-6 bg-background/90 backdrop-blur-md px-6 py-3 rounded-full border border-surface-border shadow-2xl">
+        <a href="#" className="flex flex-col items-center text-foreground hover:text-accent transition-colors">
+          <Heart className="w-5 h-5 mb-1" />
+          <span className="text-[10px] font-bold">Inicio</span>
+        </a>
+        <a href="#menu" className="flex flex-col items-center text-foreground hover:text-accent transition-colors">
+          <IceCream2 className="w-5 h-5 mb-1" />
+          <span className="text-[10px] font-bold">Menú</span>
+        </a>
+        <a href="#ubicacion" className="flex flex-col items-center text-foreground hover:text-accent transition-colors">
+          <MapPin className="w-5 h-5 mb-1" />
+          <span className="text-[10px] font-bold">Local</span>
+        </a>
+      </div>
     </main>
   );
 }
