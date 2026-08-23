@@ -12,7 +12,11 @@ export function CartSidebar({ whatsappNumber }: { whatsappNumber: string }) {
     
     let message = "Hola, quisiera hacer el siguiente pedido:\n\n";
     cartItems.forEach(item => {
-      message += `- ${item.quantity}x ${item.name} ($${(item.price * item.quantity).toFixed(2)})\n`;
+      let optionsStr = "";
+      if (item.options && Object.keys(item.options).length > 0) {
+        optionsStr = ` (${Object.entries(item.options).map(([k, v]) => `${v}`).join(", ")})`;
+      }
+      message += `- ${item.quantity}x ${item.name}${optionsStr} ($${(item.price * item.quantity).toFixed(2)})\n`;
     });
     message += `\n*Total a pagar: $${cartTotal.toFixed(2)}*`;
 
@@ -67,7 +71,7 @@ export function CartSidebar({ whatsappNumber }: { whatsappNumber: string }) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9 }}
-                    key={item.id} 
+                    key={item.cartItemId} 
                     className="flex gap-4 items-center bg-background p-4 rounded-2xl"
                   >
                     <div className="w-20 h-20 relative bg-surface rounded-xl overflow-hidden flex-shrink-0">
@@ -76,19 +80,26 @@ export function CartSidebar({ whatsappNumber }: { whatsappNumber: string }) {
                     
                     <div className="flex-1">
                       <h3 className="font-bold text-foreground line-clamp-1">{item.name}</h3>
+                      {item.options && (
+                        <div className="text-xs text-foreground/60 mt-0.5">
+                          {Object.entries(item.options).map(([key, value]) => (
+                            <span key={key} className="block">• {value}</span>
+                          ))}
+                        </div>
+                      )}
                       <div className="text-accent font-bold mt-1">${item.price.toFixed(2)}</div>
                       
                       <div className="flex items-center gap-3 mt-3">
                         <div className="flex items-center bg-surface rounded-full border border-surface-border">
                           <button 
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
                             className="w-8 h-8 flex items-center justify-center text-foreground hover:text-accent transition-colors"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
                           <span className="w-6 text-center font-medium text-sm">{item.quantity}</span>
                           <button 
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
                             className="w-8 h-8 flex items-center justify-center text-foreground hover:text-accent transition-colors"
                           >
                             <Plus className="w-4 h-4" />
@@ -96,7 +107,7 @@ export function CartSidebar({ whatsappNumber }: { whatsappNumber: string }) {
                         </div>
                         
                         <button 
-                          onClick={() => removeFromCart(item.id)}
+                          onClick={() => removeFromCart(item.cartItemId)}
                           className="p-2 text-foreground/40 hover:text-red-500 transition-colors ml-auto"
                         >
                           <Trash2 className="w-5 h-5" />

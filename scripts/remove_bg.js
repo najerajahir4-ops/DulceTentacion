@@ -6,18 +6,16 @@ const API_KEY = 'pCjJbv6ByAS5BhjBcWLimUFc';
 const imagesDir = path.join(__dirname, '..', 'public', 'images');
 
 const filesToProcess = [
-  'chocolate.jfif',
-  'crepe.jfif',
-  'frappe.jfif',
-  'saborfresa.jfif',
-  'vainilla.jfif',
-  'waffle.jfif'
+  'new_crepe.png',
+  'new_frappe.png',
+  'new_waffle.png',
+  'new_icecream.png'
 ];
 
 async function removeBackground(filename) {
   return new Promise((resolve, reject) => {
     const inputPath = path.join(imagesDir, filename);
-    const outputPath = path.join(imagesDir, filename.replace('.jfif', '-bgless.png'));
+    const outputPath = path.join(imagesDir, filename.replace('.png', '-bgless.png'));
 
     if (!fs.existsSync(inputPath)) {
       console.log(`Skipping ${filename} (not found)`);
@@ -27,7 +25,7 @@ async function removeBackground(filename) {
     const formData = require('child_process').execSync(
       `curl -s -X POST https://api.remove.bg/v1.0/removebg -H "X-Api-Key: ${API_KEY}" -F "image_file=@${inputPath}" -F "size=auto" --output "${outputPath}"`
     );
-    console.log(`Processed ${filename} -> ${filename.replace('.jfif', '-bgless.png')}`);
+    console.log(`Processed ${filename} -> ${filename.replace('.png', '-bgless.png')}`);
     resolve();
   });
 }

@@ -33,22 +33,38 @@ const MENU_CATEGORIES = ["Todo", "Helados Artesanales", "Waffles", "Frappés", "
 
 // We use local images interchangeably to guarantee they load and show the melt effect properly
 const MENU_ITEMS = [
-  { id: 1, name: "Helado de Frutos Rojos", category: "Helados Artesanales", description: "Cremoso helado artesanal con trozos de fresas y frambuesas naturales.", price: "$3.50", image: "/images/saborfresa-bgless.png", popular: true },
-  { id: 2, name: "Cono Doble Choco-Vainilla", category: "Helados Artesanales", description: "Clásico cono artesanal con chocolate belga y vainilla de Madagascar.", price: "$4.00", image: "/images/chocolate-bgless.png" },
+  // 10 Helados Artesanales
+  { id: 1, name: "Helado de Frutos Rojos", category: "Helados Artesanales", description: "Cremoso helado con trozos de fresas y frambuesas naturales.", price: "$3.50", image: "/images/saborfresa-bgless.png", popular: true },
+  { id: 2, name: "Cono Doble Choco-Vainilla", category: "Helados Artesanales", description: "Clásico cono con chocolate belga y vainilla.", price: "$4.00", image: "/images/chocolate-bgless.png" },
   { id: 3, name: "Copa Sundae Suprema", category: "Helados Artesanales", description: "Tres bolas de helado, crema chantilly, cereza y full sirope.", price: "$4.50", image: "/images/vainilla-bgless.png" },
   { id: 4, name: "Helado de Pistacho", category: "Helados Artesanales", description: "Pistachos reales italianos molidos en base de crema dulce.", price: "$3.75", image: "/images/vainilla-bgless.png" },
   { id: 5, name: "Cono Simple de Mora", category: "Helados Artesanales", description: "El clásico favorito, ácido y dulce a la vez.", price: "$2.50", image: "/images/saborfresa-bgless.png" },
   { id: 6, name: "Copa Banana Split", category: "Helados Artesanales", description: "Banana entera, tres sabores de helado, chispas y crema.", price: "$5.50", image: "/images/chocolate-bgless.png", popular: true },
   { id: 7, name: "Helado Ron Pasas", category: "Helados Artesanales", description: "Pasas maceradas en ron añejo con base de vainilla cremosa.", price: "$3.50", image: "/images/vainilla-bgless.png" },
   { id: 8, name: "Cono Waffle Gigante", category: "Helados Artesanales", description: "Cono de masa de waffle crujiente con dos bolas inmensas.", price: "$4.25", image: "/images/waffle-bgless.png" },
-  { id: 9, name: "Helado Menta Granizada", category: "Helados Artesanales", description: "Menta fresca con crujientes chispas de chocolate amargo.", price: "$3.50", image: "/images/chocolate-bgless.png" },
+  { id: 9, name: "Helado Menta Granizada", category: "Helados Artesanales", description: "Menta fresca con crujientes chispas de chocolate amargo.", price: "$3.50", image: "/images/new_icecream-bgless.png" },
   { id: 10, name: "Tarrina Familiar", category: "Helados Artesanales", description: "Un litro entero de tu sabor favorito para llevar a casa.", price: "$9.00", image: "/images/vainilla-bgless.png" },
-  { id: 11, name: "Waffle Supremo", category: "Waffles", description: "Waffle recién horneado con helado, fresas frescas y sirope de chocolate.", price: "$5.50", image: "/images/waffle-bgless.png", popular: true },
-  { id: 12, name: "Waffle Clásico", category: "Waffles", description: "Waffle crujiente con miel de maple y mantequilla.", price: "$3.50", image: "/images/waffle-bgless.png" },
-  { id: 13, name: "Frappé de Moka", category: "Frappés", description: "Café moka helado con crema batida y chispas de chocolate.", price: "$4.50", image: "/images/frappe-bgless.png", popular: true },
-  { id: 14, name: "Frappé de Fresa", category: "Frappés", description: "Batido refrescante de fresas naturales con crema.", price: "$4.00", image: "/images/frappe-bgless.png" },
-  { id: 15, name: "Crepe Nutella Fresas", category: "Crepes", description: "Crepe francés con abundante Nutella y fresas frescas.", price: "$4.50", image: "/images/crepe-bgless.png", popular: true },
-  { id: 16, name: "Crepe Salado Jamón Queso", category: "Crepes", description: "Crepe salado con jamón ahumado y queso derretido.", price: "$5.00", image: "/images/crepe-bgless.png" },
+  
+  // 3 Waffles
+  { id: 11, name: "Waffle Sencillo", category: "Waffles", description: "Waffle recién horneado con una bola de helado a elección.", price: "$3.50", image: "/images/waffle-bgless.png", hasOptions: true },
+  { id: 12, name: "Waffle Especial", category: "Waffles", description: "Waffle con fruta, helado y sirope.", price: "$4.50", image: "/images/new_waffle-bgless.png", popular: true, hasOptions: true },
+  { id: 13, name: "Waffle Supremo", category: "Waffles", description: "Doble porción de helado, doble fruta y extra crema.", price: "$6.00", image: "/images/waffle-bgless.png", hasOptions: true },
+
+  // 5 Frappés
+  { id: 14, name: "Frappé de Moka", category: "Frappés", description: "Café moka helado con crema batida y chispas.", price: "$4.50", image: "/images/frappe-bgless.png", popular: true },
+  { id: 15, name: "Frappé de Fresa", category: "Frappés", description: "Batido refrescante de fresas naturales con crema.", price: "$4.00", image: "/images/frappe-bgless.png" },
+  { id: 16, name: "Frappé de Caramelo", category: "Frappés", description: "Dulce caramelo fundido con café y crema.", price: "$4.75", image: "/images/new_frappe-bgless.png", popular: true },
+  { id: 17, name: "Frappé de Oreo", category: "Frappés", description: "Galletas Oreo trituradas con leche y vainilla.", price: "$4.50", image: "/images/frappe-bgless.png" },
+  { id: 18, name: "Frappé de Vainilla", category: "Frappés", description: "Clásico batido cremoso de vainilla.", price: "$3.75", image: "/images/frappe-bgless.png" },
+
+  // 7 Crepes
+  { id: 19, name: "Crepe Nutella Clásico", category: "Crepes", description: "Crepe francés con abundante Nutella.", price: "$3.50", image: "/images/crepe-bgless.png" },
+  { id: 20, name: "Crepe Frutos del Bosque", category: "Crepes", description: "Crepe relleno de fresas y chocolate, acompañado de helado.", price: "$4.50", image: "/images/new_crepe-bgless.png", popular: true, hasOptions: true },
+  { id: 21, name: "Crepe Tropical", category: "Crepes", description: "Crepe con banano, piña, lechera y coco rallado.", price: "$4.25", image: "/images/crepe-bgless.png", hasOptions: true },
+  { id: 22, name: "Crepe Dulce de Leche", category: "Crepes", description: "Abundante manjar (arequipe) con helado a elección.", price: "$4.00", image: "/images/crepe-bgless.png", hasOptions: true },
+  { id: 23, name: "Crepe Salado Jamón Queso", category: "Crepes", description: "Crepe salado con jamón ahumado y queso derretido.", price: "$5.00", image: "/images/crepe-bgless.png" },
+  { id: 24, name: "Crepe Salado Pollo", category: "Crepes", description: "Pollo con champiñones en salsa blanca.", price: "$5.50", image: "/images/crepe-bgless.png" },
+  { id: 25, name: "Crepe Mix Supreme", category: "Crepes", description: "Mitad Nutella, mitad Manjar, con 2 frutas y helado.", price: "$6.50", image: "/images/new_crepe-bgless.png", popular: true, hasOptions: true },
 ];
 
 const FEATURES = [
@@ -56,6 +72,70 @@ const FEATURES = [
   { icon: Leaf, title: "Ingredientes Frescos", desc: "Frutas naturales y lácteos de primera calidad." },
   { icon: Heart, title: "Hechos con Amor", desc: "El sabor que te hará volver por más." },
 ];
+
+// --- Components ---
+function CustomizationModal({ item, onClose, onConfirm }: { item: any, onClose: () => void, onConfirm: (options: Record<string, string>) => void }) {
+  const [fruta, setFruta] = useState("Fresa");
+  const [helado, setHelado] = useState("Vainilla");
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={onClose} />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 border border-surface-border z-10"
+      >
+        <h3 className="text-2xl font-serif font-bold text-accent mb-2">Personaliza tu pedido</h3>
+        <p className="text-foreground/70 mb-6 font-medium">{item.name}</p>
+
+        <div className="space-y-5">
+          <div>
+            <label className="block text-sm font-bold text-foreground mb-3">Elige tu Fruta</label>
+            <div className="grid grid-cols-3 gap-2">
+              {['Fresa', 'Banano', 'Mixto'].map(opt => (
+                <button
+                  key={opt}
+                  onClick={() => setFruta(opt)}
+                  className={`py-2 rounded-xl text-sm font-bold transition-all ${fruta === opt ? 'bg-accent text-white shadow-md' : 'bg-surface text-foreground/70 hover:bg-surface-border'}`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-bold text-foreground mb-3">Sabor de Helado</label>
+            <div className="grid grid-cols-2 gap-2">
+              {['Vainilla', 'Chocolate', 'Fresa', 'Ron Pasas'].map(opt => (
+                <button
+                  key={opt}
+                  onClick={() => setHelado(opt)}
+                  className={`py-2 rounded-xl text-sm font-bold transition-all ${helado === opt ? 'bg-accent text-white shadow-md' : 'bg-surface text-foreground/70 hover:bg-surface-border'}`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 flex gap-3">
+          <button onClick={onClose} className="flex-1 py-3 rounded-full font-bold text-foreground/60 bg-surface hover:bg-surface-border transition-colors">
+            Cancelar
+          </button>
+          <button 
+            onClick={() => onConfirm({ "Fruta": fruta, "Helado": helado })}
+            className="flex-1 py-3 rounded-full font-bold text-white bg-accent hover:bg-accent-hover shadow-lg shadow-accent/30 transition-all hover:-translate-y-1"
+          >
+            Agregar
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 
 // --- Animation Variants ---
 const staggerContainer: any = {
@@ -68,8 +148,7 @@ const fadeUp: any = {
 };
 
 // --- Melting Card Component ---
-function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: string }) {
-  const { addToCart } = useCart();
+function MeltingCard({ item, WHATSAPP_NUMBER, onAddToCart }: { item: any, WHATSAPP_NUMBER: string, onAddToCart: (item: any) => void }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const dispMapRef = useRef<SVGFEDisplacementMapElement>(null);
@@ -176,7 +255,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
             {item.price}
           </div>
           <button 
-            onClick={() => addToCart(item)}
+            onClick={() => onAddToCart(item)}
             className="inline-block w-full max-w-[160px] mx-auto py-3 bg-accent text-white rounded-full font-bold text-sm hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20 hover:-translate-y-1"
           >
             Agregar al Carrito
@@ -195,6 +274,7 @@ export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"gallery" | "list">("gallery");
+  const [selectedItemForOptions, setSelectedItemForOptions] = useState<any>(null);
   
   const [scrollProgress, setScrollProgress] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -327,8 +407,26 @@ export default function LandingPage() {
   const WHATSAPP_NUMBER = "593997338788";
   const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=Hola,%20quisiera%20más%20información%20sobre%20sus%20helados`;
 
+  const handleAddToCartClick = (item: any) => {
+    if (item.hasOptions) {
+      setSelectedItemForOptions(item);
+    } else {
+      addToCart(item);
+    }
+  };
+
   return (
     <main className="min-h-screen selection:bg-accent selection:text-white">
+      {selectedItemForOptions && (
+        <CustomizationModal 
+          item={selectedItemForOptions}
+          onClose={() => setSelectedItemForOptions(null)}
+          onConfirm={(options) => {
+            addToCart(selectedItemForOptions, options);
+            setSelectedItemForOptions(null);
+          }}
+        />
+      )}
       <CartSidebar whatsappNumber={WHATSAPP_NUMBER} />
       
       {/* NAVBAR */}
@@ -638,7 +736,7 @@ export default function LandingPage() {
                   className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto px-[7.5vw] md:px-[calc(50vw-200px)] pb-4 pt-4 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
                 >
                   {filteredMenu.map((item) => (
-                    <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} />
+                    <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} onAddToCart={handleAddToCartClick} />
                   ))}
                 </div>
               </div>
@@ -683,7 +781,7 @@ export default function LandingPage() {
                           </div>
                           
                           <button 
-                            onClick={() => addToCart(item)}
+                            onClick={() => handleAddToCartClick(item)}
                             className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-accent text-white flex items-center justify-center flex-shrink-0 shadow-md hover:bg-accent-hover hover:scale-110 transition-all mr-1 md:mr-2"
                             aria-label="Agregar"
                           >
