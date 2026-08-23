@@ -12,37 +12,41 @@ import {
   Milk,
   Cookie,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Search,
+  ShoppingCart
 } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { DripDivider } from "@/components/ui/DripDivider";
+import { useCart } from "@/components/CartContext";
+import { CartSidebar } from "@/components/ui/CartSidebar";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
 }
 
 // --- Mock Data ---
-const MENU_CATEGORIES = ["Helados Artesanales", "Waffles", "Frappés", "Crepes"];
+const MENU_CATEGORIES = ["Todo", "Helados Artesanales", "Waffles", "Frappés", "Crepes"];
 
 // We use local images interchangeably to guarantee they load and show the melt effect properly
 const MENU_ITEMS = [
-  { id: 1, name: "Helado de Frutos Rojos", category: "Helados Artesanales", description: "Cremoso helado artesanal con trozos de fresas y frambuesas naturales.", price: "$3.50", image: "/images/concepto-plato.png" },
-  { id: 2, name: "Cono Doble Choco-Vainilla", category: "Helados Artesanales", description: "Clásico cono artesanal con chocolate belga y vainilla de Madagascar.", price: "$4.00", image: "/images/hero-bg.png" },
-  { id: 3, name: "Copa Sundae Suprema", category: "Helados Artesanales", description: "Tres bolas de helado, crema chantilly, cereza y full sirope.", price: "$4.50", image: "/images/concepto-plato.png" },
-  { id: 4, name: "Helado de Pistacho", category: "Helados Artesanales", description: "Pistachos reales italianos molidos en base de crema dulce.", price: "$3.75", image: "/images/hero-bg.png" },
-  { id: 5, name: "Cono Simple de Mora", category: "Helados Artesanales", description: "El clásico favorito, ácido y dulce a la vez.", price: "$2.50", image: "/images/concepto-plato.png" },
-  { id: 6, name: "Copa Banana Split", category: "Helados Artesanales", description: "Banana entera, tres sabores de helado, chispas y crema.", price: "$5.50", image: "/images/hero-bg.png" },
-  { id: 7, name: "Helado Ron Pasas", category: "Helados Artesanales", description: "Pasas maceradas en ron añejo con base de vainilla cremosa.", price: "$3.50", image: "/images/concepto-plato.png" },
-  { id: 8, name: "Cono Waffle Gigante", category: "Helados Artesanales", description: "Cono de masa de waffle crujiente con dos bolas inmensas.", price: "$4.25", image: "/images/hero-bg.png" },
-  { id: 9, name: "Helado Menta Granizada", category: "Helados Artesanales", description: "Menta fresca con crujientes chispas de chocolate amargo.", price: "$3.50", image: "/images/concepto-plato.png" },
-  { id: 10, name: "Tarrina Familiar", category: "Helados Artesanales", description: "Un litro entero de tu sabor favorito para llevar a casa.", price: "$9.00", image: "/images/hero-bg.png" },
-  { id: 11, name: "Waffle Supremo", category: "Waffles", description: "Waffle recién horneado con helado, fresas frescas y sirope de chocolate.", price: "$5.50", image: "/images/concepto-plato.png" },
-  { id: 12, name: "Waffle Clásico", category: "Waffles", description: "Waffle crujiente con miel de maple y mantequilla.", price: "$3.50", image: "/images/hero-bg.png" },
-  { id: 13, name: "Frappé de Moka", category: "Frappés", description: "Café moka helado con crema batida y chispas de chocolate.", price: "$4.50", image: "/images/concepto-plato.png" },
-  { id: 14, name: "Frappé de Fresa", category: "Frappés", description: "Batido refrescante de fresas naturales con crema.", price: "$4.00", image: "/images/hero-bg.png" },
-  { id: 15, name: "Crepe Nutella Fresas", category: "Crepes", description: "Crepe francés con abundante Nutella y fresas frescas.", price: "$4.50", image: "/images/concepto-plato.png" },
-  { id: 16, name: "Crepe Salado Jamón Queso", category: "Crepes", description: "Crepe salado con jamón ahumado y queso derretido.", price: "$5.00", image: "/images/hero-bg.png" },
+  { id: 1, name: "Helado de Frutos Rojos", category: "Helados Artesanales", description: "Cremoso helado artesanal con trozos de fresas y frambuesas naturales.", price: "$3.50", image: "/images/saborfresa-bgless.png", popular: true },
+  { id: 2, name: "Cono Doble Choco-Vainilla", category: "Helados Artesanales", description: "Clásico cono artesanal con chocolate belga y vainilla de Madagascar.", price: "$4.00", image: "/images/chocolate-bgless.png" },
+  { id: 3, name: "Copa Sundae Suprema", category: "Helados Artesanales", description: "Tres bolas de helado, crema chantilly, cereza y full sirope.", price: "$4.50", image: "/images/vainilla-bgless.png" },
+  { id: 4, name: "Helado de Pistacho", category: "Helados Artesanales", description: "Pistachos reales italianos molidos en base de crema dulce.", price: "$3.75", image: "/images/vainilla-bgless.png" },
+  { id: 5, name: "Cono Simple de Mora", category: "Helados Artesanales", description: "El clásico favorito, ácido y dulce a la vez.", price: "$2.50", image: "/images/saborfresa-bgless.png" },
+  { id: 6, name: "Copa Banana Split", category: "Helados Artesanales", description: "Banana entera, tres sabores de helado, chispas y crema.", price: "$5.50", image: "/images/chocolate-bgless.png", popular: true },
+  { id: 7, name: "Helado Ron Pasas", category: "Helados Artesanales", description: "Pasas maceradas en ron añejo con base de vainilla cremosa.", price: "$3.50", image: "/images/vainilla-bgless.png" },
+  { id: 8, name: "Cono Waffle Gigante", category: "Helados Artesanales", description: "Cono de masa de waffle crujiente con dos bolas inmensas.", price: "$4.25", image: "/images/waffle-bgless.png" },
+  { id: 9, name: "Helado Menta Granizada", category: "Helados Artesanales", description: "Menta fresca con crujientes chispas de chocolate amargo.", price: "$3.50", image: "/images/chocolate-bgless.png" },
+  { id: 10, name: "Tarrina Familiar", category: "Helados Artesanales", description: "Un litro entero de tu sabor favorito para llevar a casa.", price: "$9.00", image: "/images/vainilla-bgless.png" },
+  { id: 11, name: "Waffle Supremo", category: "Waffles", description: "Waffle recién horneado con helado, fresas frescas y sirope de chocolate.", price: "$5.50", image: "/images/waffle-bgless.png", popular: true },
+  { id: 12, name: "Waffle Clásico", category: "Waffles", description: "Waffle crujiente con miel de maple y mantequilla.", price: "$3.50", image: "/images/waffle-bgless.png" },
+  { id: 13, name: "Frappé de Moka", category: "Frappés", description: "Café moka helado con crema batida y chispas de chocolate.", price: "$4.50", image: "/images/frappe-bgless.png", popular: true },
+  { id: 14, name: "Frappé de Fresa", category: "Frappés", description: "Batido refrescante de fresas naturales con crema.", price: "$4.00", image: "/images/frappe-bgless.png" },
+  { id: 15, name: "Crepe Nutella Fresas", category: "Crepes", description: "Crepe francés con abundante Nutella y fresas frescas.", price: "$4.50", image: "/images/crepe-bgless.png", popular: true },
+  { id: 16, name: "Crepe Salado Jamón Queso", category: "Crepes", description: "Crepe salado con jamón ahumado y queso derretido.", price: "$5.00", image: "/images/crepe-bgless.png" },
 ];
 
 const FEATURES = [
@@ -63,6 +67,7 @@ const fadeUp: any = {
 
 // --- Melting Card Component ---
 function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: string }) {
+  const { addToCart } = useCart();
   const cardRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const dispMapRef = useRef<SVGFEDisplacementMapElement>(null);
@@ -126,7 +131,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
   }, [item.id]);
 
   return (
-    <div className="shrink-0 w-[85vw] md:w-[400px] h-auto snap-center relative py-12">
+    <div className="shrink-0 w-[85vw] md:w-[400px] h-auto snap-center relative py-4">
       <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
         <filter id={`melt-${item.id}`} x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" result="warp" />
@@ -146,6 +151,11 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
         className="bg-transparent flex flex-col h-full transform-gpu will-change-transform items-center"
       >
         <div className="relative w-full h-[300px] flex items-center justify-center p-4">
+          {item.popular && (
+            <div className="absolute top-0 right-4 md:right-8 z-10 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 tracking-wider uppercase border border-yellow-200">
+              ⭐ Más Vendido
+            </div>
+          )}
           <img 
             ref={imgRef}
             src={item.image} 
@@ -163,14 +173,12 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
           <div className="text-3xl font-serif text-foreground font-bold mb-6">
             {item.price}
           </div>
-          <a 
-            href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola,%20quisiera%20pedir%20un%20${encodeURIComponent(item.name)}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button 
+            onClick={() => addToCart(item)}
             className="inline-block w-full max-w-[200px] mx-auto py-4 bg-accent text-white rounded-full font-bold hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20 hover:-translate-y-1"
           >
-            Comprar
-          </a>
+            Agregar al Carrito
+          </button>
         </div>
       </div>
     </div>
@@ -178,11 +186,23 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
 }
 
 export default function LandingPage() {
-  const [activeCategory, setActiveCategory] = useState("Helados Artesanales");
+  const { cartCount, toggleCart } = useCart();
+  const [activeCategory, setActiveCategory] = useState("Todo");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [shuffledMenu, setShuffledMenu] = useState(MENU_ITEMS);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   
   const [scrollProgress, setScrollProgress] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
+  
+  // Reset scroll on filter change
+  useEffect(() => {
+    if (galleryRef.current) {
+      galleryRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+    }
+    setScrollProgress(0);
+  }, [activeCategory, searchQuery]);
   
   // Custom progress bar logic
   const handleGalleryScroll = useCallback(() => {
@@ -206,11 +226,18 @@ export default function LandingPage() {
   });
 
   useEffect(() => {
+    // Initial random shuffle on client
+    setShuffledMenu([...MENU_ITEMS].sort(() => Math.random() - 0.5));
+
     // Force scroll to top on reload
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
     window.scrollTo(0, 0);
+    if (galleryRef.current) {
+      galleryRef.current.scrollLeft = 0;
+      setScrollProgress(0);
+    }
 
     // Initial check for navbar
     setIsScrolled(window.scrollY > 20);
@@ -219,7 +246,19 @@ export default function LandingPage() {
       setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // Check Open Status (2 PM to 10 PM)
+    const checkOpenStatus = () => {
+      const hour = new Date().getHours();
+      setIsOpen(hour >= 14 && hour < 22);
+    };
+    checkOpenStatus();
+    const interval = setInterval(checkOpenStatus, 60000);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearInterval(interval);
+    };
   }, []);
 
   // React state for Dragging
@@ -268,13 +307,26 @@ export default function LandingPage() {
     }
   };
 
-  const filteredMenu = MENU_ITEMS.filter(item => item.category === activeCategory);
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category);
+    if (category === "Todo") {
+      setShuffledMenu([...MENU_ITEMS].sort(() => Math.random() - 0.5));
+    }
+  };
+
+  const filteredMenu = shuffledMenu.filter(item => {
+    const matchesCategory = activeCategory === "Todo" || item.category === activeCategory;
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const WHATSAPP_NUMBER = "593997338788";
   const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=Hola,%20quisiera%20más%20información%20sobre%20sus%20helados`;
 
   return (
     <main className="min-h-screen selection:bg-accent selection:text-white">
+      <CartSidebar whatsappNumber={WHATSAPP_NUMBER} />
       
       {/* NAVBAR */}
       <nav 
@@ -310,6 +362,13 @@ export default function LandingPage() {
           
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface/80 border border-surface-border text-xs font-bold mr-2 text-foreground/80 shadow-sm">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isOpen ? 'bg-green-400' : 'bg-red-400'}`}></span>
+                  <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isOpen ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                </span>
+                {isOpen ? 'Abierto Ahora' : 'Cerrado'}
+              </div>
               <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="p-2 bg-surface rounded-full text-foreground hover:text-white hover:bg-accent transition-colors">
                 <FacebookIcon className="w-4 h-4" />
               </a>
@@ -320,14 +379,17 @@ export default function LandingPage() {
                 <TikTokIcon className="w-4 h-4" />
               </a>
             </div>
-            <a 
-              href={WHATSAPP_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 bg-accent text-white rounded-full font-bold hover:bg-accent-hover transition-colors shadow-md shadow-accent/20 hover:shadow-lg hover:shadow-accent/40 hover:-translate-y-0.5 duration-300"
+            <button 
+              onClick={toggleCart}
+              className="relative p-3 bg-accent text-white rounded-full hover:bg-accent-hover transition-colors shadow-md shadow-accent/20 hover:shadow-lg hover:shadow-accent/40 hover:-translate-y-0.5 duration-300"
             >
-              Pedir Ahora
-            </a>
+              <ShoppingCart className="w-6 h-6" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-foreground text-surface text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                  {cartCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       </nav>
@@ -399,13 +461,15 @@ export default function LandingPage() {
             className="relative"
           >
             <div className="relative w-full aspect-square max-w-lg mx-auto">
+              {/* Sombra base */}
+              <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 w-[55%] h-[8%] bg-black/25 rounded-[100%] blur-xl z-0 pointer-events-none" />
               <Image 
-                src="/images/hero-bg.png" 
+                src="/images/helado_transparente.png" 
                 unoptimized
-                alt="Helado Artesanal Avita" 
+                alt="Helado en Vaso" 
                 fill
                 priority
-                className="object-contain drop-shadow-2xl"
+                className="object-contain drop-shadow-[0_20px_30px_rgba(122,22,32,0.3)] relative z-10"
               />
             </div>
           </motion.div>
@@ -415,7 +479,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section id="nosotros" className="py-24 bg-surface relative z-30 scroll-mt-24">
+      <section id="nosotros" className="pt-24 pb-8 bg-surface relative z-30 scroll-mt-24">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div 
             className="grid md:grid-cols-3 gap-12"
@@ -445,7 +509,7 @@ export default function LandingPage() {
       </section>
 
       {/* MENU / MELTING GALLERY */}
-      <section className="pt-32 pb-12 bg-surface relative z-20">
+      <section className="pt-8 pb-12 bg-surface relative z-20">
         <div id="menu" className="max-w-7xl mx-auto px-6 mb-16 text-center scroll-mt-28">
           <motion.div 
             className="space-y-4"
@@ -473,7 +537,7 @@ export default function LandingPage() {
               <motion.button
                 key={category}
                 variants={fadeUp}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => handleCategoryClick(category)}
                 className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
                   activeCategory === category 
                     ? 'bg-foreground text-surface shadow-md scale-105'
@@ -484,6 +548,43 @@ export default function LandingPage() {
               </motion.button>
             ))}
           </motion.div>
+
+          {/* Search Bar */}
+          <motion.div 
+            className="mt-8 max-w-md mx-auto relative"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <div className="relative flex items-center">
+              <Search className="absolute left-4 w-5 h-5 text-foreground/50" />
+              <input 
+                type="text" 
+                placeholder="Busca tu postre favorito..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-white/50 backdrop-blur-sm border border-surface-border rounded-full text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-sm"
+              />
+            </div>
+          </motion.div>
+
+          {/* Custom Scroll Progress Indicator */}
+          <motion.div 
+            className="max-w-xs mx-auto mt-8 flex items-center justify-center gap-4"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <div className="text-[10px] font-bold text-foreground/40 uppercase tracking-[0.2em]">Desliza</div>
+            <div className="flex-1 bg-foreground/5 rounded-full h-1.5 relative overflow-hidden">
+              <div 
+                className="absolute top-0 left-0 h-full w-1/4 bg-accent rounded-full transition-transform duration-75 ease-out shadow-sm shadow-accent/50" 
+                style={{ transform: `translateX(${scrollProgress * 300}%)` }} 
+              />
+            </div>
+          </motion.div>
         </div>
 
         {/* Horizontal/Vertical Drag Gallery Container */}
@@ -491,7 +592,7 @@ export default function LandingPage() {
           {/* Left Arrow */}
           <button 
             onClick={() => scrollGallery('left')}
-            className="absolute left-4 md:left-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
+            className="hidden md:block absolute left-4 md:left-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
             aria-label="Anterior"
           >
             <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
@@ -500,7 +601,7 @@ export default function LandingPage() {
           {/* Right Arrow */}
           <button 
             onClick={() => scrollGallery('right')}
-            className="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all opacity-80 md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
+            className="hidden md:block absolute right-4 md:right-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
             aria-label="Siguiente"
           >
             <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
@@ -513,7 +614,7 @@ export default function LandingPage() {
             onMouseLeave={handleMouseLeave}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
-            className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto px-[7.5vw] md:px-[calc(50vw-200px)] pb-4 pt-10 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
+            className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto px-[7.5vw] md:px-[calc(50vw-200px)] pb-4 pt-4 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
           >
             {filteredMenu.map((item) => (
               <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} />
@@ -522,6 +623,51 @@ export default function LandingPage() {
         </div>
 
         <DripDivider color="var(--surface)" position="bottom" />
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="py-24 bg-surface relative z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-serif text-foreground font-bold mb-4">Lo que dicen nuestros clientes</h2>
+            <p className="text-foreground/60 max-w-2xl mx-auto font-medium">Cientos de familias ya disfrutan de la calidad de Avita. ¡Únete a ellos!</p>
+          </motion.div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { name: "María F.", text: "Los mejores waffles que he probado, la masa es súper crujiente y la atención de primera.", stars: 5 },
+              { name: "Carlos J.", text: "El helado de pistacho es increíble, se nota que usan ingredientes reales y no saborizantes.", stars: 5 },
+              { name: "Ana P.", text: "Pedimos siempre por WhatsApp y llega perfecto. El empaque mantiene el helado intacto.", stars: 5 }
+            ].map((testimonio, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-background p-8 rounded-3xl border border-surface-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-bl-full" />
+                <div className="flex text-yellow-400 mb-4 text-xl">
+                  {[...Array(testimonio.stars)].map((_, j) => (
+                    <span key={j}>★</span>
+                  ))}
+                </div>
+                <p className="text-foreground/80 italic mb-6 leading-relaxed">"{testimonio.text}"</p>
+                <div className="font-bold text-foreground flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent">
+                    {testimonio.name.charAt(0)}
+                  </div>
+                  {testimonio.name}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* FOOTER */}
@@ -546,9 +692,28 @@ export default function LandingPage() {
               className="h-12 md:h-16 w-auto object-contain"
             />
             
-            <div className="flex items-center gap-2 font-medium bg-background/10 backdrop-blur-sm px-8 py-4 rounded-full border border-white/10">
-              <MapPin className="w-5 h-5 text-accent" />
-              Frente al Parque Helen Tenka
+            <div className="flex flex-col items-center gap-4 w-full max-w-lg">
+              <div className="flex items-center gap-2 font-medium bg-background/10 backdrop-blur-sm px-8 py-4 rounded-full border border-white/10 w-full justify-center">
+                <MapPin className="w-5 h-5 text-accent" />
+                Frente al Parque Helen Tenka
+              </div>
+              
+              <div className="w-full h-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl relative group">
+                <div className="absolute inset-0 bg-background/20 backdrop-blur-[2px] group-hover:opacity-0 transition-opacity duration-300 pointer-events-none z-10 flex items-center justify-center">
+                  <span className="bg-foreground text-white text-xs font-bold px-4 py-2 rounded-full flex items-center gap-2">
+                    <MapPin className="w-4 h-4" /> Ver en Mapa
+                  </span>
+                </div>
+                <iframe 
+                  src="https://maps.google.com/maps?q=Parque%20Helen%20Tenka&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen={false} 
+                  loading="lazy" 
+                  className="w-full h-full opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0 transition-all duration-500"
+                />
+              </div>
             </div>
 
             <div className="flex gap-6">
