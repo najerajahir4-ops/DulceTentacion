@@ -876,7 +876,7 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-foreground text-background pt-8 pb-20 md:pb-8 relative z-10 overflow-hidden">
+      <footer className="bg-foreground text-background py-8 relative z-10 overflow-hidden">
         {/* Drip Texture Background overlay */}
         <div 
           className="absolute inset-0 opacity-5 pointer-events-none"
@@ -887,7 +887,7 @@ export default function LandingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="flex flex-col items-center text-center space-y-6">
+          <div className="flex flex-col items-center text-center space-y-4">
             <Image 
               src="/images/logo-transparent.png" 
               unoptimized
@@ -897,15 +897,22 @@ export default function LandingPage() {
               className="h-12 md:h-16 w-auto object-contain"
             />
             <div className="flex gap-4">
-              <a href="https://www.instagram.com/avita_ice_cream/" target="_blank" rel="noopener noreferrer" className="p-3 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
+              <a href="https://www.instagram.com/avita_ice_cream/" target="_blank" rel="noopener noreferrer" className="p-2 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
                 <InstagramIcon className="w-5 h-5" />
               </a>
-              <a href="https://www.tiktok.com/@heladeriaavita" target="_blank" rel="noopener noreferrer" className="p-3 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
+              <a href="https://www.tiktok.com/@heladeriaavita" target="_blank" rel="noopener noreferrer" className="p-2 bg-background/10 backdrop-blur-sm border border-white/10 rounded-full hover:bg-accent transition-colors">
                 <TikTokIcon className="w-5 h-5" />
               </a>
             </div>
 
-            <div className="w-full h-px bg-white/10 max-w-lg mx-auto my-4" />
+            {/* ÍNDICE DE NAVEGACIÓN EN FOOTER */}
+            <div className="flex items-center gap-6 text-sm font-bold mt-2">
+              <a href="#" className="hover:text-accent transition-colors">Inicio</a>
+              <a href="#menu" className="hover:text-accent transition-colors">Menú</a>
+              <a href="#ubicacion" className="hover:text-accent transition-colors">Ubicación</a>
+            </div>
+
+            <div className="w-full h-px bg-white/10 max-w-lg mx-auto my-2" />
 
             <p className="text-sm text-background/50 font-medium font-sans">
               &copy; {new Date().getFullYear()} Avita Ice Cream & Waffles. Todos los derechos reservados.
@@ -914,8 +921,8 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* FLOATING MOBILE NAVIGATION INDEX */}
-      <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-6 bg-background/90 backdrop-blur-md px-6 py-3 rounded-full border border-surface-border shadow-2xl">
+      {/* FLOATING NAVIGATION INDEX (Visible en todas las pantallas) */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-6 bg-background/90 backdrop-blur-md px-6 py-3 rounded-full border border-surface-border shadow-2xl">
         <a href="#" className="flex flex-col items-center text-foreground hover:text-accent transition-colors">
           <Heart className="w-5 h-5 mb-1" />
           <span className="text-[10px] font-bold">Inicio</span>
