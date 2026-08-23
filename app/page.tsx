@@ -827,35 +827,50 @@ export default function LandingPage() {
             <p className="text-foreground/60 max-w-2xl mx-auto font-medium relative z-10">Cientos de familias ya disfrutan de la calidad de Avita. ¡Únete a ellos!</p>
           </motion.div>
           
-          <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar pb-6 px-2 -mx-2 md:mx-0">
-            {[
-              { name: "María F.", text: "Los mejores waffles que he probado, la masa es súper crujiente y la atención de primera.", stars: 5 },
-              { name: "Carlos J.", text: "El helado de pistacho es increíble, se nota que usan ingredientes reales y no saborizantes.", stars: 5 },
-              { name: "Ana P.", text: "Pedimos siempre por WhatsApp y llega perfecto. El empaque mantiene el helado intacto.", stars: 5 }
-            ].map((testimonio, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-background p-8 rounded-3xl border border-surface-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex-shrink-0 w-[85vw] md:w-auto snap-center"
-              >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-bl-full" />
-                <div className="flex text-yellow-400 mb-4 text-xl">
-                  {[...Array(testimonio.stars)].map((_, j) => (
-                    <span key={j}>★</span>
-                  ))}
-                </div>
-                <p className="text-foreground/80 italic mb-6 leading-relaxed">"{testimonio.text}"</p>
-                <div className="font-bold text-foreground flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent">
-                    {testimonio.name.charAt(0)}
+          <div className="relative overflow-hidden w-full py-4">
+            {/* Fade Edges */}
+            <div className="absolute inset-y-0 left-0 w-12 md:w-32 bg-gradient-to-r from-surface to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-12 md:w-32 bg-gradient-to-l from-surface to-transparent z-10 pointer-events-none" />
+            
+            <motion.div 
+              className="flex w-max gap-6 md:gap-8 cursor-grab active:cursor-grabbing hover:[animation-play-state:paused]"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ ease: "linear", duration: 40, repeat: Infinity }}
+            >
+              {[
+                { name: "María F.", text: "Los mejores waffles que he probado, la masa es súper crujiente y la atención de primera.", stars: 5 },
+                { name: "Carlos J.", text: "El helado de pistacho es increíble, se nota que usan ingredientes reales y no saborizantes.", stars: 5 },
+                { name: "Ana P.", text: "Pedimos siempre por WhatsApp y llega perfecto. El empaque mantiene el helado intacto.", stars: 5 },
+                { name: "María F.", text: "Los mejores waffles que he probado, la masa es súper crujiente y la atención de primera.", stars: 5 },
+                { name: "Carlos J.", text: "El helado de pistacho es increíble, se nota que usan ingredientes reales y no saborizantes.", stars: 5 },
+                { name: "Ana P.", text: "Pedimos siempre por WhatsApp y llega perfecto. El empaque mantiene el helado intacto.", stars: 5 },
+                { name: "María F.", text: "Los mejores waffles que he probado, la masa es súper crujiente y la atención de primera.", stars: 5 },
+                { name: "Carlos J.", text: "El helado de pistacho es increíble, se nota que usan ingredientes reales y no saborizantes.", stars: 5 },
+                { name: "Ana P.", text: "Pedimos siempre por WhatsApp y llega perfecto. El empaque mantiene el helado intacto.", stars: 5 },
+                { name: "María F.", text: "Los mejores waffles que he probado, la masa es súper crujiente y la atención de primera.", stars: 5 },
+                { name: "Carlos J.", text: "El helado de pistacho es increíble, se nota que usan ingredientes reales y no saborizantes.", stars: 5 },
+                { name: "Ana P.", text: "Pedimos siempre por WhatsApp y llega perfecto. El empaque mantiene el helado intacto.", stars: 5 }
+              ].map((testimonio, i) => (
+                <div 
+                  key={i}
+                  className="bg-background p-8 rounded-3xl border border-surface-border shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex-shrink-0 w-[85vw] md:w-[400px]"
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-bl-full" />
+                  <div className="flex text-yellow-400 mb-4 text-xl">
+                    {[...Array(testimonio.stars)].map((_, j) => (
+                      <span key={j}>★</span>
+                    ))}
                   </div>
-                  {testimonio.name}
+                  <p className="text-foreground/80 italic mb-6 leading-relaxed">"{testimonio.text}"</p>
+                  <div className="font-bold text-foreground flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent">
+                      {testimonio.name.charAt(0)}
+                    </div>
+                    {testimonio.name}
+                  </div>
                 </div>
-              </motion.div>
-            ))}
+              ))}
+            </motion.div>
           </div>
         </div>
 
