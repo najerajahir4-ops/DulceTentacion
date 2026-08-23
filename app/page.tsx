@@ -281,6 +281,13 @@ export default function LandingPage() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
   
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const handleHeroVideoTimeUpdate = useCallback(() => {
+    if (heroVideoRef.current && heroVideoRef.current.currentTime >= 30) {
+      heroVideoRef.current.currentTime = 24;
+    }
+  }, []);
+  
   // Reset scroll on filter change
   useEffect(() => {
     if (galleryRef.current) {
@@ -500,6 +507,21 @@ export default function LandingPage() {
       {/* HERO SECTION */}
       <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 bg-background z-40 overflow-hidden">
         
+        {/* Background Video (Store Interior) */}
+        <div className="absolute inset-0 z-0 overflow-hidden opacity-10 pointer-events-none">
+          <video 
+            ref={heroVideoRef}
+            src="/images/como_llegar.mp4#t=24"
+            autoPlay 
+            muted 
+            playsInline 
+            onTimeUpdate={handleHeroVideoTimeUpdate}
+            className="w-full h-full object-cover grayscale blur-[2px]"
+          />
+          {/* Tint overlay */}
+          <div className="absolute inset-0 bg-background/60" />
+        </div>
+
         {/* Animated Background Blobs (Melt System Aura) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <motion.div 
