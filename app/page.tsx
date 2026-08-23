@@ -516,7 +516,7 @@ export default function LandingPage() {
             muted 
             playsInline 
             onTimeUpdate={handleHeroVideoTimeUpdate}
-            className="w-full h-full object-cover grayscale blur-[2px]"
+            className="w-full h-full object-cover blur-[30px] opacity-40 scale-110"
           />
           {/* Tint overlay */}
           <div className="absolute inset-0 bg-background/60" />
