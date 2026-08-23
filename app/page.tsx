@@ -16,7 +16,9 @@ import {
   Search,
   ShoppingCart,
   LayoutGrid,
-  List as ListIcon
+  List as ListIcon,
+  Star,
+  Sparkles
 } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -496,8 +498,19 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 bg-background z-40">
+      <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-48 bg-background z-40 overflow-hidden">
         
+        {/* BACKGROUND DOODLES */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.03] text-foreground">
+          <IceCream2 className="absolute top-[10%] left-[5%] w-24 h-24 -rotate-12" />
+          <Cherry className="absolute top-[20%] right-[10%] w-16 h-16 rotate-45" />
+          <Cookie className="absolute bottom-[30%] left-[15%] w-20 h-20 rotate-12" />
+          <Sparkles className="absolute top-[40%] left-[40%] w-12 h-12" />
+          <Star className="absolute bottom-[20%] right-[20%] w-16 h-16 -rotate-12" />
+          <Heart className="absolute top-[15%] left-[60%] w-14 h-14 rotate-12" />
+          <Leaf className="absolute bottom-[10%] left-[50%] w-20 h-20 -rotate-45" />
+        </div>
+
         {/* Animated Background Blobs (Melt System Aura) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <motion.div 
@@ -581,8 +594,19 @@ export default function LandingPage() {
 
 
       {/* MENU / MELTING GALLERY */}
-      <section className="pt-8 pb-12 bg-surface relative z-20">
-        <div id="menu" className="max-w-7xl mx-auto px-6 mb-16 text-center scroll-mt-28">
+      <section className="pt-8 pb-12 bg-surface relative z-20 overflow-hidden">
+        
+        {/* BACKGROUND DOODLES (MENU) */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.03] text-foreground">
+          <IceCream2 className="absolute top-[5%] right-[5%] w-32 h-32 rotate-12" />
+          <Cookie className="absolute top-[30%] left-[8%] w-24 h-24 -rotate-12" />
+          <Cherry className="absolute bottom-[20%] right-[15%] w-20 h-20 -rotate-45" />
+          <Star className="absolute top-[15%] left-[20%] w-16 h-16 rotate-45" />
+          <Sparkles className="absolute bottom-[40%] left-[5%] w-12 h-12" />
+          <Heart className="absolute top-[40%] right-[30%] w-16 h-16 -rotate-12" />
+        </div>
+
+        <div id="menu" className="max-w-7xl mx-auto px-6 mb-16 text-center scroll-mt-28 relative z-10">
           <motion.div 
             className="space-y-4"
             initial="hidden"
