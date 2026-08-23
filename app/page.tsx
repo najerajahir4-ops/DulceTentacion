@@ -876,16 +876,16 @@ export default function LandingPage() {
       </section>
 
       {/* INFINITE MARQUEE DIVIDER */}
-      <div className="bg-accent text-white py-4 md:py-6 overflow-hidden relative z-40 shadow-[0_10px_30px_rgba(122,22,32,0.15)] flex whitespace-nowrap border-y border-white/10">
+      <div className="bg-accent text-white py-2 md:py-3 overflow-hidden relative z-40 shadow-[0_5px_15px_rgba(122,22,32,0.1)] flex whitespace-nowrap border-y border-white/10">
         <motion.div 
-          className="flex gap-8 md:gap-12 items-center w-max pr-8 md:pr-12 font-serif text-lg md:text-2xl tracking-[0.2em] font-semibold"
+          className="flex gap-8 md:gap-12 items-center w-max pr-8 md:pr-12 font-serif text-sm md:text-base tracking-[0.2em] font-semibold"
           animate={{ x: ["0%", "-50%"] }}
           transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
         >
           {Array.from({ length: 16 }).map((_, i) => (
             <div key={i} className="flex items-center gap-8 md:gap-12">
               <span>EL SABOR QUE TE HARÁ VOLVER</span>
-              <span className="text-[#E6C687] text-sm md:text-base">✦</span>
+              <span className="text-[#E6C687] text-xs md:text-sm">✦</span>
             </div>
           ))}
         </motion.div>
