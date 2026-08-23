@@ -131,7 +131,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
   }, [item.id]);
 
   return (
-    <div className="shrink-0 w-[85vw] md:w-[400px] h-auto snap-center relative py-4">
+    <div className="shrink-0 w-[75vw] md:w-[280px] h-auto snap-center relative py-4">
       <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
         <filter id={`melt-${item.id}`} x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" result="warp" />
@@ -150,7 +150,7 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
         ref={cardRef} 
         className="bg-transparent flex flex-col h-full transform-gpu will-change-transform items-center"
       >
-        <div className="relative w-full h-[300px] flex items-center justify-center p-4">
+        <div className="relative w-full h-[220px] flex items-center justify-center p-2">
           {item.popular && (
             <div className="absolute top-0 right-4 md:right-8 z-10 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 tracking-wider uppercase border border-yellow-200">
               ⭐ Más Vendido
@@ -165,17 +165,17 @@ function MeltingCard({ item, WHATSAPP_NUMBER }: { item: any, WHATSAPP_NUMBER: st
             style={{ filter: `url(#melt-${item.id})` }}
           />
         </div>
-        <div className="p-4 flex flex-col flex-grow text-center w-full">
-          <h3 className="text-2xl font-serif text-foreground mb-3 font-bold">{item.name}</h3>
-          <p className="text-sm text-foreground/60 mb-6 flex-grow leading-relaxed">
+        <div className="p-3 flex flex-col flex-grow text-center w-full">
+          <h3 className="text-xl font-serif text-foreground mb-2 font-bold">{item.name}</h3>
+          <p className="text-xs text-foreground/60 mb-4 flex-grow leading-relaxed line-clamp-3">
             {item.description}
           </p>
-          <div className="text-3xl font-serif text-foreground font-bold mb-6">
+          <div className="text-2xl font-serif text-foreground font-bold mb-4">
             {item.price}
           </div>
           <button 
             onClick={() => addToCart(item)}
-            className="inline-block w-full max-w-[200px] mx-auto py-4 bg-accent text-white rounded-full font-bold hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20 hover:-translate-y-1"
+            className="inline-block w-full max-w-[160px] mx-auto py-3 bg-accent text-white rounded-full font-bold text-sm hover:bg-accent-hover transition-colors shadow-lg shadow-accent/20 hover:-translate-y-1"
           >
             Agregar al Carrito
           </button>
