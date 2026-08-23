@@ -590,12 +590,37 @@ export default function LandingPage() {
             <div className="relative w-full aspect-square max-w-lg mx-auto">
               {/* Sombra base */}
               <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 w-[55%] h-[8%] bg-black/25 rounded-[100%] blur-xl z-0 pointer-events-none" />
+              
+              {/* Collage Images (Behind) */}
+              <motion.img 
+                animate={{ y: [0, -12, 0], rotate: [-12, -8, -12] }} 
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                src="/images/new_waffle-bgless.png" 
+                className="absolute bottom-[10%] -left-[20%] w-[50%] h-[50%] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] z-0 blur-[1px] opacity-90"
+                alt=""
+              />
+              <motion.img 
+                animate={{ y: [0, 15, 0], rotate: [15, 20, 15] }} 
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                src="/images/new_crepe-bgless.png" 
+                className="absolute top-[15%] -right-[15%] w-[45%] h-[45%] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] z-0 blur-[1px] opacity-90"
+                alt=""
+              />
+              <motion.img 
+                animate={{ y: [0, -15, 0], rotate: [-5, 0, -5] }} 
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                src="/images/new_frappe-bgless.png" 
+                className="absolute top-[10%] -left-[5%] w-[35%] h-[35%] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.15)] z-0 blur-[2px] opacity-80"
+                alt=""
+              />
+
+              {/* Main Image (Front) */}
               <Image 
                 src="/images/helado_transparente.png" 
                 alt="Helado en Vaso" 
                 fill
                 priority
-                className="object-contain drop-shadow-[0_20px_30px_rgba(122,22,32,0.3)] relative z-10"
+                className="object-contain drop-shadow-[0_20px_30px_rgba(122,22,32,0.3)] relative z-20"
               />
             </div>
           </motion.div>
