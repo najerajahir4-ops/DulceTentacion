@@ -707,7 +707,7 @@ export default function LandingPage() {
               </motion.div>
 
               {/* Horizontal/Vertical Drag Gallery Container */}
-              <div className="relative group max-w-[100vw] mt-4">
+              <div className="relative group w-full max-w-full mt-4">
                 {/* Left Arrow */}
                 <button 
                   onClick={() => scrollGallery('left')}
@@ -733,11 +733,13 @@ export default function LandingPage() {
                   onMouseLeave={handleMouseLeave}
                   onMouseUp={handleMouseUp}
                   onMouseMove={handleMouseMove}
-                  className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto px-[7.5vw] md:px-[calc(50vw-200px)] pb-4 pt-4 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
+                  className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto pl-[7.5vw] md:pl-[calc(50vw-200px)] pr-[7.5vw] md:pr-0 pb-4 pt-4 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
                 >
                   {filteredMenu.map((item) => (
                     <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} onAddToCart={handleAddToCartClick} />
                   ))}
+                  {/* Spacer to enforce trailing padding in flex scrollbars */}
+                  <div className="w-[1px] h-[1px] flex-shrink-0 md:w-[calc(50vw-200px)]" aria-hidden="true" />
                 </div>
               </div>
             </>
