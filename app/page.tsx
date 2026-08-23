@@ -631,7 +631,7 @@ export default function LandingPage() {
           </motion.div>
 
           <motion.div 
-            className="flex overflow-x-auto md:justify-center snap-x snap-mandatory hide-scrollbar gap-3 mt-10 pb-4 px-2"
+            className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-3 mt-10 pb-4 px-2 w-max max-w-full mx-auto"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -821,11 +821,6 @@ export default function LandingPage() {
               &ldquo;
             </div>
             
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 text-accent font-bold text-xs mb-4 md:mb-6 uppercase tracking-widest relative z-10 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              Voces de la comunidad
-            </div>
-            
             <h2 className="text-4xl md:text-5xl font-serif text-foreground font-bold mb-4 relative z-10">Lo que dicen nuestros clientes</h2>
             <p className="text-foreground/60 max-w-2xl mx-auto font-medium relative z-10">Cientos de familias ya disfrutan de la calidad de Avita. ¡Únete a ellos!</p>
           </motion.div>
@@ -875,10 +870,10 @@ export default function LandingPage() {
               Frente al Parque Helen Tenka
             </div>
             
-            <div className="w-full max-w-5xl bg-white rounded-[2.5rem] p-4 md:p-6 shadow-2xl shadow-accent/5 border border-surface-border flex flex-col md:flex-row gap-4 md:gap-6">
+            <div className="w-full max-w-5xl bg-white rounded-[2.5rem] p-4 md:p-6 shadow-2xl shadow-accent/5 border border-surface-border">
               
               {/* MAPA */}
-              <div className="w-full md:w-3/5 aspect-square md:aspect-auto md:h-[500px] rounded-[1.5rem] overflow-hidden relative group bg-surface">
+              <div className="w-full aspect-square md:aspect-[21/9] md:h-[500px] rounded-[1.5rem] overflow-hidden relative group bg-surface">
                 <div className="absolute inset-0 bg-background/5 backdrop-blur-[1px] group-hover:opacity-0 transition-opacity duration-500 pointer-events-none z-10 flex items-center justify-center">
                   <span className="bg-foreground text-white text-sm font-bold px-5 py-2.5 rounded-full flex items-center gap-2 shadow-xl">
                     <MapPin className="w-4 h-4" /> Ver en Mapa
@@ -893,21 +888,6 @@ export default function LandingPage() {
                   loading="lazy" 
                   className="w-full h-full opacity-90 group-hover:opacity-100 transition-all duration-500 grayscale group-hover:grayscale-0"
                 />
-              </div>
-
-              {/* VIDEO COMO LLEGAR */}
-              <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto md:h-[500px] rounded-[1.5rem] overflow-hidden relative bg-black flex items-center justify-center group">
-                <video 
-                  src="/images/como_llegar.mp4" 
-                  controls 
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                />
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-lg z-10 pointer-events-none flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                  Ruta al local
-                </div>
               </div>
 
             </div>
