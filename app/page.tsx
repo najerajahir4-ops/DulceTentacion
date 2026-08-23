@@ -14,7 +14,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
-  ShoppingCart
+  ShoppingCart,
+  LayoutGrid,
+  List as ListIcon
 } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -192,6 +194,7 @@ export default function LandingPage() {
   const [shuffledMenu, setShuffledMenu] = useState(MENU_ITEMS);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"gallery" | "list">("gallery");
   
   const [scrollProgress, setScrollProgress] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -549,15 +552,15 @@ export default function LandingPage() {
             ))}
           </motion.div>
 
-          {/* Search Bar */}
+          {/* Search Bar & View Toggle */}
           <motion.div 
-            className="mt-8 max-w-md mx-auto relative"
+            className="mt-8 max-w-xl mx-auto relative flex flex-col md:flex-row gap-4 items-center"
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <div className="relative flex items-center">
+            <div className="relative flex-1 w-full flex items-center">
               <Search className="absolute left-4 w-5 h-5 text-foreground/50" />
               <input 
                 type="text" 
@@ -567,59 +570,133 @@ export default function LandingPage() {
                 className="w-full pl-12 pr-4 py-3 bg-white/50 backdrop-blur-sm border border-surface-border rounded-full text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all shadow-sm"
               />
             </div>
-          </motion.div>
-
-          {/* Custom Scroll Progress Indicator */}
-          <motion.div 
-            className="max-w-xs mx-auto mt-8 flex items-center justify-center gap-4"
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <div className="text-[10px] font-bold text-foreground/40 uppercase tracking-[0.2em]">Desliza</div>
-            <div className="flex-1 bg-foreground/5 rounded-full h-1.5 relative overflow-hidden">
-              <div 
-                className="absolute top-0 left-0 h-full w-1/4 bg-accent rounded-full transition-transform duration-75 ease-out shadow-sm shadow-accent/50" 
-                style={{ transform: `translateX(${scrollProgress * 300}%)` }} 
-              />
+            
+            <div className="flex bg-surface-border/30 rounded-full p-1 border border-surface-border">
+              <button
+                onClick={() => setViewMode("gallery")}
+                className={`p-2.5 rounded-full transition-colors flex items-center gap-2 ${viewMode === "gallery" ? "bg-white text-accent shadow-sm" : "text-foreground/50 hover:text-foreground"}`}
+                title="Vista interactiva"
+              >
+                <LayoutGrid className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`p-2.5 rounded-full transition-colors flex items-center gap-2 ${viewMode === "list" ? "bg-white text-accent shadow-sm" : "text-foreground/50 hover:text-foreground"}`}
+                title="Vista de catálogo"
+              >
+                <ListIcon className="w-5 h-5" />
+              </button>
             </div>
           </motion.div>
-        </div>
 
-        {/* Horizontal/Vertical Drag Gallery Container */}
-        <div className="relative group max-w-[100vw]">
-          {/* Left Arrow */}
-          <button 
-            onClick={() => scrollGallery('left')}
-            className="hidden md:block absolute left-4 md:left-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
-            aria-label="Anterior"
-          >
-            <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
-          </button>
+          {viewMode === 'gallery' && (
+            <>
+              {/* Custom Scroll Progress Indicator */}
+              <motion.div 
+                className="max-w-xs mx-auto mt-8 flex items-center justify-center gap-4"
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+              >
+                <div className="text-[10px] font-bold text-foreground/40 uppercase tracking-[0.2em]">Desliza</div>
+                <div className="flex-1 bg-foreground/5 rounded-full h-1.5 relative overflow-hidden">
+                  <div 
+                    className="absolute top-0 left-0 h-full w-1/4 bg-accent rounded-full transition-transform duration-75 ease-out shadow-sm shadow-accent/50" 
+                    style={{ transform: `translateX(${scrollProgress * 300}%)` }} 
+                  />
+                </div>
+              </motion.div>
 
-          {/* Right Arrow */}
-          <button 
-            onClick={() => scrollGallery('right')}
-            className="hidden md:block absolute right-4 md:right-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
-            aria-label="Siguiente"
-          >
-            <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
-          </button>
+              {/* Horizontal/Vertical Drag Gallery Container */}
+              <div className="relative group max-w-[100vw] mt-4">
+                {/* Left Arrow */}
+                <button 
+                  onClick={() => scrollGallery('left')}
+                  className="hidden md:block absolute left-4 md:left-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
+                  aria-label="Anterior"
+                >
+                  <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+                </button>
 
-          <div 
-            ref={galleryRef}
-            onScroll={handleGalleryScroll}
-            onMouseDown={handleMouseDown}
-            onMouseLeave={handleMouseLeave}
-            onMouseUp={handleMouseUp}
-            onMouseMove={handleMouseMove}
-            className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto px-[7.5vw] md:px-[calc(50vw-200px)] pb-4 pt-4 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
-          >
-            {filteredMenu.map((item) => (
-              <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} />
-            ))}
-          </div>
+                {/* Right Arrow */}
+                <button 
+                  onClick={() => scrollGallery('right')}
+                  className="hidden md:block absolute right-4 md:right-12 top-1/2 -translate-y-1/2 z-20 p-3 md:p-4 bg-background/90 backdrop-blur-md rounded-full shadow-xl border border-surface-border text-foreground hover:bg-accent hover:text-white transition-all md:opacity-0 md:group-hover:opacity-100 hover:scale-110"
+                  aria-label="Siguiente"
+                >
+                  <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
+                </button>
+
+                <div 
+                  ref={galleryRef}
+                  onScroll={handleGalleryScroll}
+                  onMouseDown={handleMouseDown}
+                  onMouseLeave={handleMouseLeave}
+                  onMouseUp={handleMouseUp}
+                  onMouseMove={handleMouseMove}
+                  className="w-full flex md:flex-row flex-col gap-6 md:gap-12 overflow-x-auto md:overflow-y-hidden overflow-y-auto px-[7.5vw] md:px-[calc(50vw-200px)] pb-4 pt-4 snap-y md:snap-x snap-mandatory hide-scrollbar items-center md:items-stretch will-change-scroll"
+                >
+                  {filteredMenu.map((item) => (
+                    <MeltingCard key={`${activeCategory}-${item.id}`} item={item} WHATSAPP_NUMBER={WHATSAPP_NUMBER} />
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
+          {viewMode === 'list' && (
+            <div className="max-w-5xl mx-auto mt-12 text-left space-y-16 pb-12">
+              {MENU_CATEGORIES.filter(cat => cat !== "Todo").map(category => {
+                const itemsInCategory = filteredMenu.filter(item => item.category === category);
+                if (itemsInCategory.length === 0) return null;
+                
+                return (
+                  <motion.div 
+                    key={category} 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="space-y-6"
+                  >
+                    <div className="flex justify-between items-end border-b-2 border-surface-border/60 pb-3 px-2">
+                      <h3 className="text-2xl font-serif font-bold text-foreground">{category}</h3>
+                      <span className="text-sm font-medium text-foreground/50">{itemsInCategory.length} productos</span>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-4 md:gap-6 px-2">
+                      {itemsInCategory.map(item => (
+                        <div key={item.id} className="bg-white rounded-[24px] p-3 md:p-4 flex items-center gap-4 shadow-sm border border-surface-border hover:shadow-lg transition-all duration-300 relative overflow-hidden group">
+                          {item.popular && (
+                            <div className="absolute top-0 left-0 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-br-xl text-[10px] font-bold shadow-sm z-10 flex items-center gap-1 uppercase tracking-wider">
+                              ⭐ Pop
+                            </div>
+                          )}
+                          <div className="w-24 h-24 md:w-28 md:h-28 bg-surface rounded-[20px] flex-shrink-0 relative flex items-center justify-center p-3 group-hover:scale-105 transition-transform duration-500">
+                            <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                          </div>
+                          
+                          <div className="flex-1 min-w-0 py-1 flex flex-col h-full justify-center">
+                            <h4 className="font-bold text-foreground text-[15px] md:text-base leading-tight pr-4">{item.name}</h4>
+                            <p className="text-[13px] text-foreground/60 line-clamp-2 mt-1.5 pr-2 leading-relaxed">{item.description}</p>
+                            <div className="mt-3 text-accent font-bold text-lg">{item.price}</div>
+                          </div>
+                          
+                          <button 
+                            onClick={() => addToCart(item)}
+                            className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-accent text-white flex items-center justify-center flex-shrink-0 shadow-md hover:bg-accent-hover hover:scale-110 transition-all mr-1 md:mr-2"
+                            aria-label="Agregar"
+                          >
+                            <span className="text-2xl md:text-3xl leading-none font-light mb-1">+</span>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         <DripDivider color="var(--surface)" position="bottom" />
