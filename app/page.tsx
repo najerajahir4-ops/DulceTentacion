@@ -704,8 +704,15 @@ export default function LandingPage() {
 
       {/* PROMOTIONAL BANNERS CAROUSEL (KFC STYLE) */}
       {banners && banners.length > 0 && (
-        <section className="pt-8 pb-4 bg-[#FAF4EC] relative z-25 border-b border-[#E5D5C0]">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="py-14 bg-[#F4EBDC] relative z-25 border-y border-[#E5D5C0]/60 overflow-hidden">
+          {/* Top Curved Divider */}
+          <div className="absolute top-0 left-0 right-0 w-full overflow-hidden leading-none z-10 pointer-events-none -translate-y-px">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-8 sm:h-14 text-[#FAF4EC] fill-current">
+              <path d="M0,0 L1200,0 L1200,40 C1050,110 750,10 500,70 C300,120 100,50 0,90 Z" />
+            </svg>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-6 relative z-20 pt-4">
             <div className="flex items-end justify-between mb-4">
               <div>
                 <span className="text-xs font-serif font-extrabold uppercase tracking-[0.2em] text-[#C81D31] block mb-1">
@@ -1144,8 +1151,15 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* FOOTER TRANSITION (CURVA ASCENDENTE EN CHOCOLATE AMARGO) */}
+      <div className="relative w-full overflow-hidden leading-none z-20 -mb-1 pointer-events-none">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-14 sm:h-24 text-[#2C1A14] fill-current">
+          <path d="M0,60 C300,120 600,-20 900,80 C1050,120 1150,40 1200,20 L1200,120 L0,120 Z" />
+        </svg>
+      </div>
+
       {/* FOOTER */}
-      <footer className="bg-[#2C1A14] text-[#FAF4EC] py-10 relative z-10 overflow-hidden border-t border-[#D49B4B]/30">
+      <footer className="bg-[#2C1A14] text-[#FAF4EC] pb-10 pt-4 relative z-10 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             

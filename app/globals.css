@@ -25,13 +25,11 @@
   --surface-border: #E5D5C0;
 }
 
-/* Waffle Grid Pattern Background Utility */
+/* Subtle Waffle Grid Pattern Background Utility (No dots/confetti) */
 .waffle-bg-pattern {
   background-color: #FAF4EC;
-  background-image: radial-gradient(#D49B4B 0.75px, transparent 0.75px), radial-gradient(#D49B4B 0.75px, #FAF4EC 0.75px);
-  background-size: 30px 30px;
-  background-position: 0 0, 15px 15px;
-  opacity: 0.95;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23EAD9C3' stroke-width='1' opacity='0.35'%3E%3Cpath d='M0 0h40v40H0z'/%3E%3Cpath d='M0 20h40M20 0v40M0 0l40 40M40 0L0 40'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 32px 32px;
 }
 
 /* Bitten Corner Cutout Mask Utility ("La Mordida") */
