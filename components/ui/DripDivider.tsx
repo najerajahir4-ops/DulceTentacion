@@ -19,7 +19,6 @@ export function DripDivider({ color = "var(--background)", position = "bottom", 
   const container = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    // Reduced motion check
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
@@ -60,6 +59,31 @@ export function DripDivider({ color = "var(--background)", position = "bottom", 
           className="drip-path"
           d={pathData}
         />
+      </svg>
+    </div>
+  );
+}
+
+export function MeltingCreamDivider({
+  color = "#F4EBDC",
+  flip = false,
+  height = "h-12 sm:h-20"
+}: {
+  color?: string;
+  flip?: boolean;
+  height?: string;
+}) {
+  return (
+    <div className={`absolute left-0 right-0 w-full overflow-hidden leading-none z-20 pointer-events-none ${
+      flip ? "top-0 -translate-y-px rotate-180" : "bottom-0 translate-y-px"
+    }`}>
+      <svg
+        viewBox="0 0 1200 120"
+        preserveAspectRatio="none"
+        className={`relative block w-full ${height}`}
+        style={{ fill: color }}
+      >
+        <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,120 L0,120 Z" />
       </svg>
     </div>
   );

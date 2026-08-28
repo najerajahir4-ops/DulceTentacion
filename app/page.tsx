@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, memo } from "react";
+import { useState, useEffect, useRef, memo, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { 
@@ -12,56 +12,32 @@ import {
   LayoutGrid,
   List as ListIcon,
   Pencil,
-  ShoppingBag
+  ShoppingBag,
+  Sparkles,
+  Heart,
+  Leaf,
+  User
 } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { DripDivider } from "@/components/ui/DripDivider";
+import dynamic from "next/dynamic";
+import { DripDivider, MeltingCreamDivider } from "@/components/ui/DripDivider";
 import { useCart } from "@/components/CartContext";
 import { CartSidebar } from "@/components/ui/CartSidebar";
-import { LiveEditorDrawer } from "@/components/admin/LiveEditorDrawer";
+import { optimizeCloudinaryUrl } from "@/lib/image-utils";
+import { GourmetPreloader } from "@/components/ui/GourmetPreloader";
+
+const LiveEditorDrawer = dynamic(
+  () => import("@/components/admin/LiveEditorDrawer").then((mod) => mod.LiveEditorDrawer),
+  { ssr: false }
+);
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
 }
 
-// --- Mock Data ---
-const MENU_CATEGORIES = ["Todo", "Helados Artesanales", "Waffles", "Frappés", "Crepes"];
-
-const MENU_ITEMS = [
-  // 10 Helados Artesanales
-  { id: 1, name: "Helado de Frutos Rojos", category: "Helados Artesanales", description: "Cremoso helado con trozos de fresas y frambuesas naturales.", price: "$3.50", image: "/images/saborfresa-bgless.png", popular: true },
-  { id: 2, name: "Cono Doble Choco-Vainilla", category: "Helados Artesanales", description: "Clásico cono con chocolate belga y vainilla.", price: "$4.00", image: "/images/chocolate-bgless.png" },
-  { id: 3, name: "Copa Sundae Suprema", category: "Helados Artesanales", description: "Tres bolas de helado, crema chantilly, cereza y full sirope.", price: "$4.50", image: "/images/vainilla-bgless.png" },
-  { id: 4, name: "Helado de Pistacho", category: "Helados Artesanales", description: "Pistachos reales italianos molidos en base de crema dulce.", price: "$3.75", image: "/images/vainilla-bgless.png" },
-  { id: 5, name: "Cono Simple de Mora", category: "Helados Artesanales", description: "El clásico favorito, ácido y dulce a la vez.", price: "$2.50", image: "/images/saborfresa-bgless.png" },
-  { id: 6, name: "Copa Banana Split", category: "Helados Artesanales", description: "Banana entera, tres sabores de helado, chispas y crema.", price: "$5.50", image: "/images/chocolate-bgless.png", popular: true },
-  { id: 7, name: "Helado Ron Pasas", category: "Helados Artesanales", description: "Pasas maceradas en ron añejo con base de vainilla cremosa.", price: "$3.50", image: "/images/vainilla-bgless.png" },
-  { id: 8, name: "Cono Waffle Gigante", category: "Helados Artesanales", description: "Cono de masa de waffle crujiente con dos bolas inmensas.", price: "$4.25", image: "/images/waffle-bgless.png" },
-  { id: 9, name: "Helado Menta Granizada", category: "Helados Artesanales", description: "Menta fresca con crujientes chispas de chocolate amargo.", price: "$3.50", image: "/images/new_icecream-bgless.png" },
-  { id: 10, name: "Tarrina Familiar", category: "Helados Artesanales", description: "Un litro entero de tu sabor favorito para llevar a casa.", price: "$9.00", image: "/images/vainilla-bgless.png" },
-  
-  // 3 Waffles
-  { id: 11, name: "Waffle Sencillo", category: "Waffles", description: "Waffle recién horneado con una bola de helado a elección.", price: "$3.50", image: "/images/waffle-bgless.png", hasOptions: true },
-  { id: 12, name: "Waffle Especial", category: "Waffles", description: "Waffle con fruta, helado y sirope.", price: "$4.50", image: "/images/new_waffle-bgless.png", popular: true, hasOptions: true },
-  { id: 13, name: "Waffle Supremo", category: "Waffles", description: "Doble porción de helado, doble fruta y extra crema.", price: "$6.00", image: "/images/waffle-bgless.png", hasOptions: true },
-
-  // 5 Frappés
-  { id: 14, name: "Frappé de Moka", category: "Frappés", description: "Café moka helado con crema batida y chispas.", price: "$4.50", image: "/images/frappe-bgless.png", popular: true },
-  { id: 15, name: "Frappé de Fresa", category: "Frappés", description: "Batido refrescante de fresas naturales con crema.", price: "$4.00", image: "/images/frappe-bgless.png" },
-  { id: 16, name: "Frappé de Caramelo", category: "Frappés", description: "Dulce caramelo fundido con café y crema.", price: "$4.75", image: "/images/new_frappe-bgless.png", popular: true },
-  { id: 17, name: "Frappé de Oreo", category: "Frappés", description: "Galletas Oreo trituradas con leche y vainilla.", price: "$4.50", image: "/images/frappe-bgless.png" },
-  { id: 18, name: "Frappé de Vainilla", category: "Frappés", description: "Clásico batido cremoso de vainilla.", price: "$3.75", image: "/images/frappe-bgless.png" },
-
-  // 7 Crepes
-  { id: 19, name: "Crepe Nutella Clásico", category: "Crepes", description: "Crepe francés con abundante Nutella.", price: "$3.50", image: "/images/crepe-bgless.png" },
-  { id: 20, name: "Crepe Frutos del Bosque", category: "Crepes", description: "Crepe relleno de fresas y chocolate, acompañado de helado.", price: "$4.50", image: "/images/new_crepe-bgless.png", popular: true, hasOptions: true },
-  { id: 21, name: "Crepe Tropical", category: "Crepes", description: "Crepe con banano, piña, lechera y coco rallado.", price: "$4.25", image: "/images/crepe-bgless.png", hasOptions: true },
-  { id: 22, name: "Crepe Dulce de Leche", category: "Crepes", description: "Abundante manjar (arequipe) con helado a elección.", price: "$4.00", image: "/images/crepe-bgless.png", hasOptions: true },
-  { id: 23, name: "Crepe Salado Jamón Queso", category: "Crepes", description: "Crepe salado con jamón ahumado y queso derretido.", price: "$5.00", image: "/images/crepe-bgless.png" },
-  { id: 24, name: "Crepe Salado Pollo", category: "Crepes", description: "Pollo con champiñones en salsa blanca.", price: "$5.50", image: "/images/crepe-bgless.png" },
-  { id: 25, name: "Crepe Mix Supreme", category: "Crepes", description: "Mitad Nutella, mitad Manjar, con 2 frutas y helado.", price: "$6.50", image: "/images/new_crepe-bgless.png", popular: true, hasOptions: true },
-];
+// Dynamic categories fetched from menu-types
+const MENU_CATEGORIES = ["Todo", "Helados Artesanales", "Waffles", "Frappés", "Crepes", "Gelato", "Sabores de Gelato", "Bolos Gourmet", "Combos"];
 
 // --- Animation Variants ---
 const staggerContainer: any = {
@@ -199,7 +175,7 @@ const MeltingCard = memo(function MeltingCard({
           )}
           <img 
             ref={imgRef}
-            src={item.image} 
+            src={optimizeCloudinaryUrl(item.image, 600)} 
             alt="" 
             loading="lazy"
             onError={(e) => {
@@ -219,15 +195,15 @@ const MeltingCard = memo(function MeltingCard({
           />
         </div>
         <div className="p-1 pt-2 flex flex-col flex-grow text-center w-full items-center">
-          <h3 className="text-xl sm:text-2xl font-serif text-[#2C1A14] font-bold leading-tight tracking-tight mb-1">
+          <h3 className="text-xl sm:text-2xl font-serif text-[#2C1A14] font-bold leading-tight tracking-tight mb-1 text-balance">
             {item.name}
           </h3>
           {item.description && item.description.trim() && (
-            <p className="text-xs text-[#2C1A14]/70 mb-1 leading-snug line-clamp-2 max-w-[240px] font-sans font-medium">
+            <p className="text-xs text-[#2C1A14]/70 mb-1 leading-snug line-clamp-2 max-w-[240px] font-sans font-medium text-pretty">
               {item.description}
             </p>
           )}
-          <div className="text-xl sm:text-2xl font-serif text-[#D49B4B] font-extrabold my-1">
+          <div className="text-xl sm:text-2xl font-serif text-[#D49B4B] font-extrabold my-1 tabular-nums">
             {item.price}
           </div>
           <button 
@@ -246,7 +222,7 @@ export default function LandingPage() {
   const { cartCount, toggleCart, addToCart } = useCart();
   const [activeCategory, setActiveCategory] = useState("Todo");
   const [searchQuery, setSearchQuery] = useState("");
-  const [shuffledMenu, setShuffledMenu] = useState<any[]>(MENU_ITEMS);
+  const [shuffledMenu, setShuffledMenu] = useState<any[]>([]);
   const [banners, setBanners] = useState<any[]>([]);
   const promoRef = useRef<HTMLDivElement>(null);
 
@@ -313,47 +289,36 @@ export default function LandingPage() {
     // Public storefront website is always Light Mode
     document.documentElement.classList.remove("dark");
 
-    // Load logo & hero settings
-    fetch("/api/settings")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && json.data) {
-          if (json.data.logoUrl) setLogoUrl(json.data.logoUrl);
-          if (json.data.heroImageUrl) setHeroImageUrl(json.data.heroImageUrl);
-          if (json.data.heroTitle) setHeroTitle(json.data.heroTitle);
-          if (json.data.heroSubtitle) setHeroSubtitle(json.data.heroSubtitle);
-          if (json.data.heroDescription) setHeroDescription(json.data.heroDescription);
-          if (json.data.heroImageScale !== undefined) setHeroImageScale(json.data.heroImageScale);
-          if (json.data.heroImageFit !== undefined) setHeroImageFit(json.data.heroImageFit);
-        }
-      })
-      .catch((err) => console.error("Error al cargar configuración:", err));
+    // Parallel data fetching (Vercel Best Practice: eliminating waterfalls)
+    Promise.all([
+      fetch("/api/settings").then((res) => res.json()).catch(() => null),
+      fetch("/api/banners?active=true").then((res) => res.json()).catch(() => null),
+      fetch("/api/menu").then((res) => res.json()).catch(() => null),
+    ]).then(([settingsJson, bannersJson, menuJson]) => {
+      if (settingsJson && settingsJson.success && settingsJson.data) {
+        if (settingsJson.data.logoUrl) setLogoUrl(settingsJson.data.logoUrl);
+        if (settingsJson.data.heroImageUrl) setHeroImageUrl(settingsJson.data.heroImageUrl);
+        if (settingsJson.data.heroTitle) setHeroTitle(settingsJson.data.heroTitle);
+        if (settingsJson.data.heroSubtitle) setHeroSubtitle(settingsJson.data.heroSubtitle);
+        if (settingsJson.data.heroDescription) setHeroDescription(settingsJson.data.heroDescription);
+        if (settingsJson.data.heroImageScale !== undefined) setHeroImageScale(settingsJson.data.heroImageScale);
+        if (settingsJson.data.heroImageFit !== undefined) setHeroImageFit(settingsJson.data.heroImageFit);
+      }
 
-    // Load promo banners
-    fetch("/api/banners?active=true")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.data)) {
-          setBanners(json.data);
-        }
-      })
-      .catch((err) => console.error("Error al cargar banners:", err));
+      if (bannersJson && bannersJson.success && Array.isArray(bannersJson.data)) {
+        setBanners(bannersJson.data);
+      }
 
-    // Load menu from backend API
-    fetch("/api/menu")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          setShuffledMenu(json.data);
-        }
-      })
-      .catch((err) => console.error("Error al cargar menú:", err));
+      if (menuJson && menuJson.success && Array.isArray(menuJson.data)) {
+        setShuffledMenu(menuJson.data);
+      }
+    });
 
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     // Check query params for live editor shortcut
     if (typeof window !== "undefined") {
@@ -363,15 +328,20 @@ export default function LandingPage() {
       }
     }
 
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 400);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      clearTimeout(timer);
     };
   }, []);
+
+  // Collect all image URLs for GourmetPreloader
+  const allImageUrls = useMemo(() => {
+    return [
+      logoUrl,
+      heroImageUrl,
+      ...banners.map((b) => b.image),
+      ...shuffledMenu.map((m) => m.image),
+    ].filter(Boolean) as string[];
+  }, [logoUrl, heroImageUrl, banners, shuffledMenu]);
 
   const galleryRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -450,6 +420,15 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-[#FAF4EC] text-[#2C1A14] selection:bg-[#C81D31] selection:text-white font-sans antialiased overflow-x-hidden relative">
       
+      {/* Gourmet Preloader Screen while images are downloading */}
+      {isLoading && (
+        <GourmetPreloader
+          logoUrl="/images/logo.webp"
+          imageUrls={allImageUrls}
+          onComplete={() => setIsLoading(false)}
+        />
+      )}
+      
       {/* Dynamic Melt Filter for Hero Title */}
       <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
         <filter id="melt-hero" x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
@@ -474,13 +453,13 @@ export default function LandingPage() {
           <Link href="/" className="flex items-center gap-3 group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src={logoUrl || "/images/logo-transparent.png"}
+              src={logoUrl || "/images/logo.webp"}
               alt=""
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 if (!target.dataset.fallback) {
                   target.dataset.fallback = "true";
-                  target.src = "/images/logo-transparent.png";
+                  target.src = "/images/logo.webp";
                 }
               }}
               className="h-10 md:h-12 w-auto object-contain transition-transform group-hover:scale-105"
@@ -515,6 +494,16 @@ export default function LandingPage() {
                 </span>
               )}
             </button>
+
+            {/* Admin Panel Access Button (Persona con Traje) */}
+            <a
+              href="/admin"
+              className="p-3 rounded-full bg-[#F4EBDC] text-[#2C1A14] border border-[#D49B4B]/40 hover:bg-[#2C1A14] hover:text-white transition-all shadow-xs cursor-pointer group flex items-center justify-center relative z-50"
+              title="Panel de Administración"
+              aria-label="Panel Administrador"
+            >
+              <User className="w-5 h-5" />
+            </a>
 
             {/* Mobile Menu Toggle Button */}
             <button 
@@ -555,12 +544,20 @@ export default function LandingPage() {
             >
               Sucursal
             </a>
+            <a 
+              href="/admin" 
+              onClick={() => setIsOpen(false)}
+              className="block font-serif font-bold text-lg text-[#C81D31] hover:underline flex items-center gap-2 pt-2 border-t border-[#D49B4B]/20"
+            >
+              <User className="w-5 h-5" />
+              <span>Panel Administrador</span>
+            </a>
           </div>
         )}
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative pt-28 pb-20 lg:pt-40 lg:pb-32 bg-[#FAF4EC] waffle-bg-pattern z-40 overflow-hidden border-b border-[#E5D5C0]">
+      <section className="relative pt-28 pb-16 sm:pb-20 lg:pt-36 lg:pb-24 bg-[#FAF4EC] waffle-bg-pattern z-40 overflow-hidden">
         
         {/* Background Video (Store Interior) */}
         <div className="absolute inset-0 z-0 overflow-hidden opacity-10 pointer-events-none">
@@ -614,12 +611,12 @@ export default function LandingPage() {
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-[#2C1A14] leading-[1.12] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-[#2C1A14] leading-[1.12] tracking-tight text-balance">
               {heroTitle} <br/>
               <span className="text-[#C81D31] italic font-serif">{heroSubtitle}</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-[#2C1A14]/85 font-medium max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans">
+            <p className="text-base sm:text-lg text-[#2C1A14]/85 font-medium max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans text-pretty">
               {heroDescription}
             </p>
 
@@ -638,6 +635,31 @@ export default function LandingPage() {
                 <MapPin className="w-4 h-4 text-[#C81D31]" />
                 <span>Nuestra Sucursal</span>
               </a>
+            </div>
+
+            {/* Gourmet Value Pillars */}
+            <div className="pt-6 grid grid-cols-3 gap-3 border-t border-[#D49B4B]/20">
+              <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+                <div className="flex items-center gap-1.5 text-xs font-serif font-extrabold text-[#2C1A14]">
+                  <IceCream2 className="w-3.5 h-3.5 text-[#C81D31]" />
+                  <span>100% Artesanal</span>
+                </div>
+                <span className="text-[11px] text-[#2C1A14]/70 font-sans font-medium">Recetas Propias</span>
+              </div>
+              <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+                <div className="flex items-center gap-1.5 text-xs font-serif font-extrabold text-[#2C1A14]">
+                  <Sparkles className="w-3.5 h-3.5 text-[#D49B4B]" />
+                  <span>Fruta Fresca</span>
+                </div>
+                <span className="text-[11px] text-[#2C1A14]/70 font-sans font-medium">Calidad Seleccionada</span>
+              </div>
+              <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+                <div className="flex items-center gap-1.5 text-xs font-serif font-extrabold text-[#2C1A14]">
+                  <Heart className="w-3.5 h-3.5 text-[#C81D31]" />
+                  <span>Hecho con Amor</span>
+                </div>
+                <span className="text-[11px] text-[#2C1A14]/70 font-sans font-medium">Sabor Incomparable</span>
+              </div>
             </div>
           </motion.div>
 
@@ -676,8 +698,10 @@ export default function LandingPage() {
 
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={heroImageUrl || "/images/new_waffle-bgless.png"}
+                src={optimizeCloudinaryUrl(heroImageUrl || "/images/new_waffle-bgless.png", 800)}
                 alt=""
+                fetchPriority="high"
+                decoding="async"
                 className={`w-full h-full relative z-10 drop-shadow-[0_20px_35px_rgba(44,26,20,0.45)] transition-all duration-300 ${
                   heroImageFit === "cover" ? "object-cover" : "object-contain"
                 }`}
@@ -700,19 +724,20 @@ export default function LandingPage() {
             </div>
           </motion.div>
         </div>
+
       </section>
 
       {/* PROMOTIONAL BANNERS CAROUSEL (KFC STYLE) */}
       {banners && banners.length > 0 && (
-        <section className="py-14 bg-[#F4EBDC] relative z-25 border-y border-[#E5D5C0]/60 overflow-hidden">
-          {/* Top Curved Divider */}
-          <div className="absolute top-0 left-0 right-0 w-full overflow-hidden leading-none z-10 pointer-events-none -translate-y-px">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-8 sm:h-14 text-[#FAF4EC] fill-current">
-              <path d="M0,0 L1200,0 L1200,40 C1050,110 750,10 500,70 C300,120 100,50 0,90 Z" />
+        <section className="bg-[#F4EBDC] relative z-25 pb-14 overflow-hidden">
+          {/* Wave Transition from Hero (#FAF4EC) directly above Promos */}
+          <div className="w-full overflow-hidden leading-none z-10 pointer-events-none bg-[#FAF4EC] -mt-1">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-10 sm:h-16 text-[#F4EBDC] fill-current">
+              <path d="M0,40 C200,95 450,15 650,75 C850,115 1050,35 1200,60 L1200,120 L0,120 Z" />
             </svg>
           </div>
 
-          <div className="max-w-7xl mx-auto px-6 relative z-20 pt-4">
+          <div className="max-w-7xl mx-auto px-6 relative z-20 pt-2 sm:pt-4">
             <div className="flex items-end justify-between mb-4">
               <div>
                 <span className="text-xs font-serif font-extrabold uppercase tracking-[0.2em] text-[#C81D31] block mb-1">
@@ -722,26 +747,6 @@ export default function LandingPage() {
                   Ofertas Especiales
                 </h2>
               </div>
-              {banners.length > 1 && (
-                <div className="hidden sm:flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => scrollPromoBanners('left')}
-                    className="p-2.5 rounded-full bg-[#F4EBDC] border border-[#D49B4B]/30 text-[#2C1A14] hover:bg-[#2C1A14] hover:text-white transition-all shadow-xs cursor-pointer"
-                    aria-label="Anterior"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => scrollPromoBanners('right')}
-                    className="p-2.5 rounded-full bg-[#F4EBDC] border border-[#D49B4B]/30 text-[#2C1A14] hover:bg-[#2C1A14] hover:text-white transition-all shadow-xs cursor-pointer"
-                    aria-label="Siguiente"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
-              )}
             </div>
 
             {/* Horizontal Banner Cards Carousel (Fixed / Static when 1 banner) */}
@@ -776,8 +781,10 @@ export default function LandingPage() {
                     <>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={banner.image}
+                        src={optimizeCloudinaryUrl(banner.image, 800)}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
                         className="absolute inset-0 w-full h-full object-cover z-0 rounded-tr-[36px] rounded-bl-[36px] rounded-tl-2xl rounded-br-2xl group-hover:scale-105 transition-transform duration-500"
                         style={{
                           transform: banner.imageScale ? `scale(${banner.imageScale})` : undefined
@@ -855,8 +862,10 @@ export default function LandingPage() {
                       }`}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={banner.image}
+                          src={optimizeCloudinaryUrl(banner.image, 600)}
                           alt=""
+                          loading="lazy"
+                          decoding="async"
                           className={`w-full h-full drop-shadow-[0_20px_30px_rgba(0,0,0,0.65)] group-hover:scale-110 transition-all duration-500 relative z-20 ${
                             banner.imageFit === "cover" ? "object-cover rounded-2xl" : "object-contain"
                           }`}
@@ -879,11 +888,14 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
+
+          {/* Melting Cream Drip Divider to Menu Section */}
+          <MeltingCreamDivider color="#FAF4EC" height="h-12 sm:h-20" />
         </section>
       )}
 
       {/* MENU / MELTING GALLERY */}
-      <section className="pt-10 pb-16 bg-[#FAF4EC] relative z-30 overflow-hidden border-b border-[#E5D5C0]">
+      <section className="pt-10 pb-16 bg-[#FAF4EC] relative z-30 overflow-hidden">
         <div id="menu" className="max-w-7xl mx-auto px-6 mb-12 text-center scroll-mt-28 relative z-10">
           <motion.div 
             className="space-y-3"
@@ -1062,7 +1074,7 @@ export default function LandingPage() {
                           )}
                           <div className="w-24 h-24 md:w-28 md:h-28 bg-[#FAF4EC] rounded-[20px] flex-shrink-0 relative flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-500 border border-[#E5D5C0]">
                             <img 
-                              src={item.image} 
+                              src={optimizeCloudinaryUrl(item.image, 400)} 
                               alt="" 
                               loading="lazy" 
                               decoding="async" 
@@ -1099,11 +1111,13 @@ export default function LandingPage() {
             </div>
           )}
         </div>
+        
+        {/* Melting Cream Drip Divider to Location Section */}
+        <MeltingCreamDivider color="#F4EBDC" height="h-12 sm:h-20" />
       </section>
 
-
       {/* LOCATION / UBICACION */}
-      <section id="ubicacion" className="pt-20 pb-16 bg-[#FAF4EC] relative z-10">
+      <section id="ubicacion" className="pt-20 pb-16 bg-[#F4EBDC] relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col items-center text-center space-y-6">
             <div>
@@ -1152,7 +1166,7 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER TRANSITION (CURVA ASCENDENTE EN CHOCOLATE AMARGO) */}
-      <div className="relative w-full overflow-hidden leading-none z-20 -mb-1 pointer-events-none">
+      <div className="relative w-full overflow-hidden leading-none z-20 -mb-1 pointer-events-none bg-[#F4EBDC]">
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-14 sm:h-24 text-[#2C1A14] fill-current">
           <path d="M0,60 C300,120 600,-20 900,80 C1050,120 1150,40 1200,20 L1200,120 L0,120 Z" />
         </svg>
@@ -1167,14 +1181,14 @@ export default function LandingPage() {
             <div className="flex-shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
-                src={logoUrl || "/images/logo-transparent.png"}
+                src={logoUrl || "/images/logo.webp"}
                 alt=""
                 className="h-10 md:h-12 w-auto object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   if (!target.dataset.fallback) {
                     target.dataset.fallback = "true";
-                    target.src = "/images/logo-transparent.png";
+                    target.src = "/images/logo.webp";
                   }
                 }}
               />

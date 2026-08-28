@@ -37,6 +37,10 @@ export default function RootLayout({
       lang="es"
       className={`${fraunces.variable} ${inter.variable} h-full antialiased scroll-smooth`}
     >
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground overflow-x-hidden">
         {/* Global Noise Overlay for premium matte feel */}
         <div 

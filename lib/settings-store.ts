@@ -20,8 +20,8 @@ const TMP_FILE = path.join(os.tmpdir(), "settings.json");
 let memorySettingsCache: SiteSettings | null = null;
 
 const DEFAULT_SETTINGS: SiteSettings = {
-  logoUrl: "/images/logo-transparent.png",
-  logoPublicId: "",
+  logoUrl: "https://res.cloudinary.com/gpjsyq8h/image/upload/v1787927723/menu_restaurante/1787927753492_logo_1787927750680.png",
+  logoPublicId: "menu_restaurante/1787927753492_logo_1787927750680",
   heroImageUrl: "/images/new_waffle-bgless.png",
   heroImagePublicId: "",
   heroImageScale: 1.0,

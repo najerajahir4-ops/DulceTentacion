@@ -87,7 +87,7 @@ export function CartSidebar({ whatsappNumber }: { whatsappNumber: string }) {
                           ))}
                         </div>
                       )}
-                      <div className="text-accent font-bold mt-1">${item.price.toFixed(2)}</div>
+                      <div className="text-accent font-bold mt-1 tabular-nums">${item.price.toFixed(2)}</div>
                       
                       <div className="flex items-center gap-3 mt-3">
                         <div className="flex items-center bg-surface rounded-full border border-surface-border">
@@ -97,7 +97,7 @@ export function CartSidebar({ whatsappNumber }: { whatsappNumber: string }) {
                           >
                             <Minus className="w-4 h-4" />
                           </button>
-                          <span className="w-6 text-center font-medium text-sm">{item.quantity}</span>
+                          <span className="w-6 text-center font-medium text-sm tabular-nums">{item.quantity}</span>
                           <button 
                             onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
                             className="w-8 h-8 flex items-center justify-center text-foreground hover:text-accent transition-colors"
@@ -123,7 +123,7 @@ export function CartSidebar({ whatsappNumber }: { whatsappNumber: string }) {
               <div className="p-6 bg-background border-t border-surface-border">
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-foreground/70 font-medium">Total Estimado</span>
-                  <span className="text-3xl font-serif font-bold text-foreground">${cartTotal.toFixed(2)}</span>
+                  <span className="text-3xl font-serif font-bold text-foreground tabular-nums">${cartTotal.toFixed(2)}</span>
                 </div>
                 <button 
                   onClick={handleCheckout}
