@@ -415,7 +415,7 @@ export default function LandingPage() {
     return matchesCategory && matchesSearch;
   });
 
-  const WHATSAPP_NUMBER = "593980548506";
+  const WHATSAPP_NUMBER = "593963519916";
 
   return (
     <main className="min-h-screen bg-[#FAF4EC] text-[#2C1A14] selection:bg-[#C81D31] selection:text-white font-sans antialiased overflow-x-hidden relative">
