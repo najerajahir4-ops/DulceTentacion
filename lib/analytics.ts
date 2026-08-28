@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 
 export interface VisitEvent {
   id: string;
@@ -36,13 +37,9 @@ export interface AnalyticsSummary {
 }
 
 const DATA_FILE = path.join(process.cwd(), "data", "analytics.json");
+const TMP_FILE = path.join(os.tmpdir(), "analytics.json");
 
-function ensureDirectoryExistence(filePath: string) {
-  const dirname = path.dirname(filePath);
-  if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, { recursive: true });
-  }
-}
+let memoryVisitsCache: VisitEvent[] | null = null;
 
 function formatDate(d: Date): string {
   return d.toISOString().split("T")[0];
@@ -55,7 +52,6 @@ function getDayLabel(dateStr: string): string {
   return `${days[d.getDay()]} ${day}`;
 }
 
-// Generate realistic starting seed for previous 6 days if starting empty
 function generateInitialSeed(): VisitEvent[] {
   const events: VisitEvent[] = [];
   const now = new Date();
@@ -63,10 +59,9 @@ function generateInitialSeed(): VisitEvent[] {
   for (let i = 6; i >= 1; i--) {
     const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
     const dateStr = formatDate(d);
-    // 35 to 80 visits per day
     const count = 35 + Math.floor(Math.random() * 45);
     for (let j = 0; j < count; j++) {
-      const hour = 11 + Math.floor(Math.random() * 11); // between 11:00 and 22:00
+      const hour = 11 + Math.floor(Math.random() * 11);
       events.push({
         id: `seed-${dateStr}-${j}`,
         timestamp: d.setHours(hour, Math.floor(Math.random() * 60)),
@@ -79,7 +74,6 @@ function generateInitialSeed(): VisitEvent[] {
     }
   }
 
-  // Today initial visits
   const todayStr = formatDate(now);
   const todayCount = 28 + Math.floor(Math.random() * 15);
   for (let j = 0; j < todayCount; j++) {
@@ -99,27 +93,50 @@ function generateInitialSeed(): VisitEvent[] {
 }
 
 export function getAllVisits(): VisitEvent[] {
+  if (memoryVisitsCache && memoryVisitsCache.length > 0) {
+    return memoryVisitsCache;
+  }
+
   try {
-    ensureDirectoryExistence(DATA_FILE);
-    if (!fs.existsSync(DATA_FILE)) {
-      const initial = generateInitialSeed();
-      fs.writeFileSync(DATA_FILE, JSON.stringify(initial, null, 2), "utf-8");
-      return initial;
+    if (fs.existsSync(TMP_FILE)) {
+      const raw = fs.readFileSync(TMP_FILE, "utf-8");
+      memoryVisitsCache = JSON.parse(raw) as VisitEvent[];
+      return memoryVisitsCache;
     }
-    const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw) as VisitEvent[];
+
+    if (fs.existsSync(DATA_FILE)) {
+      const raw = fs.readFileSync(DATA_FILE, "utf-8");
+      memoryVisitsCache = JSON.parse(raw) as VisitEvent[];
+      return memoryVisitsCache;
+    }
   } catch (error) {
     console.error("Error reading analytics file:", error);
-    return [];
   }
+
+  memoryVisitsCache = generateInitialSeed();
+  return memoryVisitsCache;
 }
 
 export function saveVisits(visits: VisitEvent[]): void {
+  memoryVisitsCache = visits;
+
+  // 1. Try primary data file (Local environment)
   try {
-    ensureDirectoryExistence(DATA_FILE);
+    const dirname = path.dirname(DATA_FILE);
+    if (!fs.existsSync(dirname)) {
+      fs.mkdirSync(dirname, { recursive: true });
+    }
     fs.writeFileSync(DATA_FILE, JSON.stringify(visits, null, 2), "utf-8");
+    return;
   } catch (error) {
-    console.error("Error saving analytics:", error);
+    // Expected on Vercel Serverless Read-Only File System
+  }
+
+  // 2. Fallback to /tmp directory (Serverless environment)
+  try {
+    fs.writeFileSync(TMP_FILE, JSON.stringify(visits, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Error saving analytics to tmp:", error);
   }
 }
 
@@ -146,7 +163,6 @@ export function recordVisit(data: {
 
   visits.push(newEvent);
 
-  // Keep last 5000 visits to keep file lightweight and fast
   const trimmed = visits.slice(-5000);
   saveVisits(trimmed);
 
@@ -161,7 +177,6 @@ export function getAnalyticsSummary(): AnalyticsSummary {
   const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
   const yesterdayStr = formatDate(yesterday);
 
-  // Today & Yesterday visits
   const todayVisits = visits.filter((v) => v.date === todayStr);
   const yesterdayVisits = visits.filter((v) => v.date === yesterdayStr);
 
@@ -175,7 +190,6 @@ export function getAnalyticsSummary(): AnalyticsSummary {
     growthRate = 100;
   }
 
-  // 7-day Timeline
   const dailyTimeline: DailyStat[] = [];
   for (let i = 6; i >= 0; i--) {
     const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
@@ -189,7 +203,6 @@ export function getAnalyticsSummary(): AnalyticsSummary {
     });
   }
 
-  // Device breakdown
   let mobileCount = 0;
   let desktopCount = 0;
   let tabletCount = 0;
@@ -206,7 +219,6 @@ export function getAnalyticsSummary(): AnalyticsSummary {
     tablet: Math.round((tabletCount / total) * 100),
   };
 
-  // Peak hours
   const hourCounts: Record<number, number> = {};
   for (let h = 0; h < 24; h++) hourCounts[h] = 0;
   visits.forEach((v) => {
@@ -219,7 +231,6 @@ export function getAnalyticsSummary(): AnalyticsSummary {
     return { hour: hourNum, label, count };
   });
 
-  // Recent 10 visits
   const recentVisits = [...visits].reverse().slice(0, 10);
 
   return {

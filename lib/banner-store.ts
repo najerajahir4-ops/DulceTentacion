@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 
 export interface PromoBanner {
   id: string;
@@ -18,34 +19,79 @@ export interface PromoBanner {
 }
 
 const DATA_FILE = path.join(process.cwd(), "data", "banners.json");
+const TMP_FILE = path.join(os.tmpdir(), "banners.json");
 
-function ensureDirectoryExistence(filePath: string) {
-  const dirname = path.dirname(filePath);
-  if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, { recursive: true });
+let memoryBannersCache: PromoBanner[] | null = null;
+
+const DEFAULT_BANNERS: PromoBanner[] = [
+  {
+    id: "banner-1",
+    title: "Combo Tentación Familiar",
+    subtitle: "2 Waffles Especiales + 2 Frappés a elección con 15% de descuento.",
+    price: "14.99",
+    image: "/images/new_waffle-bgless.png",
+    badge: "OFERTA RECOMENDADA ✦ 15% OFF",
+    link: "#menu",
+    active: true,
+    imageSize: "large",
+    imageScale: 1.0,
+    imageFit: "contain",
+    blendMode: "none",
+    layoutMode: "split"
   }
-}
+];
 
 export function getAllBanners(): PromoBanner[] {
-  try {
-    if (!fs.existsSync(DATA_FILE)) {
-      return [];
-    }
-    const data = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(data) as PromoBanner[];
-  } catch (error) {
-    console.error("Error al leer archivo de banners:", error);
-    return [];
+  if (memoryBannersCache && memoryBannersCache.length > 0) {
+    return memoryBannersCache;
   }
+
+  try {
+    if (fs.existsSync(TMP_FILE)) {
+      const data = fs.readFileSync(TMP_FILE, "utf-8");
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        memoryBannersCache = parsed as PromoBanner[];
+        return memoryBannersCache;
+      }
+    }
+
+    if (fs.existsSync(DATA_FILE)) {
+      const data = fs.readFileSync(DATA_FILE, "utf-8");
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        memoryBannersCache = parsed as PromoBanner[];
+        return memoryBannersCache;
+      }
+    }
+  } catch (error) {
+    console.error("Error reading banners file:", error);
+  }
+
+  memoryBannersCache = DEFAULT_BANNERS;
+  return memoryBannersCache;
 }
 
 export function saveAllBanners(banners: PromoBanner[]): void {
+  memoryBannersCache = banners;
+
+  // 1. Try primary data file (Local environment)
   try {
-    ensureDirectoryExistence(DATA_FILE);
+    const dirname = path.dirname(DATA_FILE);
+    if (!fs.existsSync(dirname)) {
+      fs.mkdirSync(dirname, { recursive: true });
+    }
     fs.writeFileSync(DATA_FILE, JSON.stringify(banners, null, 2), "utf-8");
+    return;
   } catch (error) {
-    console.error("Error al guardar banners:", error);
-    throw new Error("No se pudo guardar la información de los banners.");
+    // Expected on Vercel Serverless Read-Only File System
+  }
+
+  // 2. Fallback to /tmp directory (Serverless environment)
+  try {
+    fs.writeFileSync(TMP_FILE, JSON.stringify(banners, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Error writing banners to tmp:", error);
   }
 }
 

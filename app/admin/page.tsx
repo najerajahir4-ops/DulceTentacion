@@ -38,6 +38,7 @@ import {
   Star,
   Flame,
   Settings,
+  Coffee,
 } from "lucide-react";
 import { MENU_CATEGORIES, MenuCategory, MenuItem } from "@/lib/menu-types";
 import { DishImageUploader } from "@/components/admin/DishImageUploader";
@@ -46,7 +47,9 @@ import { AnalyticsSummary } from "@/lib/analytics";
 
 // Sleek Monochrome Vector Icons for Categories
 const CATEGORY_VECTOR_ICONS: Record<MenuCategory, React.ComponentType<{ className?: string }>> = {
+  "Helados Artesanales": IceCream2,
   Waffles: Grid,
+  Frappés: Coffee,
   Crepes: ChefHat,
   Gelato: IceCream2,
   Nuevos: Sparkles,
@@ -421,7 +424,7 @@ export default function AdminPage() {
     setFormError(null);
     setFormData({
       name: product.name,
-      category: product.category,
+      category: product.category as MenuCategory,
       price: product.price.replace("$", ""),
       description: product.description,
       image: product.image,
@@ -1264,7 +1267,7 @@ export default function AdminPage() {
                     </thead>
                     <tbody className={`divide-y font-medium ${isDarkMode ? "divide-slate-800 text-slate-200" : "divide-slate-100 text-slate-700"}`}>
                       {filteredProducts.map((product) => {
-                        const CatIcon = CATEGORY_VECTOR_ICONS[product.category];
+                        const CatIcon = CATEGORY_VECTOR_ICONS[product.category as MenuCategory] || IceCream2;
 
                         return (
                           <tr key={product.id} className={`transition-colors ${isDarkMode ? "hover:bg-slate-800/50" : "hover:bg-slate-50/60"}`}>
@@ -1373,7 +1376,7 @@ export default function AdminPage() {
               /* GRID VIEW */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => {
-                  const CatIcon = CATEGORY_VECTOR_ICONS[product.category];
+                  const CatIcon = CATEGORY_VECTOR_ICONS[product.category as MenuCategory] || IceCream2;
 
                   return (
                     <div
