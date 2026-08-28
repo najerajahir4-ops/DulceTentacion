@@ -557,7 +557,7 @@ export default function LandingPage() {
       </nav>
 
       {/* HERO SECTION */}
-      <section className="relative pt-28 pb-16 sm:pb-20 lg:pt-36 lg:pb-24 bg-[#FAF4EC] waffle-bg-pattern z-40 overflow-hidden">
+      <section className="relative pt-28 pb-16 sm:pb-20 lg:pt-36 lg:pb-24 bg-[#FAF4EC] z-40 overflow-hidden">
         
         {/* Background Video (Store Interior) */}
         <div className="absolute inset-0 z-0 overflow-hidden opacity-10 pointer-events-none">
@@ -574,28 +574,6 @@ export default function LandingPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#FAF4EC]/80 via-[#FAF4EC]/95 to-[#FAF4EC]" />
         </div>
 
-        {/* Ambient Warm Color Auras */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <motion.div 
-            animate={{ 
-              x: [0, 50, 0], 
-              y: [0, 30, 0],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-[10%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-[#C81D31]/10 blur-[110px] mix-blend-multiply"
-          />
-          <motion.div 
-            animate={{ 
-              x: [0, -40, 0], 
-              y: [0, 50, 0],
-              scale: [1, 1.2, 1]
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            className="absolute top-[20%] -right-[15%] w-[45vw] h-[45vw] rounded-full bg-[#D49B4B]/15 blur-[120px] mix-blend-multiply"
-          />
-        </div>
-
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center relative z-10">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -604,61 +582,61 @@ export default function LandingPage() {
             className="lg:col-span-7 space-y-7 text-center lg:text-left"
           >
             {/* Gourmet Artisan Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F4EBDC] border border-[#D49B4B]/40 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-[#C81D31] animate-pulse" />
-              <span className="text-xs font-serif font-extrabold uppercase tracking-[0.2em] text-[#2C1A14]">
-                Repostería & Gelato Artesanal ✦ Santo Domingo
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F4EBDC] border border-[#E5D5C0]">
+              <span className="w-2 h-2 rounded-full bg-[#D49B4B]" />
+              <span className="text-xs font-sans font-medium uppercase tracking-wider text-[#2C1A14]">
+                Repostería & Gelato Artesanal · Santo Domingo
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif text-[#2C1A14] leading-[1.12] tracking-tight text-balance">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-[#2C1A14] leading-[1.12] tracking-tight text-balance">
               {heroTitle} <br/>
-              <span className="text-[#C81D31] italic font-serif">{heroSubtitle}</span>
+              <span className="text-[#D49B4B]">{heroSubtitle}</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-[#2C1A14]/85 font-medium max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans text-pretty">
+            <p className="text-base sm:text-lg text-[#2C1A14]/80 font-sans max-w-xl mx-auto lg:mx-0 leading-relaxed text-pretty">
               {heroDescription}
             </p>
 
             <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4">
               <a 
                 href="#menu"
-                className="px-8 py-4 bg-gradient-to-r from-[#C81D31] to-[#E02B43] text-white font-serif font-bold text-sm rounded-full shadow-xl shadow-[#C81D31]/25 hover:shadow-2xl hover:scale-105 transition-all flex items-center gap-2 border border-[#C81D31]"
+                className="px-8 py-3.5 bg-[#2C1A14] text-[#FAF4EC] font-sans font-medium text-sm rounded-full shadow-sm hover:bg-[#3D2817] transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <span>Explorar Menú</span>
                 <ChevronRight className="w-4 h-4" />
               </a>
               <a
                 href="#ubicacion"
-                className="px-6 py-4 bg-[#F4EBDC] text-[#2C1A14] font-serif font-bold text-sm rounded-full border border-[#D49B4B]/40 hover:bg-[#2C1A14] hover:text-white transition-all shadow-xs flex items-center gap-2"
+                className="px-6 py-3.5 bg-[#F4EBDC] text-[#2C1A14] font-sans font-medium text-sm rounded-full border border-[#E5D5C0] hover:bg-[#E5D5C0] transition-colors flex items-center gap-2 cursor-pointer"
               >
-                <MapPin className="w-4 h-4 text-[#C81D31]" />
+                <MapPin className="w-4 h-4 text-[#D49B4B]" />
                 <span>Nuestra Sucursal</span>
               </a>
             </div>
 
             {/* Gourmet Value Pillars */}
-            <div className="pt-6 grid grid-cols-3 gap-3 border-t border-[#D49B4B]/20">
+            <div className="pt-6 grid grid-cols-3 gap-3 border-t border-[#E5D5C0]">
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-                <div className="flex items-center gap-1.5 text-xs font-serif font-extrabold text-[#2C1A14]">
-                  <IceCream2 className="w-3.5 h-3.5 text-[#C81D31]" />
+                <div className="flex items-center gap-1.5 text-xs font-sans font-semibold text-[#2C1A14]">
+                  <IceCream2 className="w-3.5 h-3.5 text-[#D49B4B]" />
                   <span>100% Artesanal</span>
                 </div>
-                <span className="text-[11px] text-[#2C1A14]/70 font-sans font-medium">Recetas Propias</span>
+                <span className="text-[11px] text-[#2C1A14]/70 font-sans">Recetas Propias</span>
               </div>
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-                <div className="flex items-center gap-1.5 text-xs font-serif font-extrabold text-[#2C1A14]">
+                <div className="flex items-center gap-1.5 text-xs font-sans font-semibold text-[#2C1A14]">
                   <Sparkles className="w-3.5 h-3.5 text-[#D49B4B]" />
                   <span>Fruta Fresca</span>
                 </div>
-                <span className="text-[11px] text-[#2C1A14]/70 font-sans font-medium">Calidad Seleccionada</span>
+                <span className="text-[11px] text-[#2C1A14]/70 font-sans">Calidad Seleccionada</span>
               </div>
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-                <div className="flex items-center gap-1.5 text-xs font-serif font-extrabold text-[#2C1A14]">
-                  <Heart className="w-3.5 h-3.5 text-[#C81D31]" />
+                <div className="flex items-center gap-1.5 text-xs font-sans font-semibold text-[#2C1A14]">
+                  <Heart className="w-3.5 h-3.5 text-[#D49B4B]" />
                   <span>Hecho con Amor</span>
                 </div>
-                <span className="text-[11px] text-[#2C1A14]/70 font-sans font-medium">Sabor Incomparable</span>
+                <span className="text-[11px] text-[#2C1A14]/70 font-sans">Sabor Incomparable</span>
               </div>
             </div>
           </motion.div>
@@ -670,8 +648,7 @@ export default function LandingPage() {
             transition={{ duration: 1, delay: 0.2 }}
             className="lg:col-span-5 relative flex justify-center"
           >
-            <div className="relative w-full max-w-md aspect-square rounded-[40px] bg-gradient-to-br from-[#F4EBDC] to-[#E5D5C0] p-6 shadow-[0_25px_50px_rgba(44,26,20,0.2)] border-2 border-[#D49B4B]/40 bitten-corner-mask group">
-              <div className="absolute inset-0 bg-[#D49B4B]/10 rounded-[40px] blur-xl group-hover:scale-105 transition-transform" />
+            <div className="relative w-full max-w-md aspect-square rounded-3xl bg-[#F4EBDC] p-6 shadow-sm border border-[#E5D5C0] group">
 
               {/* Live Edit Button for Hero Showcase */}
               {isLiveEditMode && (
@@ -689,7 +666,7 @@ export default function LandingPage() {
                     });
                     setActiveEditType("hero");
                   }}
-                  className="absolute top-4 left-4 z-30 p-2.5 bg-white/95 text-[#C81D31] rounded-full shadow-xl border border-[#FAF4EC] flex items-center justify-center hover:scale-110 hover:bg-[#C81D31] hover:text-white transition-all cursor-pointer"
+                  className="absolute top-4 left-4 z-30 p-2.5 bg-white/95 text-[#2C1A14] rounded-full shadow-md border border-[#E5D5C0] flex items-center justify-center hover:bg-[#2C1A14] hover:text-white transition-all cursor-pointer"
                   title="Editar Portada Hero en Vivo"
                 >
                   <Pencil className="w-4 h-4" />
@@ -702,8 +679,8 @@ export default function LandingPage() {
                 alt=""
                 fetchPriority="high"
                 decoding="async"
-                className={`w-full h-full relative z-10 drop-shadow-[0_20px_35px_rgba(44,26,20,0.45)] transition-all duration-300 ${
-                  heroImageFit === "cover" ? "object-cover" : "object-contain"
+                className={`w-full h-full relative z-10 drop-shadow-md transition-all duration-300 ${
+                  heroImageFit === "cover" ? "object-cover rounded-2xl" : "object-contain"
                 }`}
                 style={{
                   transform: `scale(${heroImageScale || 1.0})`,
@@ -716,26 +693,16 @@ export default function LandingPage() {
                   }
                 }}
               />
-              {/* Gold Seal Stamp Badge */}
-              <div className="absolute -bottom-4 -left-4 z-20 w-20 h-20 rounded-full bg-gradient-to-br from-[#D49B4B] via-[#F0B865] to-[#D49B4B] text-[#2C1A14] font-serif font-black flex flex-col items-center justify-center shadow-xl border-2 border-dashed border-[#FAF4EC] transform -rotate-12">
-                <span className="text-[9px] uppercase tracking-widest font-sans font-bold text-[#2C1A14] leading-none mb-0.5">ARTESANAL</span>
-                <span className="text-xs font-extrabold leading-none text-[#2C1A14]">100%</span>
-              </div>
             </div>
           </motion.div>
         </div>
-
       </section>
 
       {/* PROMOTIONAL BANNERS CAROUSEL (KFC STYLE) */}
       {banners && banners.length > 0 && (
-        <section className="bg-[#F4EBDC] relative z-25 pb-14 overflow-hidden">
-          {/* Wave Transition from Hero (#FAF4EC) directly above Promos */}
-          <div className="w-full overflow-hidden leading-none z-10 pointer-events-none bg-[#FAF4EC] -mt-1">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-10 sm:h-16 text-[#F4EBDC] fill-current">
-              <path d="M0,40 C200,95 450,15 650,75 C850,115 1050,35 1200,60 L1200,120 L0,120 Z" />
-            </svg>
-          </div>
+        <section className="bg-[#FAF4EC] relative z-25 pb-14 overflow-hidden">
+          {/* Clean Border Separator */}
+          <div className="border-t border-[#E5D5C0]" />
 
           <div className="max-w-7xl mx-auto px-6 relative z-20 pt-2 sm:pt-4">
             <div className="flex items-end justify-between mb-4">
@@ -888,14 +855,14 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
-
-          {/* Melting Cream Drip Divider to Menu Section */}
-          <MeltingCreamDivider color="#FAF4EC" height="h-12 sm:h-20" />
         </section>
       )}
 
-      {/* MENU / MELTING GALLERY */}
-      <section className="pt-10 pb-16 bg-[#FAF4EC] relative z-30 overflow-hidden">
+      {/* Clean Border Separator */}
+      <div className="border-t border-[#E5D5C0]" />
+
+      {/* MENU / GALLERY */}
+      <section className="pt-12 pb-16 bg-[#FAF4EC] relative z-30 overflow-hidden">
         <div id="menu" className="max-w-7xl mx-auto px-6 mb-12 text-center scroll-mt-28 relative z-10">
           <motion.div 
             className="space-y-3"
@@ -904,13 +871,13 @@ export default function LandingPage() {
             viewport={{ once: true }}
             variants={fadeUp}
           >
-            <span className="text-xs font-serif font-extrabold uppercase tracking-[0.25em] text-[#C81D31] block">
+            <span className="text-xs font-serif font-bold uppercase tracking-wider text-[#D49B4B] block">
               NUESTRO MENÚ ARTESANAL
             </span>
-            <h2 className="text-3xl md:text-5xl font-serif text-[#2C1A14] font-extrabold tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-serif text-[#2C1A14] font-bold tracking-tight">
               Tú solo mira estos postres
             </h2>
-            <p className="text-[#2C1A14]/75 text-base font-sans font-medium">
+            <p className="text-[#2C1A14]/80 text-base font-sans">
               Elige tu categoría favorita y déjate tentar
             </p>
           </motion.div>
@@ -928,10 +895,10 @@ export default function LandingPage() {
                 key={category}
                 variants={fadeUp}
                 onClick={() => handleCategoryClick(category)}
-                className={`px-6 py-2.5 rounded-full text-sm font-serif font-bold transition-all duration-300 flex-shrink-0 snap-center cursor-pointer ${
+                className={`px-6 py-2.5 rounded-full text-sm font-sans font-medium transition-colors flex-shrink-0 snap-center cursor-pointer ${
                   activeCategory === category 
-                    ? 'bg-[#C81D31] text-white shadow-md shadow-[#C81D31]/30 scale-105'
-                    : 'bg-[#F4EBDC] text-[#2C1A14] border border-[#D49B4B]/30 hover:bg-[#2C1A14] hover:text-white'
+                    ? 'bg-[#2C1A14] text-[#FAF4EC] shadow-xs'
+                    : 'bg-[#F4EBDC] text-[#2C1A14] border border-[#E5D5C0] hover:bg-[#E5D5C0]'
                 }`}
               >
                 {category}
@@ -955,21 +922,21 @@ export default function LandingPage() {
                 placeholder="Busca tu postre favorito..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-[#F4EBDC]/80 border border-[#D49B4B]/40 rounded-full text-[#2C1A14] placeholder:text-[#2C1A14]/50 focus:outline-none focus:ring-2 focus:ring-[#C81D31] focus:border-transparent transition-all shadow-xs"
+                className="w-full pl-12 pr-4 py-3 bg-[#F4EBDC] border border-[#E5D5C0] rounded-full text-[#2C1A14] placeholder:text-[#2C1A14]/50 focus:outline-none focus:ring-1 focus:ring-[#2C1A14] transition-all shadow-xs font-sans text-sm"
               />
             </div>
             
-            <div className="flex bg-[#F4EBDC] rounded-full p-1 border border-[#D49B4B]/40">
+            <div className="flex bg-[#F4EBDC] rounded-full p-1 border border-[#E5D5C0]">
               <button
                 onClick={() => setViewMode("gallery")}
-                className={`p-2.5 rounded-full transition-colors flex items-center gap-2 cursor-pointer ${viewMode === "gallery" ? "bg-[#C81D31] text-white shadow-xs" : "text-[#2C1A14]/60 hover:text-[#2C1A14]"}`}
+                className={`p-2.5 rounded-full transition-colors flex items-center gap-2 cursor-pointer ${viewMode === "gallery" ? "bg-[#2C1A14] text-[#FAF4EC] shadow-xs" : "text-[#2C1A14]/60 hover:text-[#2C1A14]"}`}
                 title="Vista interactiva"
               >
                 <LayoutGrid className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`p-2.5 rounded-full transition-colors flex items-center gap-2 cursor-pointer ${viewMode === "list" ? "bg-[#C81D31] text-white shadow-xs" : "text-[#2C1A14]/60 hover:text-[#2C1A14]"}`}
+                className={`p-2.5 rounded-full transition-colors flex items-center gap-2 cursor-pointer ${viewMode === "list" ? "bg-[#2C1A14] text-[#FAF4EC] shadow-xs" : "text-[#2C1A14]/60 hover:text-[#2C1A14]"}`}
                 title="Vista de catálogo"
               >
                 <ListIcon className="w-5 h-5" />
@@ -1111,33 +1078,32 @@ export default function LandingPage() {
             </div>
           )}
         </div>
-        
-        {/* Melting Cream Drip Divider to Location Section */}
-        <MeltingCreamDivider color="#F4EBDC" height="h-12 sm:h-20" />
+        {/* Clean Border Separator */}
+        <div className="border-t border-[#E5D5C0]" />
       </section>
 
       {/* LOCATION / UBICACION */}
-      <section id="ubicacion" className="pt-20 pb-16 bg-[#F4EBDC] relative z-10">
+      <section id="ubicacion" className="pt-16 pb-16 bg-[#FAF4EC] relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col items-center text-center space-y-6">
             <div>
-              <span className="text-xs font-serif font-extrabold uppercase tracking-[0.25em] text-[#C81D31] block mb-1">
+              <span className="text-xs font-serif font-bold uppercase tracking-wider text-[#D49B4B] block mb-1">
                 VISÍTANOS EN SANTO DOMINGO
               </span>
-              <h2 className="text-3xl md:text-4xl font-serif text-[#2C1A14] font-extrabold">
+              <h2 className="text-3xl md:text-4xl font-serif text-[#2C1A14] font-bold">
                 Nuestra Sucursal
               </h2>
             </div>
 
-            <div className="flex items-center gap-2 font-serif font-bold text-sm bg-[#F4EBDC] text-[#2C1A14] px-6 py-3 rounded-full border border-[#D49B4B]/40 shadow-xs">
-              <MapPin className="w-4 h-4 text-[#C81D31]" />
+            <div className="flex items-center gap-2 font-sans font-medium text-sm bg-[#F4EBDC] text-[#2C1A14] px-6 py-3 rounded-full border border-[#E5D5C0] shadow-xs">
+              <MapPin className="w-4 h-4 text-[#D49B4B]" />
               Frente al Parque Helen Tenka, Santo Domingo
             </div>
             
-            <div className="w-full max-w-5xl bg-[#F4EBDC] rounded-[2.5rem] p-4 md:p-6 shadow-xl border border-[#E5D5C0] flex flex-col md:flex-row gap-4 md:gap-6">
+            <div className="w-full max-w-5xl bg-[#FAF4EC] rounded-3xl p-4 md:p-6 shadow-sm border border-[#E5D5C0] flex flex-col md:flex-row gap-6">
               
               {/* MAPA */}
-              <div className="w-full md:w-3/5 aspect-square md:aspect-auto md:h-[450px] rounded-[1.5rem] overflow-hidden relative bg-[#FAF4EC] border border-[#E5D5C0]">
+              <div className="w-full md:w-3/5 aspect-square md:aspect-auto md:h-[420px] rounded-2xl overflow-hidden relative bg-[#FAF4EC] border border-[#E5D5C0]">
                 <iframe 
                   src="https://maps.google.com/maps?q=-0.244889,-79.163583&t=&z=17&ie=UTF8&iwloc=&output=embed" 
                   width="100%" 
@@ -1150,7 +1116,7 @@ export default function LandingPage() {
               </div>
 
               {/* VIDEO COMO LLEGAR */}
-              <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto md:h-[450px] rounded-[1.5rem] overflow-hidden relative bg-black flex items-center justify-center">
+              <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto md:h-[420px] rounded-2xl overflow-hidden relative bg-[#2C1A14] border border-[#E5D5C0] flex items-center justify-center">
                 <video 
                   src="/images/como_llegar.mp4" 
                   controls 
@@ -1165,12 +1131,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FOOTER TRANSITION (CURVA ASCENDENTE EN CHOCOLATE AMARGO) */}
-      <div className="relative w-full overflow-hidden leading-none z-20 -mb-1 pointer-events-none bg-[#F4EBDC]">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-14 sm:h-24 text-[#2C1A14] fill-current">
-          <path d="M0,60 C300,120 600,-20 900,80 C1050,120 1150,40 1200,20 L1200,120 L0,120 Z" />
-        </svg>
-      </div>
+      {/* STRAIGHT BORDER FOOTER TRANSITION */}
+      <div className="border-t border-[#E5D5C0]" />
 
       {/* FOOTER */}
       <footer className="bg-[#2C1A14] text-[#FAF4EC] pb-10 pt-4 relative z-10 overflow-hidden">

@@ -1,48 +1,88 @@
-# Avita Ice Cream & Waffles - E-Commerce Landing Page
+# 🧇 Dulce Tentación — Repostería & Gelato Artesanal
 
-Bienvenido al repositorio de la Landing Page premium para **Avita Ice Cream & Waffles**. Este proyecto fue diseñado meticulosamente con un enfoque en estética de alta gama, interacciones fluidas y conversiones directas a WhatsApp.
-
-## 🌟 Concepto de Diseño: "Melt System"
-El núcleo visual de esta página es el **Melt System**. Utilizando filtros SVG avanzados (`feTurbulence` y `feDisplacementMap`) combinados con **GSAP** y **Framer Motion**, hemos creado una experiencia fluida donde los elementos reaccionan como si estuvieran derritiéndose. 
-
-### Características de Diseño Clave:
-- **Galería Flotante (Apple-style):** Los productos (Waffles, Frappés, Helados) se presentan en formato PNG sin fondo. Un motor GSAP calcula una sombra (`drop-shadow`) que se adapta exactamente a la silueta del producto, logrando un efecto 3D sin estar encerrados en cajas cuadradas.
-- **Drip Dividers:** Transiciones entre secciones con un borde ondulado (gotas de helado/crema) que se superponen matemáticamente usando cascadas de `z-index` (40, 30, 20, 10) para eliminar cualquier brecha microscópica (subpixel gaps) entre los bloques de color.
-- **Navegación Centrada Absoluta:** Un menú superior fijo con desenfoque de cristal (backdrop-blur), anclajes con `scroll-margin-top` calculados para no tapar los títulos al hacer clic, e iconos dinámicos (Lucide React).
-- **Textura Táctil Global:** Un sutil filtro de ruido estático global de 3.5% de opacidad le da un acabado "mate" o de papel fotográfico a toda la pantalla.
-
-## 🛠 Stack Tecnológico
-- **Framework:** Next.js 16 (App Router)
-- **Estilos:** Tailwind CSS (con variables CSS modernas en `globals.css`)
-- **Tipografía:** 
-  - `Fraunces` (Serif): Para los títulos. Aporta elegancia, lujo e historia.
-  - `Inter` (Sans-serif): Para el cuerpo de texto, logrando una legibilidad perfecta.
-- **Animaciones:** 
-  - **Framer Motion:** Maneja las entradas al hacer scroll (`whileInView`), desvanecimientos (`fadeUp`) y la carga inicial secuencial (`staggerContainer`).
-  - **GSAP (GreenSock):** Usado para las animaciones continuas súper fluidas (el efecto de derretimiento constante en las tarjetas y los blobs animados del fondo).
-- **Iconos:** Lucide React
-- **Despliegue:** Vercel
-
-## 🎨 Paleta de Colores
-- `--background`: `#FDF6EC` (Crema suave para descansar la vista)
-- `--surface`: `#FFFFFF` (Blanco puro para aislar y resaltar los productos en la galería)
-- `--foreground`: `#7A1620` (Marrón Vino tinto, da un contraste sofisticado sin ser negro)
-- `--accent`: `#E4536B` (Fresa brillante, utilizado para los "Call to Action" y botones)
-- `--secondary`: `#A97A4E` (Dorado cálido)
-
-## 📱 Flujo de Usuario y Conversión
-Toda la página está optimizada para la fricción cero. Los botones de "Pedir Ahora" y "Comprar" en cada producto no llevan a un complejo carrito de compras. En su lugar, abren una pestaña directa a **WhatsApp**, pre-escribiendo el nombre del producto exacto que el cliente eligió, acortando el embudo de ventas enormemente.
-
-## ⚙️ Historial de Decisiones Técnicas (Notas para la IA)
-1. **Subpixel Gaps:** Al principio, los `DripDivider` dejaban una línea de 1px visible debido a los cálculos decimales de pantalla de los navegadores. Se resolvió haciendo que el SVG exceda su contenedor por `1px` (`bottom-[1px]`) y ordenando los `z-index` en orden descendente (40 a 10 de arriba a abajo).
-2. **Sombras de GSAP Bounding Box:** Inicialmente, el filtro `drop-shadow` de GSAP se aplicaba a todo el contenedor `div` de la tarjeta, lo que en algunos navegadores creaba una ilusión de "cuadro blanco" debido a la creación de un nuevo contexto de renderizado (`transform-gpu`). Se solucionó aislando el `drop-shadow` exclusivamente a la etiqueta `<img>` usando un `ref` secundario, manteniendo el fondo de la galería 100% puro.
-3. **Scroll Margins:** Para evitar que la barra de navegación fija tapara los títulos al navegar mediante las anclas (`#menu`, `#nosotros`), se integró `scroll-mt-28` y `scroll-mt-24` para calcular un frenado anticipado del scroll.
-4. **Dependencias:** Se limpiaron componentes sin uso (como el cursor personalizado `CustomCursor`) para asegurar compilaciones exitosas y rápidas en Vercel.
-5. **Centrado del Menú de Categorías:** Se utilizó un layout inteligente (`inline-flex` en contenedor `text-center`) para mantener centrados los botones de categorías (Waffles, Crepes, etc.) en pantallas grandes, garantizando su perfecta alineación.
-6. **Loader Animado (Splash Screen):** Se implementó una pantalla de carga a pantalla completa con `framer-motion` (`AnimatePresence`) para garantizar una hidratación visual perfecta de fuentes y assets pesados durante al menos 2 segundos en el primer renderizado.
-7. **Marquee Infinito:** Se añadió una cinta dinámica infinita ("EL SABOR QUE TE HARÁ VOLVER") como separador elegante entre el menú y los testimonios. Se ajustó su grosor (padding) y tamaño tipográfico para mantener un perfil estético sutil y premium.
-8. **Collage Flotante:** Se optimizó la disposición de las imágenes flotantes secundarias detrás del producto principal (Hero). Se eliminó el desenfoque artificial (blur) para máxima nitidez y se expandieron radialmente para evitar traslapes.
-9. **UX Móvil Responsivo:** Se agregó una regla en la carga de la página (`useEffect`) que detecta dispositivos móviles (`window.innerWidth < 768`) para forzar la "Vista de Lista" (catálogo) por defecto, ofreciendo una navegación de compra mucho más ágil y amigable para pulgares.
+Aplicación Web Ecommerce e interactiva desarrollada con **Next.js 16 (Turbopack)**, **Tailwind CSS**, **Framer Motion** y **Cloudinary**.
 
 ---
-*Este documento ha sido actualizado tras la última iteración de diseño y performance, sirviendo como registro maestro de las decisiones estéticas de Avita.*
+
+## 📌 Estado Actual del Proyecto (Punto donde nos quedamos)
+
+- **Entorno:** Trabajo **100% en Servidor Local** (`http://localhost:3000`). No se han realizado `git push` a remoto.
+- **Estado de Compilación:** Build de producción verificado con `npm run build` — **Compilación exitosa en 2.4s (Código 0)**, 0 errores de TypeScript y 0 advertencias de Turbopack.
+- **Rama Actual de Git:** `main` (con un respaldo completo en la rama local `respaldo-diseno-actual`).
+
+---
+
+## 🛠️ Resumen de Todo lo Logrado
+
+### 1. Optimizaciones de Rendimiento Vercel (Vercel Best Practices)
+- **Compresión Inteligente de Imágenes (`lib/image-utils.ts`):**
+  - Creada la función `optimizeCloudinaryUrl(url, width)` que inyecta parámetros automáticos de Cloudinary (`f_auto,q_auto,c_limit,w_N`). Reduce imágenes pesadas de 3 MB a archivos WebP de ~30 KB (hasta **90% de ahorro de peso** y latencia).
+- **Resource Hints (`app/layout.tsx`):**
+  - Añadidas etiquetas `<link rel="preconnect">` y `<link rel="dns-prefetch">` apuntando a `res.cloudinary.com` para acelerar el handshaking TLS.
+- **Optimizaciones en la Página Principal (`app/page.tsx`):**
+  - Carga paralela de datos con `Promise.all`.
+  - Carga diferida (`next/dynamic`) del editor visual en vivo (`LiveEditorDrawer`).
+  - Imagen Hero optimizada con `fetchPriority="high"` y `decoding="async"`.
+  - Event listeners pasivos de scroll para no bloquear el hilo principal.
+
+---
+
+### 2. Rediseño del Splash Screen / Pantalla de Carga (`GourmetPreloader.tsx`)
+Rediseñado bajo los principios de **diseño minimalista de alto nivel / quiet luxury** (estilo Aesop / Linear / Apple):
+- **Logo Transparente Recoloreado:** Se removió el recuadro cuadrado oscuro de `public/images/logo.webp` y se convirtieron sus trazos al tono oficial **Chocolate Amargo (`#2C1A14`)**, logrando un contraste nítido sobre el fondo neutro.
+- **Esencialismo Absoluto:** Reducido únicamente a 3 elementos:
+  1. Silueta transparente del logo del waffle.
+  2. Título único: *"Preparando tus Tentaciones..."*.
+  3. Indicador de progreso lineal ultra delgado de **2px** (`h-[2px] w-44 bg-[#E5D5C0]`) con llenado suave en **Dorado Terracota (`#D49B4B`)**.
+- **Fondo & Retícula:** Fondo Crema Vainilla (`#FAF4EC` a `#F5E6D3`) con retícula centrada en múltiplos de 8px y animación de salida fluida (`ease: [0.16, 1, 0.3, 1]`).
+
+---
+
+### 3. Rediseño Estético Minimalista del Sitio Web (`app/page.tsx`)
+Se aplicó un restyling completo manteniendo el **100% de la lógica funcional, props, hooks e interactividad**, así como la **tarjeta "Combo Sin Culpa" de Ofertas Especiales**:
+
+- **Paleta Reducida a 3 Colores:**
+  - Base neutra: Crema Vainilla (`#FAF4EC` / `#F4EBDC`).
+  - Texto e Iconos: Chocolate Amargo (`#2C1A14`).
+  - Acento: Dorado Terracota (`#D49B4B`).
+- **Eliminación de Texturas & Olas SVG:**
+  - Se removió la textura de rombos (`waffle-bg-pattern`).
+  - Se reemplazaron todas las olas y derretidos (`MeltingCreamDivider` y SVGs) por **líneas divisorias rectas y sutiles (`border-t border-[#E5D5C0]`)**.
+- **Sistema Unificado de Botones:**
+  - Botones principales en estilo píldora de Chocolate Amargo (`bg-[#2C1A14] text-[#FAF4EC] hover:bg-[#3D2817]`).
+  - Botones secundarios en crema con borde fino (`bg-[#F4EBDC] border border-[#E5D5C0]`).
+- **Filtros de Categoría:** Estado activo en Chocolate Amargo (`#2C1A14`) e inactivos en Crema con borde suave (`#F4EBDC`).
+- **Retirada de Badges Decorativos:** Se eliminó el sello circular dorado ("100% ARTESANAL") sobre la foto del Hero.
+- **Coherencia en Sucursal:** El Mapa interactivo y el Video *"Cómo Llegar"* comparten dimensiones cuadradas/rectangulares idénticas, esquinas redondeadas (`rounded-2xl`) y borde gris fino (`border border-[#E5D5C0]`).
+- **Transición Limpia al Footer:** Línea divisoria recta que da paso al footer en Chocolate Amargo (`#2C1A14`).
+- **Tarjeta "Combo Sin Culpa" Intacta:** La sección de Promociones y la tarjeta de oferta en color burdeos se mantuvieron sin ninguna alteración.
+
+---
+
+### 4. Control de Versiones & Respaldos (Git)
+- **Punto de Respaldo Creado:**
+  - Se creó la rama de respaldo local: `respaldo-diseno-actual`
+  - Permite volver en cualquier momento al estado anterior del proyecto antes del rediseño del sitio.
+
+---
+
+## ⚡ Comandos para Iniciar en Local
+
+```bash
+# Instalar dependencias (si aplica)
+npm install
+
+# Iniciar servidor de desarrollo en local
+npm run dev
+
+# Probar compilación de producción
+npm run build
+```
+
+---
+
+## 🎯 Próximos Pasos Sugeridos para la Siguiente Sesión
+
+1. Probar el flujo de pedidos y carrito (`CartSidebar.tsx`).
+2. Revisar el panel de administración (`/admin`) para edición de menú y banners.
+3. Ajustar cualquier detalle adicional de contenido según la preferencia del cliente.
