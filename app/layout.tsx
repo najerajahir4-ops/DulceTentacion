@@ -16,12 +16,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Avita | Helados Artesanales y Waffles",
-  description: "Los mejores frappés, waffles y helados artesanales elaborados con ingredientes naturales. Pide a domicilio o visítanos frente al Parque Helen Tenka.",
-  keywords: "helados, waffles, frappés, postres, heladería artesanal, helados a domicilio, parque helen tenka, avita, heladería, postres cerca de mi",
+  title: "Dulce Tentación | Waffles, Crepes & Gelato Artesanal",
+  description: "Los mejores waffles, crepes y helados artesanales elaborados con ingredientes naturales. Pide a domicilio o visítanos en Santo Domingo.",
+  keywords: "waffles, crepes, helados artesanales, postres, dulce tentacion, santo domingo, postres a domicilio",
   openGraph: {
-    title: "Avita | Ice Cream & Waffles",
-    description: "El sabor que te hará volver. Frappés, waffles y helados artesanales.",
+    title: "Dulce Tentación | Waffles, Crepes & Gelato",
+    description: "Repostería y heladería artesanal en Santo Domingo. Waffles, crepes y gelato.",
     type: "website",
     locale: "es_EC",
   }

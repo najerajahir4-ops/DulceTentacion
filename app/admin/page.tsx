@@ -766,7 +766,7 @@ export default function AdminPage() {
             Volver a la Tienda
           </Link>
           <div className={`text-[11px] text-center ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
-            Avita v2.4 • Panel Corporativo
+            Dulce Tentación • Panel de Control
           </div>
         </div>
       </aside>
@@ -1672,7 +1672,7 @@ export default function AdminPage() {
                 <div className="space-y-3 text-center sm:text-left flex-1">
                   <div>
                     <h3 className={`text-base font-bold font-sans ${titleClass}`}>
-                      Logo Actual de Avita
+                      Logo Actual de Dulce Tentación
                     </h3>
                     <p className={`text-xs mt-1 leading-relaxed ${subtitleClass}`}>
                       Este logo se sincroniza automáticamente en el <strong>Header</strong> y el <strong>Footer</strong> de la tienda pública.
