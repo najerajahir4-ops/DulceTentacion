@@ -30,9 +30,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Parse price from string like "$3.50" to float
-  const parsePrice = (priceStr: string) => {
-    return parseFloat(priceStr.replace("$", ""));
+  // Parse price from string like "$3.50" or number to float safely
+  const parsePrice = (priceVal: any): number => {
+    if (typeof priceVal === "number") return priceVal;
+    if (!priceVal) return 0;
+    const str = String(priceVal);
+    const cleaned = str.replace(/[^0-9.]/g, "");
+    return parseFloat(cleaned) || 0;
   };
 
   const addToCart = (item: any, options?: Record<string, string>) => {
