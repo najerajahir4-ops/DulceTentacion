@@ -1,28 +1,69 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #FDF6EC; /* Fondo Crema */
-  --color-foreground: #7A1620; /* Marrón Vino */
-  --color-accent: #E4536B; /* Acento Fresa */
-  --color-accent-hover: #c4455a;
-  --color-secondary: #A97A4E; /* Dorado */
-  --color-tertiary: #8FAE7A; /* Pistacho */
-  --color-surface: #FFFFFF;
-  --color-surface-border: #f0e6da;
+  --color-background: #FAF4EC; /* Crema Vainilla */
+  --color-foreground: #2C1A14; /* Chocolate Amargo 85% */
+  --color-accent: #C81D31; /* Rojo Cereza Glaseada */
+  --color-accent-hover: #E02B43;
+  --color-secondary: #D49B4B; /* Dorado Caramelo Tostado */
+  --color-tertiary: #F0B865; /* Caramelo Dorado Claro */
+  --color-surface: #F4EBDC; /* Panna Cotta Cálida */
+  --color-surface-border: #E5D5C0;
   
-  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-serif: var(--font-fraunces), ui-serif, Lora, Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --background: #FDF6EC;
-  --foreground: #7A1620;
-  --accent: #E4536B;
-  --accent-hover: #c4455a;
-  --secondary: #A97A4E;
-  --tertiary: #8FAE7A;
-  --surface: #FFFFFF;
-  --surface-border: #f0e6da;
+  --background: #FAF4EC;
+  --foreground: #2C1A14;
+  --accent: #C81D31;
+  --accent-hover: #E02B43;
+  --secondary: #D49B4B;
+  --tertiary: #F0B865;
+  --surface: #F4EBDC;
+  --surface-border: #E5D5C0;
+}
+
+/* Waffle Grid Pattern Background Utility */
+.waffle-bg-pattern {
+  background-color: #FAF4EC;
+  background-image: radial-gradient(#D49B4B 0.75px, transparent 0.75px), radial-gradient(#D49B4B 0.75px, #FAF4EC 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  opacity: 0.95;
+}
+
+/* Bitten Corner Cutout Mask Utility ("La Mordida") */
+.bitten-corner-mask, .bite-mask {
+  clip-path: polygon(
+    0% 0%, 
+    calc(100% - 40px) 0%, 
+    calc(100% - 35px) 8px, 
+    calc(100% - 25px) 15px, 
+    calc(100% - 15px) 25px, 
+    calc(100% - 8px) 35px, 
+    100% 40px, 
+    100% 100%, 
+    0% 100%
+  );
+  mask-image: radial-gradient(circle 35px at top right, transparent 98%, black 100%);
+  -webkit-mask-image: radial-gradient(circle 35px at top right, transparent 98%, black 100%);
+}
+
+html.dark {
+  --background: #0F172A;
+  --foreground: #F8FAFC;
+  --accent: #C81D31;
+  --accent-hover: #E02B43;
+  --secondary: #D49B4B;
+  --tertiary: #F0B865;
+  --surface: #1E293B;
+  --surface-border: #334155;
+  --color-background: #0F172A;
+  --color-foreground: #F8FAFC;
+  --color-surface: #1E293B;
+  --color-surface-border: #334155;
 }
 
 body {
@@ -90,11 +131,49 @@ p {
   height: clamp(60px, 10vw, 120px);
 }
 
-/* Scrollbar hiding for horizontal gallery */
+/* Hide scrollbar for Chrome, Safari and Opera */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+/* Hide scrollbar for IE, Edge and Firefox */
 .hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Admin Input & Textarea high-contrast styling */
+.admin-input-light {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  caret-color: #E4536B !important;
+}
+.admin-input-light:hover {
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+.admin-input-light:focus {
+  background-color: #ffffff !important;
+  border-color: #E4536B !important;
+  color: #0f172a !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(228, 83, 107, 0.2) !important;
+}
+
+.admin-input-dark {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+  caret-color: #E4536B !important;
+}
+.admin-input-dark:hover {
+  border-color: #475569 !important;
+  color: #ffffff !important;
+}
+.admin-input-dark:focus {
+  background-color: #020617 !important;
+  border-color: #E4536B !important;
+  color: #ffffff !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(228, 83, 107, 0.2) !important;
 }

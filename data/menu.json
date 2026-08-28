@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Piña Colada",
+    "category": "Bolos Gourmet",
+    "price": "$5",
+    "description": "",
+    "image": "https://res.cloudinary.com/gpjsyq8h/image/upload/c_limit,f_auto,q_auto,w_800/v1787918800/menu_restaurante/1787918830651_bolopi_a.png",
+    "popular": false,
+    "isNew": false,
+    "available": true,
+    "hasOptions": false,
+    "id": "bolos-gourmet-1787918837304",
+    "imageSize": "normal",
+    "imageScale": 1.5,
+    "imageFit": "contain"
+  }
+]

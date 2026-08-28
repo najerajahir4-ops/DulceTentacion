@@ -1,0 +1,17 @@
+[
+  {
+    "id": "banner-1787919709103",
+    "title": "COMBO SIN CULPA",
+    "subtitle": "1 Crepe Goloso + 1 Milkshake Especial",
+    "price": "6.55",
+    "image": "https://res.cloudinary.com/gpjsyq8h/image/upload/c_limit,f_auto,q_auto,w_800/v1787919774/menu_restaurante/1787919804973_0809fd75-9372-477a-92b8-6ec3d5183d1d.png",
+    "badge": "OFERTA ESPECIAL",
+    "link": "#menu",
+    "active": true,
+    "imageSize": "normal",
+    "imageScale": 1.5,
+    "imageFit": "contain",
+    "blendMode": "multiply",
+    "layoutMode": "split"
+  }
+]
