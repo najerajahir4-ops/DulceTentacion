@@ -10,6 +10,15 @@ import {
 } from "@/lib/menu-store";
 import { deleteDishImageFromCloudinary } from "@/lib/cloudinary";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+  Pragma: "no-cache",
+  Expires: "0",
+};
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -20,15 +29,18 @@ export async function GET(request: NextRequest) {
       products = products.filter((p) => p.category.toLowerCase() === category.toLowerCase());
     }
 
-    return NextResponse.json({
-      success: true,
-      categories: MENU_CATEGORIES,
-      data: products,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        categories: MENU_CATEGORIES,
+        data: products,
+      },
+      { headers: NO_CACHE_HEADERS }
+    );
   } catch (error: any) {
     return NextResponse.json(
       { success: false, error: error.message || "Error al obtener el menú." },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }

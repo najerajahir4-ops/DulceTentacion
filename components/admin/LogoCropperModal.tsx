@@ -174,8 +174,8 @@ export function LogoCropperModal({
           }`}
         >
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-[#E4536B]/15 text-[#E4536B] flex items-center justify-center shadow-xs">
-              <Sparkles className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-full bg-[#C81D31]/15 text-[#C81D31] flex items-center justify-center shadow-xs">
+              <Sparkles className="w-4 h-4 text-amber-500" />
             </div>
             <div>
               <h3 className="text-sm font-bold font-serif leading-tight">
@@ -204,11 +204,11 @@ export function LogoCropperModal({
               onClick={() => fileInputRef.current?.click()}
               className={`p-8 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
                 isDarkMode
-                  ? "border-slate-700 bg-slate-950/50 hover:border-[#E4536B] hover:bg-slate-900"
-                  : "border-slate-300 bg-slate-50 hover:border-[#E4536B] hover:bg-rose-50/50"
+                  ? "border-slate-700 bg-slate-950/50 hover:border-[#C81D31] hover:bg-slate-900"
+                  : "border-slate-300 bg-slate-50 hover:border-[#C81D31] hover:bg-rose-50/50"
               }`}
             >
-              <div className="w-12 h-12 rounded-full bg-[#E4536B]/10 text-[#E4536B] flex items-center justify-center mb-3">
+              <div className="w-12 h-12 rounded-full bg-[#C81D31]/10 text-[#C81D31] flex items-center justify-center mb-3">
                 <Upload className="w-6 h-6" />
               </div>
               <h4 className="text-xs font-bold mb-1">
@@ -219,7 +219,7 @@ export function LogoCropperModal({
               </p>
               <button
                 type="button"
-                className="px-4 py-1.5 bg-[#E4536B] text-white text-xs font-bold rounded-full shadow-md hover:bg-[#c4455a] transition-all"
+                className="px-4 py-1.5 bg-[#C81D31] text-white text-xs font-bold font-sans rounded-xl shadow-xs hover:bg-[#A31627] transition-all"
               >
                 Buscar Imagen
               </button>
@@ -242,13 +242,13 @@ export function LogoCropperModal({
                   onMouseMove={handleMouseMove}
                   onMouseUp={handleMouseUp}
                   onMouseLeave={handleMouseUp}
-                  className="relative w-[240px] h-[240px] rounded-full overflow-hidden border-4 border-[#E4536B] shadow-2xl cursor-grab active:cursor-grabbing bg-white select-none group flex items-center justify-center p-2"
+                  className="relative w-[240px] h-[240px] rounded-full overflow-hidden border-2 border-slate-300 dark:border-slate-600 shadow-2xl cursor-grab active:cursor-grabbing bg-white select-none group flex items-center justify-center p-2"
                 >
                   {/* Image fitted inside viewport (object-contain base) */}
                   <img
                     ref={imageRef}
                     src={selectedImageSrc}
-                    alt="Vista previa del logo"
+                    alt="Recorte Logo"
                     draggable={false}
                     className="w-full h-full object-contain pointer-events-none transition-transform duration-75"
                     style={{
@@ -257,7 +257,7 @@ export function LogoCropperModal({
                   />
 
                   {/* Circular Overlay Help Indicator */}
-                  <div className="absolute inset-0 border-2 border-dashed border-[#E4536B]/40 rounded-full pointer-events-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute inset-0 border-2 border-dashed border-[#C81D31]/40 rounded-full pointer-events-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <span className="bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
                       <Move className="w-3 h-3" /> Arrastra para mover
                     </span>
@@ -271,10 +271,10 @@ export function LogoCropperModal({
                 <div className="space-y-1">
                   <div className="flex justify-between items-center text-xs font-bold">
                     <span className="flex items-center gap-1.5">
-                      <ZoomIn className="w-3.5 h-3.5 text-[#E4536B]" />
+                      <ZoomIn className="w-3.5 h-3.5 text-[#C81D31]" />
                       Zoom / Escala
                     </span>
-                    <span className="text-[#E4536B]">{Math.round(zoom * 100)}%</span>
+                    <span className="text-[#C81D31]">{Math.round(zoom * 100)}%</span>
                   </div>
                   <input
                     type="range"
@@ -283,7 +283,7 @@ export function LogoCropperModal({
                     step="0.05"
                     value={zoom}
                     onChange={(e) => setZoom(parseFloat(e.target.value))}
-                    className="w-full accent-[#E4536B] cursor-pointer"
+                    className="w-full accent-[#C81D31] cursor-pointer"
                   />
                 </div>
 
@@ -300,7 +300,7 @@ export function LogoCropperModal({
                   <button
                     type="button"
                     onClick={() => setSelectedImageSrc(null)}
-                    className="text-[11px] font-bold text-[#E4536B] hover:underline"
+                    className="text-[11px] font-bold text-[#C81D31] hover:underline"
                   >
                     Cambiar Foto
                   </button>
@@ -336,7 +336,7 @@ export function LogoCropperModal({
               type="button"
               disabled={isUploading}
               onClick={handleCropAndSave}
-              className="px-5 py-2 bg-[#E4536B] text-white text-xs font-bold rounded-full shadow-md hover:bg-[#c4455a] flex items-center gap-1.5 disabled:opacity-50 transition-all hover:scale-105"
+              className="px-5 py-2 bg-[#C81D31] text-white text-xs font-bold font-sans rounded-xl shadow-xs hover:bg-[#A31627] flex items-center gap-1.5 disabled:opacity-50 transition-all cursor-pointer"
             >
               {isUploading ? (
                 <>

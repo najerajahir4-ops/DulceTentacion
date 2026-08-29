@@ -10,7 +10,7 @@ interface LiveEditorDrawerProps {
   type: "banner" | "product" | "hero";
   item: any | null;
   onChangeRealtime: (updatedItem: any) => void;
-  onSaveSuccess: () => void;
+  onSaveSuccess: (savedItem?: any, type?: string) => void;
 }
 
 export function LiveEditorDrawer({
@@ -26,10 +26,10 @@ export function LiveEditorDrawer({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (item) {
+    if (isOpen && item) {
       setFormData({ ...item });
     }
-  }, [item?.id || item?.heroImageUrl]);
+  }, [isOpen, item]);
 
   if (!isOpen || !item || !formData) return null;
 
@@ -47,24 +47,26 @@ export function LiveEditorDrawer({
 
     try {
       if (type === "hero") {
+        const payload = {
+          heroImageUrl: formData.heroImageUrl,
+          heroImagePublicId: formData.heroImagePublicId,
+          heroImageScale: formData.heroImageScale,
+          heroImageFit: formData.heroImageFit,
+          heroTitle: formData.heroTitle !== undefined ? formData.heroTitle : "Una Dulce Tentación",
+          heroSubtitle: formData.heroSubtitle !== undefined ? formData.heroSubtitle : "Hecha Arte",
+          heroDescription: formData.heroDescription !== undefined ? formData.heroDescription : "",
+        };
+
         const res = await fetch("/api/settings", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            heroImageUrl: formData.heroImageUrl,
-            heroImagePublicId: formData.heroImagePublicId,
-            heroImageScale: formData.heroImageScale,
-            heroImageFit: formData.heroImageFit,
-            heroTitle: formData.heroTitle,
-            heroSubtitle: formData.heroSubtitle,
-            heroDescription: formData.heroDescription,
-          }),
+          body: JSON.stringify(payload),
         });
         const json = await res.json();
         if (!res.ok || !json.success) {
           throw new Error(json.error || "Fallo al guardar portada en vivo.");
         }
-        onSaveSuccess();
+        onSaveSuccess(json.data || payload, "hero");
         onClose();
         return;
       }
@@ -83,7 +85,7 @@ export function LiveEditorDrawer({
         throw new Error(json.error || "Fallo al guardar cambios en vivo.");
       }
 
-      onSaveSuccess();
+      onSaveSuccess(json.data || formData, type);
       onClose();
     } catch (err: any) {
       setError(err.message || "Error al guardar los cambios.");

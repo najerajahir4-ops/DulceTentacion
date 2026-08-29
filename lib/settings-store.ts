@@ -36,28 +36,35 @@ export function getSettings(): SiteSettings {
     return memorySettingsCache;
   }
 
-  try {
-    if (fs.existsSync(TMP_FILE)) {
-      const content = fs.readFileSync(TMP_FILE, "utf-8");
-      const parsed = JSON.parse(content);
-      const loaded: SiteSettings = { ...DEFAULT_SETTINGS, ...parsed };
-      memorySettingsCache = loaded;
-      return loaded;
-    }
+  let loadedData: Partial<SiteSettings> = {};
+  let dataMtime = 0;
+  let tmpMtime = 0;
 
+  try {
     if (fs.existsSync(DATA_FILE)) {
+      dataMtime = fs.statSync(DATA_FILE).mtimeMs;
       const content = fs.readFileSync(DATA_FILE, "utf-8");
-      const parsed = JSON.parse(content);
-      const loaded: SiteSettings = { ...DEFAULT_SETTINGS, ...parsed };
-      memorySettingsCache = loaded;
-      return loaded;
+      loadedData = JSON.parse(content);
     }
   } catch (error) {
-    console.error("Error reading settings file:", error);
+    console.error("Error reading data settings file:", error);
   }
 
-  memorySettingsCache = DEFAULT_SETTINGS;
-  return DEFAULT_SETTINGS;
+  try {
+    if (fs.existsSync(TMP_FILE)) {
+      tmpMtime = fs.statSync(TMP_FILE).mtimeMs;
+      if (tmpMtime >= dataMtime) {
+        const content = fs.readFileSync(TMP_FILE, "utf-8");
+        loadedData = { ...loadedData, ...JSON.parse(content) };
+      }
+    }
+  } catch (error) {
+    console.error("Error reading tmp settings file:", error);
+  }
+
+  const loaded: SiteSettings = { ...DEFAULT_SETTINGS, ...loadedData };
+  memorySettingsCache = loaded;
+  return loaded;
 }
 
 export function updateSettings(newSettings: Partial<SiteSettings>): SiteSettings {
@@ -72,12 +79,11 @@ export function updateSettings(newSettings: Partial<SiteSettings>): SiteSettings
       fs.mkdirSync(dirname, { recursive: true });
     }
     fs.writeFileSync(DATA_FILE, JSON.stringify(updated, null, 2), "utf-8");
-    return updated;
   } catch (error) {
     // Expected on Vercel Serverless Read-Only File System
   }
 
-  // 2. Fallback to /tmp directory (Serverless environment)
+  // 2. Also write to /tmp directory (Serverless consistency)
   try {
     fs.writeFileSync(TMP_FILE, JSON.stringify(updated, null, 2), "utf-8");
   } catch (error) {

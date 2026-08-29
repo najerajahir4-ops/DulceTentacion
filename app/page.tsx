@@ -259,8 +259,34 @@ export default function LandingPage() {
     }
   };
 
-  const handleLiveSaveSuccess = () => {
-    fetch("/api/settings")
+  const handleLiveSaveSuccess = (savedData?: any, type?: string) => {
+    if (type === "hero" && savedData) {
+      if (savedData.heroImageUrl) setHeroImageUrl(savedData.heroImageUrl);
+      if (savedData.heroTitle !== undefined) setHeroTitle(savedData.heroTitle);
+      if (savedData.heroSubtitle !== undefined) setHeroSubtitle(savedData.heroSubtitle);
+      if (savedData.heroDescription !== undefined) setHeroDescription(savedData.heroDescription);
+      if (savedData.heroImageScale !== undefined) setHeroImageScale(savedData.heroImageScale);
+      if (savedData.heroImageFit !== undefined) setHeroImageFit(savedData.heroImageFit);
+      return;
+    }
+
+    if (type === "banner" && savedData) {
+      setBanners((prev) =>
+        prev.map((b) => (b.id === savedData.id ? savedData : b))
+      );
+      return;
+    }
+
+    if (type === "product" && savedData) {
+      setShuffledMenu((prev) =>
+        prev.map((p) => (p.id === savedData.id ? savedData : p))
+      );
+      return;
+    }
+
+    // Fallback re-fetch with cache-busting timestamp and no-store
+    const timestamp = Date.now();
+    fetch(`/api/settings?_t=${timestamp}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {
@@ -272,10 +298,10 @@ export default function LandingPage() {
           if (json.data.heroImageFit !== undefined) setHeroImageFit(json.data.heroImageFit);
         }
       });
-    fetch("/api/banners?active=true")
+    fetch(`/api/banners?active=true&_t=${timestamp}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => json.success && setBanners(json.data));
-    fetch("/api/menu")
+    fetch(`/api/menu?_t=${timestamp}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => json.success && setShuffledMenu(json.data));
   };
@@ -284,16 +310,28 @@ export default function LandingPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"gallery" | "list">("gallery");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     // Public storefront website is always Light Mode
     document.documentElement.classList.remove("dark");
 
-    // Parallel data fetching (Vercel Best Practice: eliminating waterfalls)
+    // Check if the current user is an authenticated admin (non-blocking)
+    fetch("/api/auth/me", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((authJson) => {
+        if (authJson && authJson.authenticated && authJson.user?.role === "admin") {
+          setIsAdmin(true);
+        }
+      })
+      .catch(() => {});
+
+    // Parallel data fetching with cache-busting (Vercel Best Practice)
+    const timestamp = Date.now();
     Promise.all([
-      fetch("/api/settings").then((res) => res.json()).catch(() => null),
-      fetch("/api/banners?active=true").then((res) => res.json()).catch(() => null),
-      fetch("/api/menu").then((res) => res.json()).catch(() => null),
+      fetch(`/api/settings?_t=${timestamp}`, { cache: "no-store" }).then((res) => res.json()).catch(() => null),
+      fetch(`/api/banners?active=true&_t=${timestamp}`, { cache: "no-store" }).then((res) => res.json()).catch(() => null),
+      fetch(`/api/menu?_t=${timestamp}`, { cache: "no-store" }).then((res) => res.json()).catch(() => null),
     ]).then(([settingsJson, bannersJson, menuJson]) => {
       if (settingsJson && settingsJson.success && settingsJson.data) {
         if (settingsJson.data.logoUrl) setLogoUrl(settingsJson.data.logoUrl);
@@ -495,15 +533,23 @@ export default function LandingPage() {
               )}
             </button>
 
-            {/* Admin Panel Access Button (Persona con Traje) */}
-            <a
-              href="/admin"
-              className="p-3 rounded-full bg-[#F4EBDC] text-[#2C1A14] border border-[#D49B4B]/40 hover:bg-[#2C1A14] hover:text-white transition-all shadow-xs cursor-pointer group flex items-center justify-center relative z-50"
-              title="Panel de Administración"
-              aria-label="Panel Administrador"
-            >
-              <User className="w-5 h-5" />
-            </a>
+            {/* Admin Panel Access Button - Renderizado Condicional Exclusivo para el Admin */}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="p-2.5 sm:px-3.5 sm:py-2 rounded-full bg-[#C81D31] text-[#FAF4EC] border border-[#D49B4B] hover:bg-[#2C1A14] hover:border-[#FAF4EC] transition-all shadow-md cursor-pointer group flex items-center gap-2 relative z-50 animate-fadeIn"
+                title="Panel de Administración (Sesión Activa)"
+                aria-label="Panel Administrador"
+              >
+                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black tracking-wider text-white">
+                  AD
+                </div>
+                <span className="hidden sm:inline text-xs font-bold font-sans tracking-wide">
+                  Admin
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse hidden sm:inline-block" />
+              </Link>
+            )}
 
             {/* Mobile Menu Toggle Button */}
             <button 
@@ -544,14 +590,23 @@ export default function LandingPage() {
             >
               Sucursal
             </a>
-            <a 
-              href="/admin" 
-              onClick={() => setIsOpen(false)}
-              className="block font-serif font-bold text-lg text-[#C81D31] hover:underline flex items-center gap-2 pt-2 border-t border-[#D49B4B]/20"
-            >
-              <User className="w-5 h-5" />
-              <span>Panel Administrador</span>
-            </a>
+            {isAdmin && (
+              <Link 
+                href="/admin" 
+                onClick={() => setIsOpen(false)}
+                className="block font-serif font-bold text-lg text-[#C81D31] hover:underline flex items-center justify-between pt-2 border-t border-[#D49B4B]/20"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-[#C81D31] text-white flex items-center justify-center text-xs font-bold">
+                    AD
+                  </div>
+                  <span>Panel Administrador</span>
+                </div>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-sans font-bold">
+                  Activo
+                </span>
+              </Link>
+            )}
           </div>
         )}
       </nav>

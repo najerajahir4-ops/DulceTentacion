@@ -2,14 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSettings, updateSettings } from "@/lib/settings-store";
 import { deleteImageFromCloudinary } from "@/lib/cloudinary";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+  Pragma: "no-cache",
+  Expires: "0",
+};
+
 export async function GET() {
   try {
     const settings = getSettings();
-    return NextResponse.json({ success: true, data: settings });
+    return NextResponse.json({ success: true, data: settings }, { headers: NO_CACHE_HEADERS });
   } catch (error: any) {
     return NextResponse.json(
       { success: false, error: error.message || "Error al obtener configuración." },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }
@@ -70,15 +79,18 @@ export async function PUT(request: NextRequest) {
 
     const updated = updateSettings(updateData);
 
-    return NextResponse.json({
-      success: true,
-      message: "Configuración del sitio actualizada exitosamente.",
-      data: updated,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Configuración del sitio actualizada exitosamente.",
+        data: updated,
+      },
+      { headers: NO_CACHE_HEADERS }
+    );
   } catch (error: any) {
     return NextResponse.json(
       { success: false, error: error.message || "Error al actualizar la configuración." },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }

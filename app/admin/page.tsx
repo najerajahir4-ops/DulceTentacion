@@ -39,6 +39,10 @@ import {
   Flame,
   Settings,
   Coffee,
+  LogOut,
+  Key,
+  Lock,
+  ShieldCheck,
 } from "lucide-react";
 import { MENU_CATEGORIES, MenuCategory, MenuItem } from "@/lib/menu-types";
 import { DishImageUploader } from "@/components/admin/DishImageUploader";
@@ -73,6 +77,63 @@ export default function AdminPage() {
   const [isLogoSaving, setIsLogoSaving] = useState(false);
   const [isHeroSaving, setIsHeroSaving] = useState(false);
 
+  // Admin Password & Security state
+  const [currentPass, setCurrentPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  const [isUpdatingPass, setIsUpdatingPass] = useState(false);
+  const [passwordFeedback, setPasswordFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordFeedback(null);
+
+    if (newPass !== confirmPass) {
+      setPasswordFeedback({ type: "error", message: "Las nuevas contraseñas no coinciden." });
+      return;
+    }
+
+    if (newPass.length < 6) {
+      setPasswordFeedback({ type: "error", message: "La nueva contraseña debe tener al menos 6 caracteres." });
+      return;
+    }
+
+    try {
+      setIsUpdatingPass(true);
+      const res = await fetch("/api/auth/password", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currentPassword: currentPass,
+          newPassword: newPass,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setPasswordFeedback({ type: "error", message: data.error || "Error al actualizar contraseña." });
+      } else {
+        setPasswordFeedback({ type: "success", message: "¡Contraseña actualizada exitosamente!" });
+        setCurrentPass("");
+        setNewPass("");
+        setConfirmPass("");
+      }
+    } catch (err: any) {
+      setPasswordFeedback({ type: "error", message: "Error al comunicar con el servidor." });
+    } finally {
+      setIsUpdatingPass(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      window.location.href = "/";
+    } catch (err) {
+      window.location.href = "/";
+    }
+  };
+
   useEffect(() => {
     // Ensure public storefront html class is clean of global dark class
     document.documentElement.classList.remove("dark");
@@ -81,8 +142,8 @@ export default function AdminPage() {
       setIsDarkMode(true);
     }
 
-    // Load site logo & hero settings
-    fetch("/api/settings")
+    // Load site logo & hero settings with cache-busting
+    fetch("/api/settings?_t=" + Date.now(), { cache: "no-store" })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {
@@ -537,7 +598,7 @@ export default function AdminPage() {
   // Dynamic Theme Helper Classes
   const cardBgClass = isDarkMode
     ? "bg-[#141C2E] border-slate-800 text-slate-100 shadow-none"
-    : "bg-white border-slate-200 text-slate-800 shadow-2xs";
+    : "bg-white border-slate-200 text-slate-800 shadow-xs";
 
   const titleClass = isDarkMode ? "text-white" : "text-slate-900";
   const subtitleClass = isDarkMode ? "text-slate-400" : "text-slate-500";
@@ -546,60 +607,83 @@ export default function AdminPage() {
     : "w-full px-3.5 py-2 text-xs rounded-xl border admin-input-light font-sans";
 
   return (
-    <div className={`min-h-screen flex flex-col md:flex-row transition-colors duration-200 ${isDarkMode ? "bg-[#0B0F17] text-slate-100" : "bg-[#F8FAFC] text-slate-800"}`}>
+    <div className={`min-h-screen flex flex-col md:flex-row transition-colors duration-200 ${isDarkMode ? "bg-[#0B0F17] text-slate-100" : "bg-[#F4F6F8] text-slate-800"}`}>
       {/* MOBILE TOP BAR */}
-      <div className={`md:hidden border-b px-4 py-3 flex items-center justify-between sticky top-0 z-50 ${isDarkMode ? "bg-[#0F172A] border-slate-800 text-white" : "bg-white border-slate-200 text-slate-900"}`}>
+      <div className={`md:hidden border-b px-4 py-3 flex items-center justify-between sticky top-0 z-50 ${isDarkMode ? "bg-[#111622] border-[#1E2536] text-white" : "bg-white border-slate-200 text-slate-900 shadow-xs"}`}>
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#7A1620] flex items-center justify-center text-white font-bold text-sm">
-            W
+          <div className={`w-8 h-8 rounded-lg p-1 flex items-center justify-center overflow-hidden shrink-0 ${isDarkMode ? "bg-white/5 border border-white/10" : "bg-slate-50 border border-slate-200"}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={logoUrl || "/images/logo.webp"}
+              alt="Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
-            <h1 className="text-sm font-bold leading-tight font-sans">Waffles & Crepes</h1>
-            <p className={`text-[10px] font-medium ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Panel Administrativo</p>
+            <h1 className={`text-sm font-serif font-bold leading-tight ${titleClass}`}>Dulce Tentación</h1>
+            <p className={`text-[10px] font-sans font-medium ${subtitleClass}`}>Panel Administrativo</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={toggleDarkMode}
-            className={`p-2 rounded-lg border text-xs font-semibold ${isDarkMode ? "bg-slate-800 border-slate-700 text-amber-400" : "bg-slate-50 border-slate-200 text-slate-700"}`}
+            className={`p-2 rounded-lg border text-xs font-semibold ${isDarkMode ? "border-slate-700 bg-slate-800 text-amber-400" : "border-slate-200 bg-slate-50 text-amber-600"}`}
           >
-            {isDarkMode ? <Moon className="w-4 h-4 text-amber-400" /> : <Sun className="w-4 h-4 text-amber-500" />}
+            {isDarkMode ? <Moon className="w-4 h-4 text-amber-400" /> : <Sun className="w-4 h-4 text-amber-600" />}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`p-2 rounded-lg ${isDarkMode ? "text-slate-300 hover:bg-slate-800" : "text-slate-600 hover:bg-slate-100"}`}
+            className={`p-2 rounded-lg ${isDarkMode ? "text-slate-300 hover:bg-slate-800" : "text-slate-700 hover:bg-slate-100"}`}
           >
             <MenuIcon className="w-5 h-5" />
           </button>
         </div>
       </div>
 
-      {/* LEFT SIDEBAR */}
+      {/* LEFT SIDEBAR (CLEAN WHITE BY DEFAULT / DARK IN DARK MODE) */}
       <aside
-        className={`fixed md:sticky top-0 left-0 h-screen w-64 min-w-[256px] shrink-0 border-r z-40 flex flex-col justify-between transition-all duration-200 ${
-          isDarkMode ? "bg-[#0F172A] border-slate-800 text-slate-100" : "bg-white border-slate-200 text-slate-800"
+        className={`fixed md:sticky top-0 left-0 h-screen w-64 min-w-[256px] shrink-0 z-40 flex flex-col justify-between transition-all duration-200 ${
+          isDarkMode
+            ? "border-r border-[#1E2536] bg-[#111622] text-slate-200"
+            : "border-r border-slate-200 bg-white text-slate-700 shadow-xs"
         } ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         <div>
-          {/* Brand Header */}
-          <div className={`p-6 border-b ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
+          {/* Brand Header with Official Waffle Logo */}
+          <div className={`p-5 border-b ${isDarkMode ? "border-[#1E2536]" : "border-slate-100"}`}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#7A1620] to-[#E4536B] flex items-center justify-center text-white font-serif font-bold text-lg shadow-sm">
-                W
+              <div className={`w-10 h-10 rounded-xl p-1.5 flex items-center justify-center overflow-hidden shrink-0 shadow-xs ${isDarkMode ? "bg-white/5 border border-white/10" : "bg-slate-50 border border-slate-200"}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={logoUrl || "/images/logo.webp"}
+                  alt="Logo Oficial"
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    if (!target.dataset.fallback) {
+                      target.dataset.fallback = "true";
+                      target.src = "/images/logo.webp";
+                    }
+                  }}
+                />
               </div>
-              <div>
-                <h2 className={`font-bold text-sm tracking-tight font-sans ${isDarkMode ? "text-white" : "text-slate-900"}`}>Waffles & Crepes</h2>
+              <div className="min-w-0">
+                <h2 className={`font-serif font-bold text-sm tracking-tight truncate ${titleClass}`}>
+                  Dulce Tentación
+                </h2>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span className={`text-[11px] font-medium ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Online • Santo Domingo</span>
+                  <span className={`text-[11px] font-sans font-medium ${subtitleClass}`}>
+                    Panel de Control
+                  </span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Navigation Items */}
-          <div className="px-3 py-6 space-y-1.5">
-            <div className={`px-3 pb-2 text-[10px] font-bold uppercase tracking-wider ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
+          {/* Navigation Items (Left 3px border in Rojo Cereza for active) */}
+          <div className="px-3 py-5 space-y-1">
+            <div className={`px-3 pb-2 text-[10px] font-bold uppercase tracking-wider font-sans ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
               Menú Principal
             </div>
 
@@ -609,22 +693,28 @@ export default function AdminPage() {
                 setCurrentTab("analytics");
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`w-full flex items-center justify-between py-2.5 pr-3 text-xs font-semibold font-sans transition-all cursor-pointer rounded-r-xl rounded-l-none ${
                 currentTab === "analytics"
-                  ? isDarkMode ? "bg-[#E4536B] text-white shadow-sm" : "bg-slate-900 text-white shadow-xs"
-                  : isDarkMode ? "text-slate-400 hover:bg-slate-800 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? isDarkMode
+                    ? "border-l-[3px] border-[#C81D31] bg-[#1C2333] text-white pl-3.5"
+                    : "border-l-[3px] border-[#C81D31] bg-slate-100 text-slate-900 font-bold pl-3.5"
+                  : isDarkMode
+                    ? "border-l-[3px] border-transparent text-slate-400 hover:bg-[#1C2333]/60 hover:text-white pl-3.5"
+                    : "border-l-[3px] border-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 pl-3.5"
               }`}
             >
               <div className="flex items-center gap-3">
-                <BarChart3 className="w-4 h-4" />
+                <BarChart3 className={`w-4 h-4 ${currentTab === "analytics" ? (isDarkMode ? "text-white" : "text-slate-900") : (isDarkMode ? "text-slate-400" : "text-slate-500")}`} />
                 <span>Analítica & Visitas</span>
               </div>
               {analytics && (
                 <span
-                  className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-bold font-sans ${
                     currentTab === "analytics"
-                      ? "bg-white/20 text-white"
-                      : isDarkMode ? "bg-emerald-950/60 text-emerald-400 border border-emerald-800/40" : "bg-emerald-50 text-emerald-600"
+                      ? isDarkMode ? "bg-white/15 text-white" : "bg-slate-200 text-slate-800"
+                      : isDarkMode
+                        ? "bg-slate-800 text-slate-300"
+                        : "bg-slate-100 text-slate-600"
                   }`}
                 >
                   +{analytics.todayVisits} hoy
@@ -638,20 +728,24 @@ export default function AdminPage() {
                 setCurrentTab("products");
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`w-full flex items-center justify-between py-2.5 pr-3 text-xs font-semibold font-sans transition-all cursor-pointer rounded-r-xl rounded-l-none ${
                 currentTab === "products"
-                  ? isDarkMode ? "bg-[#E4536B] text-white shadow-sm" : "bg-slate-900 text-white shadow-xs"
-                  : isDarkMode ? "text-slate-400 hover:bg-slate-800 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? isDarkMode
+                    ? "border-l-[3px] border-[#C81D31] bg-[#1C2333] text-white pl-3.5"
+                    : "border-l-[3px] border-[#C81D31] bg-slate-100 text-slate-900 font-bold pl-3.5"
+                  : isDarkMode
+                    ? "border-l-[3px] border-transparent text-slate-400 hover:bg-[#1C2333]/60 hover:text-white pl-3.5"
+                    : "border-l-[3px] border-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 pl-3.5"
               }`}
             >
               <div className="flex items-center gap-3">
-                <ShoppingBag className="w-4 h-4" />
+                <ShoppingBag className={`w-4 h-4 ${currentTab === "products" ? (isDarkMode ? "text-white" : "text-slate-900") : (isDarkMode ? "text-slate-400" : "text-slate-500")}`} />
                 <span>Productos</span>
               </div>
               <span
-                className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                  currentTab === "products" 
-                    ? "bg-white/20 text-white" 
+                className={`text-[10px] px-2 py-0.5 rounded-full font-bold font-sans ${
+                  currentTab === "products"
+                    ? isDarkMode ? "bg-white/15 text-white" : "bg-slate-200 text-slate-800"
                     : isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-600"
                 }`}
               >
@@ -665,21 +759,25 @@ export default function AdminPage() {
                 setCurrentTab("banners");
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`w-full flex items-center justify-between py-2.5 pr-3 text-xs font-semibold font-sans transition-all cursor-pointer rounded-r-xl rounded-l-none ${
                 currentTab === "banners"
-                  ? isDarkMode ? "bg-[#E4536B] text-white shadow-sm" : "bg-slate-900 text-white shadow-xs"
-                  : isDarkMode ? "text-slate-400 hover:bg-slate-800 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? isDarkMode
+                    ? "border-l-[3px] border-[#C81D31] bg-[#1C2333] text-white pl-3.5"
+                    : "border-l-[3px] border-[#C81D31] bg-slate-100 text-slate-900 font-bold pl-3.5"
+                  : isDarkMode
+                    ? "border-l-[3px] border-transparent text-slate-400 hover:bg-[#1C2333]/60 hover:text-white pl-3.5"
+                    : "border-l-[3px] border-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 pl-3.5"
               }`}
             >
               <div className="flex items-center gap-3">
-                <Sparkles className="w-4 h-4 text-amber-400" />
+                <Sparkles className={`w-4 h-4 ${currentTab === "banners" ? (isDarkMode ? "text-white" : "text-slate-900") : (isDarkMode ? "text-slate-400" : "text-slate-500")}`} />
                 <span>Banners Promocionales</span>
               </div>
               <span
-                className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                  currentTab === "banners" 
-                    ? "bg-white/20 text-white" 
-                    : isDarkMode ? "bg-amber-400/10 text-amber-400 border border-amber-400/20" : "bg-amber-50 text-amber-600 border border-amber-200"
+                className={`text-[10px] px-2 py-0.5 rounded-full font-bold font-sans ${
+                  currentTab === "banners"
+                    ? isDarkMode ? "bg-white/15 text-white" : "bg-slate-200 text-slate-800"
+                    : isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-600"
                 }`}
               >
                 {banners.length}
@@ -692,17 +790,29 @@ export default function AdminPage() {
                 setCurrentTab("locations");
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`w-full flex items-center justify-between py-2.5 pr-3 text-xs font-semibold font-sans transition-all cursor-pointer rounded-r-xl rounded-l-none ${
                 currentTab === "locations"
-                  ? isDarkMode ? "bg-[#E4536B] text-white shadow-sm" : "bg-slate-900 text-white shadow-xs"
-                  : isDarkMode ? "text-slate-400 hover:bg-slate-800 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? isDarkMode
+                    ? "border-l-[3px] border-[#C81D31] bg-[#1C2333] text-white pl-3.5"
+                    : "border-l-[3px] border-[#C81D31] bg-slate-100 text-slate-900 font-bold pl-3.5"
+                  : isDarkMode
+                    ? "border-l-[3px] border-transparent text-slate-400 hover:bg-[#1C2333]/60 hover:text-white pl-3.5"
+                    : "border-l-[3px] border-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 pl-3.5"
               }`}
             >
               <div className="flex items-center gap-3">
-                <MapPin className="w-4 h-4" />
+                <MapPin className={`w-4 h-4 ${currentTab === "locations" ? (isDarkMode ? "text-white" : "text-slate-900") : (isDarkMode ? "text-slate-400" : "text-slate-500")}`} />
                 <span>Sucursales</span>
               </div>
-              <span className={`text-[10px] font-medium ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>2 sedes</span>
+              <span
+                className={`text-[10px] px-2 py-0.5 rounded-full font-bold font-sans ${
+                  currentTab === "locations"
+                    ? isDarkMode ? "bg-white/15 text-white" : "bg-slate-200 text-slate-800"
+                    : isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-600"
+                }`}
+              >
+                2 sedes
+              </span>
             </button>
 
             {/* 5. LOGO DE LA MARCA */}
@@ -711,21 +821,25 @@ export default function AdminPage() {
                 setCurrentTab("settings");
                 setMobileMenuOpen(false);
               }}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+              className={`w-full flex items-center justify-between py-2.5 pr-3 text-xs font-semibold font-sans transition-all cursor-pointer rounded-r-xl rounded-l-none ${
                 currentTab === "settings"
-                  ? isDarkMode ? "bg-[#E4536B] text-white shadow-sm" : "bg-slate-900 text-white shadow-xs"
-                  : isDarkMode ? "text-slate-400 hover:bg-slate-800 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? isDarkMode
+                    ? "border-l-[3px] border-[#C81D31] bg-[#1C2333] text-white pl-3.5"
+                    : "border-l-[3px] border-[#C81D31] bg-slate-100 text-slate-900 font-bold pl-3.5"
+                  : isDarkMode
+                    ? "border-l-[3px] border-transparent text-slate-400 hover:bg-[#1C2333]/60 hover:text-white pl-3.5"
+                    : "border-l-[3px] border-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 pl-3.5"
               }`}
             >
               <div className="flex items-center gap-3">
-                <Settings className="w-4 h-4 text-[#E4536B]" />
+                <Settings className={`w-4 h-4 ${currentTab === "settings" ? (isDarkMode ? "text-white" : "text-slate-900") : (isDarkMode ? "text-slate-400" : "text-slate-500")}`} />
                 <span>Logo & Marca</span>
               </div>
               <span
-                className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                  currentTab === "settings" 
-                    ? "bg-white/20 text-white" 
-                    : isDarkMode ? "bg-[#E4536B]/15 text-[#E4536B]" : "bg-rose-50 text-[#E4536B]"
+                className={`text-[10px] px-2 py-0.5 rounded-full font-bold font-sans ${
+                  currentTab === "settings"
+                    ? isDarkMode ? "bg-white/15 text-white" : "bg-slate-200 text-slate-800"
+                    : isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-600"
                 }`}
               >
                 Oficial
@@ -735,38 +849,52 @@ export default function AdminPage() {
         </div>
 
         {/* Sidebar Footer */}
-        <div className={`p-4 border-t space-y-3 ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
+        <div className={`p-4 border-t space-y-2.5 ${isDarkMode ? "border-[#1E2536]" : "border-slate-100"}`}>
           {/* Modo Noche / Día Switch */}
           <button
             onClick={toggleDarkMode}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold font-sans border transition-all cursor-pointer ${
               isDarkMode
-                ? "bg-slate-800/80 border-slate-700/80 text-amber-300 hover:bg-slate-800"
-                : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
+                ? "border-[#253046] bg-[#18202F] text-slate-300 hover:bg-[#1F293D]"
+                : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
             }`}
           >
             <div className="flex items-center gap-2">
-              {isDarkMode ? <Moon className="w-4 h-4 text-amber-400" /> : <Sun className="w-4 h-4 text-amber-500" />}
+              {isDarkMode ? <Moon className="w-4 h-4 text-amber-400" /> : <Sun className="w-4 h-4 text-amber-600" />}
               <span>{isDarkMode ? "Modo Noche" : "Modo Día"}</span>
             </div>
-            <span className={`text-[10px] px-2.5 py-0.5 rounded-md font-bold uppercase tracking-wider ${isDarkMode ? "bg-amber-400/20 text-amber-300" : "bg-slate-200 text-slate-700"}`}>
+            <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold uppercase tracking-wider ${isDarkMode ? "bg-amber-400/20 text-amber-300" : "bg-slate-200 text-slate-600"}`}>
               {isDarkMode ? "ON" : "OFF"}
             </span>
           </button>
 
           <Link
             href="/"
-            className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold transition-colors ${
-              isDarkMode 
-                ? "border-slate-800 text-slate-300 hover:bg-slate-800" 
-                : "border-slate-200 text-slate-700 hover:bg-slate-50"
+            className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold font-sans transition-colors ${
+              isDarkMode
+                ? "border-[#253046] bg-transparent text-slate-300 hover:bg-[#18202F] hover:text-white"
+                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900"
             }`}
           >
             <ChevronLeft className="w-3.5 h-3.5" />
             Volver a la Tienda
           </Link>
-          <div className={`text-[11px] text-center ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
-            Dulce Tentación • Panel de Control
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold font-sans transition-colors cursor-pointer ${
+              isDarkMode
+                ? "border-rose-950/50 text-rose-400 hover:bg-rose-950/30 hover:text-rose-300"
+                : "border-rose-200 text-[#C81D31] hover:bg-rose-50 hover:text-[#A31627]"
+            }`}
+            title="Cerrar sesión de administrador"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            Cerrar Sesión
+          </button>
+          <div className={`text-[11px] text-center font-sans pt-1 ${subtitleClass}`}>
+            Dulce Tentación • Gestión
           </div>
         </div>
       </aside>
@@ -789,11 +917,11 @@ export default function AdminPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className={`text-2xl font-bold font-sans tracking-tight flex items-center gap-2.5 ${titleClass}`}>
-                  <BarChart3 className="w-6 h-6 text-[#E4536B]" />
+                <h1 className={`text-2xl sm:text-3xl font-serif font-bold tracking-tight flex items-center gap-2.5 ${titleClass}`}>
+                  <BarChart3 className="w-6 h-6 text-[#C81D31]" />
                   Analítica de Tráfico Diario
                 </h1>
-                <p className={`text-xs mt-1 ${subtitleClass}`}>
+                <p className={`text-xs mt-1 font-sans ${subtitleClass}`}>
                   Métricas en tiempo real de visitas, visitantes únicos y afluencia al menú.
                 </p>
               </div>
@@ -801,7 +929,7 @@ export default function AdminPage() {
               <button
                 onClick={loadAnalytics}
                 disabled={analyticsLoading}
-                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-bold transition-colors shadow-2xs self-start ${
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-bold font-sans transition-colors shadow-2xs self-start cursor-pointer ${
                   isDarkMode
                     ? "bg-[#141C2E] border-slate-800 text-slate-200 hover:bg-slate-800"
                     : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
@@ -817,7 +945,7 @@ export default function AdminPage() {
               {/* Visitas Hoy */}
               <div className={`rounded-2xl p-5 border ${cardBgClass}`}>
                 <div className={`flex items-center justify-between ${subtitleClass}`}>
-                  <span className="text-xs font-semibold">Visitas Hoy</span>
+                  <span className="text-xs font-semibold font-sans">Visitas Hoy</span>
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isDarkMode ? "bg-blue-950/60 text-blue-400" : "bg-blue-50 text-blue-600"}`}>
                     <Eye className="w-4 h-4" />
                   </div>
@@ -828,7 +956,7 @@ export default function AdminPage() {
                   </span>
                   {analytics && (
                     <span
-                      className={`text-xs font-bold px-2 py-0.5 rounded-md ${
+                      className={`text-xs font-bold px-2 py-0.5 rounded-md font-sans ${
                         analytics.growthRate >= 0
                           ? isDarkMode ? "bg-emerald-950/60 text-emerald-400" : "bg-emerald-50 text-emerald-600"
                           : isDarkMode ? "bg-rose-950/60 text-rose-400" : "bg-rose-50 text-rose-600"
@@ -839,7 +967,7 @@ export default function AdminPage() {
                     </span>
                   )}
                 </div>
-                <p className={`text-[11px] mt-1.5 ${subtitleClass}`}>
+                <p className={`text-[11px] mt-1.5 font-sans ${subtitleClass}`}>
                   vs {analytics?.yesterdayVisits ?? 0} visitas ayer
                 </p>
               </div>
@@ -847,7 +975,7 @@ export default function AdminPage() {
               {/* Visitantes Únicos */}
               <div className={`rounded-2xl p-5 border ${cardBgClass}`}>
                 <div className={`flex items-center justify-between ${subtitleClass}`}>
-                  <span className="text-xs font-semibold">Visitantes Únicos</span>
+                  <span className="text-xs font-semibold font-sans">Visitantes Únicos</span>
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isDarkMode ? "bg-emerald-950/60 text-emerald-400" : "bg-emerald-50 text-emerald-600"}`}>
                     <Users className="w-4 h-4" />
                   </div>
@@ -857,13 +985,13 @@ export default function AdminPage() {
                     {analytics?.uniqueVisitorsToday ?? "--"}
                   </span>
                 </div>
-                <p className={`text-[11px] mt-1.5 ${subtitleClass}`}>Personas estimadas navegando hoy</p>
+                <p className={`text-[11px] mt-1.5 font-sans ${subtitleClass}`}>Personas estimadas navegando hoy</p>
               </div>
 
               {/* Total Visitas */}
               <div className={`rounded-2xl p-5 border ${cardBgClass}`}>
                 <div className={`flex items-center justify-between ${subtitleClass}`}>
-                  <span className="text-xs font-semibold">Total Histórico</span>
+                  <span className="text-xs font-semibold font-sans">Total Histórico</span>
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isDarkMode ? "bg-violet-950/60 text-violet-400" : "bg-violet-50 text-violet-600"}`}>
                     <TrendingUp className="w-4 h-4" />
                   </div>
@@ -873,13 +1001,13 @@ export default function AdminPage() {
                     {analytics?.totalVisits ? analytics.totalVisits.toLocaleString() : "--"}
                   </span>
                 </div>
-                <p className={`text-[11px] mt-1.5 ${subtitleClass}`}>Aperturas de menú registradas</p>
+                <p className={`text-[11px] mt-1.5 font-sans ${subtitleClass}`}>Aperturas de menú registradas</p>
               </div>
 
               {/* Dispositivo Principal */}
               <div className={`rounded-2xl p-5 border ${cardBgClass}`}>
                 <div className={`flex items-center justify-between ${subtitleClass}`}>
-                  <span className="text-xs font-semibold">Móvil vs Escritorio</span>
+                  <span className="text-xs font-semibold font-sans">Móvil vs Escritorio</span>
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isDarkMode ? "bg-amber-950/60 text-amber-400" : "bg-amber-50 text-amber-600"}`}>
                     <Smartphone className="w-4 h-4" />
                   </div>
@@ -888,9 +1016,9 @@ export default function AdminPage() {
                   <span className={`text-3xl font-extrabold font-sans ${titleClass}`}>
                     {analytics?.deviceBreakdown?.mobile ?? 80}%
                   </span>
-                  <span className={`text-xs font-medium ${subtitleClass}`}>Móvil</span>
+                  <span className={`text-xs font-medium font-sans ${subtitleClass}`}>Móvil</span>
                 </div>
-                <p className={`text-[11px] mt-1.5 ${subtitleClass}`}>
+                <p className={`text-[11px] mt-1.5 font-sans ${subtitleClass}`}>
                   {analytics?.deviceBreakdown?.desktop ?? 20}% desde PC / Laptops
                 </p>
               </div>
@@ -901,24 +1029,27 @@ export default function AdminPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className={`text-base font-bold font-sans ${titleClass}`}>Tráfico de los Últimos 7 Días</h2>
-                  <p className={`text-xs ${subtitleClass}`}>Número de visitas recibidas día por día</p>
+                  <p className={`text-xs font-sans ${subtitleClass}`}>Número de visitas recibidas día por día</p>
                 </div>
-                <span className={`text-xs font-semibold px-3 py-1 rounded-full ${isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-500"}`}>
+                <span className={`text-xs font-semibold px-3 py-1 rounded-full font-sans ${isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-100 text-slate-500"}`}>
                   Última semana
                 </span>
               </div>
 
-              {/* Interactive Bar Chart */}
+              {/* Interactive Bar Chart (Neutral colors + Peak / Today highlighted in Rojo Cereza) */}
               <div className="pt-6 pb-2">
                 <div className={`flex items-end justify-between gap-2 sm:gap-6 border-b px-2 sm:px-6 pb-2 ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
                   {analytics?.dailyTimeline?.map((day, idx) => {
+                    const maxTimelineVisits = Math.max(...(analytics?.dailyTimeline?.map((d) => d.visits) || [1]));
                     const heightPercent = Math.max(16, Math.round((day.visits / maxChartVisits) * 100));
                     const isToday = idx === (analytics?.dailyTimeline?.length ?? 0) - 1;
+                    const isHighest = day.visits === maxTimelineVisits && day.visits > 0;
+                    const isHighlighted = isToday || isHighest;
 
                     return (
                       <div key={day.date} className="flex-1 flex flex-col items-center gap-2 group relative">
                         {/* Tooltip on hover */}
-                        <div className="absolute -top-9 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-md whitespace-nowrap z-20">
+                        <div className="absolute -top-9 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-md whitespace-nowrap z-20 font-sans">
                           {day.visits} visitas ({day.uniqueVisitors} únicos)
                         </div>
 
@@ -926,13 +1057,15 @@ export default function AdminPage() {
                         <div className={`w-full max-w-[52px] h-40 rounded-t-xl overflow-hidden flex flex-col justify-end relative shadow-2xs ${isDarkMode ? "bg-slate-800/60" : "bg-slate-100/90"}`}>
                           <div
                             style={{ height: `${heightPercent}%` }}
-                            className={`w-full rounded-t-xl transition-all duration-500 flex items-start justify-center pt-1.5 ${
-                              isToday
-                                ? "bg-gradient-to-t from-[#7A1620] to-[#E4536B] shadow-sm shadow-[#E4536B]/30"
-                                : isDarkMode ? "bg-slate-600 group-hover:bg-[#E4536B]" : "bg-slate-800 group-hover:bg-[#E4536B]"
+                            className={`w-full rounded-t-xl transition-all duration-300 flex items-start justify-center pt-1.5 ${
+                              isHighlighted
+                                ? "bg-[#C81D31] shadow-xs"
+                                : isDarkMode
+                                ? "bg-slate-700 group-hover:bg-slate-600"
+                                : "bg-slate-200 group-hover:bg-slate-300"
                             }`}
                           >
-                            <span className="text-[10px] font-bold text-white/90 drop-shadow-xs">
+                            <span className={`text-[10px] font-bold font-sans ${isHighlighted ? "text-white" : isDarkMode ? "text-slate-200" : "text-slate-700"}`}>
                               {day.visits}
                             </span>
                           </div>
@@ -940,8 +1073,8 @@ export default function AdminPage() {
 
                         {/* Day label */}
                         <span
-                          className={`text-[11px] font-semibold tracking-tight ${
-                            isToday ? "text-[#E4536B] font-bold" : subtitleClass
+                          className={`text-[11px] font-semibold tracking-tight font-sans ${
+                            isHighlighted ? "text-[#C81D31] font-bold" : subtitleClass
                           }`}
                         >
                           {day.label}
@@ -958,7 +1091,7 @@ export default function AdminPage() {
               {/* Horas de Mayor Afluencia */}
               <div className={`rounded-2xl p-6 border space-y-4 ${cardBgClass}`}>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-[#E4536B]" />
+                  <Clock className="w-4 h-4 text-[#C81D31]" />
                   <h3 className={`text-sm font-bold font-sans ${titleClass}`}>Horarios con Mayor Demanda</h3>
                 </div>
                 <p className={`text-xs ${subtitleClass}`}>
@@ -991,7 +1124,7 @@ export default function AdminPage() {
               {/* Desglose por Dispositivos */}
               <div className={`rounded-2xl p-6 border space-y-4 ${cardBgClass}`}>
                 <div className="flex items-center gap-2">
-                  <Smartphone className="w-4 h-4 text-[#E4536B]" />
+                  <Smartphone className="w-4 h-4 text-[#C81D31]" />
                   <h3 className={`text-sm font-bold font-sans ${titleClass}`}>Distribución por Dispositivo</h3>
                 </div>
                 <p className={`text-xs ${subtitleClass}`}>
@@ -1007,7 +1140,7 @@ export default function AdminPage() {
                   />
                   <div
                     style={{ width: `${analytics?.deviceBreakdown?.desktop ?? 15}%` }}
-                    className="bg-[#E4536B]"
+                    className="bg-[#C81D31]"
                     title="Escritorio"
                   />
                   <div
@@ -1101,36 +1234,33 @@ export default function AdminPage() {
             {/* Header with Title and Action Button */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className={`text-2xl font-bold font-sans tracking-tight flex items-center gap-2.5 ${titleClass}`}>
-                  <ShoppingBag className="w-6 h-6 text-[#E4536B]" />
+                <h1 className={`text-2xl sm:text-3xl font-serif font-bold tracking-tight flex items-center gap-2.5 ${titleClass}`}>
+                  <ShoppingBag className="w-6 h-6 text-[#C81D31]" />
                   Catálogo de Productos
                 </h1>
-                <p className={`text-xs mt-1 ${subtitleClass}`}>
+                <p className={`text-xs mt-1 font-sans ${subtitleClass}`}>
                   Administra las 7 categorías de waffles, crepes, gelato, bolos y combos.
                 </p>
               </div>
 
+              {/* Primary Action Button (Exclusively in Rojo Cereza #C81D31) */}
               <button
                 onClick={() => handleOpenCreateModal()}
-                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all self-start sm:self-auto ${
-                  isDarkMode
-                    ? "bg-[#E4536B] text-white hover:bg-[#c4455a]"
-                    : "bg-slate-900 text-white hover:bg-slate-800"
-                }`}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold font-sans text-white bg-[#C81D31] hover:bg-[#A31627] shadow-xs transition-all self-start sm:self-auto cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 Nuevo Producto
               </button>
             </div>
 
-            {/* Category Filter Pills (Vector Icons) */}
+            {/* Category Filter Pills (Neutral Secondary Buttons) */}
             <div className={`rounded-2xl p-2.5 border ${cardBgClass}`}>
               <div className="flex overflow-x-auto gap-1.5 pb-1 hide-scrollbar">
                 <button
                   onClick={() => setSelectedCategory("Todos")}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-2 ${
+                  className={`px-4 py-2 rounded-xl text-xs font-bold font-sans transition-all whitespace-nowrap flex items-center gap-2 cursor-pointer ${
                     selectedCategory === "Todos"
-                      ? isDarkMode ? "bg-[#E4536B] text-white shadow-sm" : "bg-slate-900 text-white shadow-xs"
+                      ? isDarkMode ? "bg-slate-700 text-white shadow-xs" : "bg-slate-900 text-white shadow-xs"
                       : isDarkMode ? "text-slate-400 hover:bg-slate-800 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                   }`}
                 >
@@ -1154,9 +1284,9 @@ export default function AdminPage() {
                     <button
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-2 group ${
+                      className={`px-4 py-2 rounded-xl text-xs font-bold font-sans transition-all whitespace-nowrap flex items-center gap-2 group cursor-pointer ${
                         selectedCategory === cat
-                          ? isDarkMode ? "bg-[#E4536B] text-white shadow-sm" : "bg-slate-900 text-white shadow-xs"
+                          ? isDarkMode ? "bg-slate-700 text-white shadow-xs" : "bg-slate-900 text-white shadow-xs"
                           : isDarkMode ? "text-slate-400 hover:bg-slate-800 hover:text-white" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                       }`}
                     >
@@ -1186,7 +1316,7 @@ export default function AdminPage() {
                   placeholder="Buscar producto por nombre..."
                   value={productSearch}
                   onChange={(e) => setProductSearch(e.target.value)}
-                  className={`w-full pl-10 pr-4 py-2 text-xs rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#E4536B] ${
+                  className={`w-full pl-10 pr-4 py-2 text-xs rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#C81D31] ${
                     isDarkMode
                       ? "bg-[#141C2E] border-slate-800 text-white placeholder-slate-500"
                       : "bg-white border-slate-200 text-slate-800 placeholder-slate-400"
@@ -1228,7 +1358,7 @@ export default function AdminPage() {
             {/* PRODUCTS CONTENT */}
             {productsLoading ? (
               <div className="flex flex-col items-center justify-center py-20 text-slate-400 space-y-3">
-                <Loader2 className="w-8 h-8 animate-spin text-[#E4536B]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#C81D31]" />
                 <p className="text-xs font-semibold">Cargando catálogo de productos...</p>
               </div>
             ) : filteredProducts.length === 0 ? (
@@ -1244,7 +1374,7 @@ export default function AdminPage() {
                   onClick={() =>
                     handleOpenCreateModal(selectedCategory === "Todos" ? "Waffles" : selectedCategory)
                   }
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#E4536B] text-white text-xs font-bold hover:bg-[#c4455a]"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#C81D31] text-white text-xs font-bold hover:bg-[#A31627] shadow-xs cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   Crear Producto
@@ -1402,7 +1532,7 @@ export default function AdminPage() {
                               </span>
                             )}
                             {product.isNew && (
-                              <span className="bg-[#E4536B] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-2xs inline-flex items-center gap-1">
+                              <span className="bg-[#C81D31] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-2xs inline-flex items-center gap-1">
                                 <Sparkles className="w-3 h-3 text-white" />
                                 Nuevo
                               </span>
@@ -1416,7 +1546,7 @@ export default function AdminPage() {
                             <h3 className={`font-bold font-sans text-sm line-clamp-1 ${titleClass}`}>
                               {product.name}
                             </h3>
-                            <span className="font-bold font-sans text-[#E4536B] text-sm">{product.price}</span>
+                            <span className="font-bold font-sans text-[#C81D31] text-sm">{product.price}</span>
                           </div>
                           <span className={`text-[10px] font-bold uppercase tracking-wider ${subtitleClass} flex items-center gap-1`}>
                             {CatIcon && <CatIcon className="w-3.5 h-3.5" />}
@@ -1471,18 +1601,18 @@ export default function AdminPage() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className={`text-2xl font-bold font-sans tracking-tight flex items-center gap-2.5 ${titleClass}`}>
+                <h1 className={`text-2xl sm:text-3xl font-serif font-bold tracking-tight flex items-center gap-2.5 ${titleClass}`}>
                   <Sparkles className="w-6 h-6 text-amber-400" />
                   Banners Promocionales (Estilo KFC)
                 </h1>
-                <p className={`text-xs mt-1 ${subtitleClass}`}>
+                <p className={`text-xs mt-1 font-sans ${subtitleClass}`}>
                   Administra las ofertas, combos y anuncios que aparecen en el carrusel de la tienda pública.
                 </p>
               </div>
 
               <button
                 onClick={handleOpenCreateBannerModal}
-                className="px-4 py-2.5 rounded-xl bg-[#E4536B] hover:bg-[#c4455a] text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-[#C81D31] hover:bg-[#A31627] text-white text-xs font-bold font-sans flex items-center gap-2 shadow-xs transition-all cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 <span>Nuevo Banner Promocional</span>
@@ -1491,14 +1621,14 @@ export default function AdminPage() {
 
             {bannersLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-[#E4536B]" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#C81D31]" />
               </div>
             ) : banners.length === 0 ? (
               <div className={`p-12 text-center rounded-2xl border ${cardBgClass}`}>
-                <p className="text-sm font-semibold">No hay banners promocionales creados.</p>
+                <p className="text-sm font-semibold font-sans">No hay banners promocionales creados.</p>
                 <button
                   onClick={handleOpenCreateBannerModal}
-                  className="mt-4 px-4 py-2 bg-[#E4536B] text-white rounded-xl text-xs font-bold"
+                  className="mt-4 px-4 py-2 bg-[#C81D31] hover:bg-[#A31627] text-white rounded-xl text-xs font-bold font-sans cursor-pointer shadow-xs"
                 >
                   Crear Primer Banner
                 </button>
@@ -1511,7 +1641,7 @@ export default function AdminPage() {
                     className={`rounded-2xl p-5 border relative overflow-hidden flex flex-col justify-between space-y-4 ${cardBgClass}`}
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <span className="bg-[#E4536B] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">
+                      <span className="bg-[#C81D31] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">
                         {banner.badge}
                       </span>
                       <div className="flex items-center gap-2">
@@ -1567,11 +1697,11 @@ export default function AdminPage() {
         {currentTab === "locations" && (
           <div className="space-y-6">
             <div>
-              <h1 className={`text-2xl font-bold font-sans tracking-tight flex items-center gap-2.5 ${titleClass}`}>
-                <MapPin className="w-6 h-6 text-[#E4536B]" />
+              <h1 className={`text-2xl sm:text-3xl font-serif font-bold tracking-tight flex items-center gap-2.5 ${titleClass}`}>
+                <MapPin className="w-6 h-6 text-[#C81D31]" />
                 Sucursales en Santo Domingo
               </h1>
-              <p className={`text-xs mt-1 ${subtitleClass}`}>
+              <p className={`text-xs mt-1 font-sans ${subtitleClass}`}>
                 Información de puntos de venta y atención al cliente.
               </p>
             </div>
@@ -1579,21 +1709,21 @@ export default function AdminPage() {
             <div className="grid md:grid-cols-2 gap-6">
               {/* Casa Matriz */}
               <div className={`rounded-2xl p-6 border space-y-4 ${cardBgClass}`}>
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? "bg-rose-950/60 text-rose-400" : "bg-rose-50 text-[#E4536B]"}`}>
-                  <MapPin className="w-5 h-5 text-[#E4536B]" />
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? "bg-rose-950/60 text-rose-400" : "bg-rose-50 text-[#C81D31]"}`}>
+                  <MapPin className="w-5 h-5 text-[#C81D31]" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#E4536B] block">
+                  <span className="text-[10px] font-bold font-sans uppercase tracking-wider text-[#C81D31] block">
                     Casa Matriz
                   </span>
                   <h3 className={`text-base font-bold font-sans mt-0.5 ${titleClass}`}>
                     Av. la Lorena y Lázaro Cárdenas esquina
                   </h3>
-                  <p className={`text-xs mt-1 ${subtitleClass}`}>
+                  <p className={`text-xs mt-1 font-sans ${subtitleClass}`}>
                     Santo Domingo de los Tsáchilas, Ecuador
                   </p>
                 </div>
-                <div className={`p-3 rounded-xl text-xs space-y-1 font-medium ${isDarkMode ? "bg-slate-900/80 border border-slate-800 text-slate-300" : "bg-slate-50 border border-slate-100 text-slate-600"}`}>
+                <div className={`p-3 rounded-xl text-xs space-y-1 font-medium font-sans ${isDarkMode ? "bg-slate-900/80 border border-slate-800 text-slate-300" : "bg-slate-50 border border-slate-100 text-slate-600"}`}>
                   <div className="flex justify-between">
                     <span>Horario de Atención:</span>
                     <span className={`font-bold ${titleClass}`}>14:00 - 22:00</span>
@@ -1607,21 +1737,21 @@ export default function AdminPage() {
 
               {/* Sucursal #1 */}
               <div className={`rounded-2xl p-6 border space-y-4 ${cardBgClass}`}>
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? "bg-rose-950/60 text-rose-400" : "bg-rose-50 text-[#E4536B]"}`}>
-                  <MapPin className="w-5 h-5 text-[#E4536B]" />
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? "bg-rose-950/60 text-rose-400" : "bg-rose-50 text-[#C81D31]"}`}>
+                  <MapPin className="w-5 h-5 text-[#C81D31]" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#E4536B] block">
+                  <span className="text-[10px] font-bold font-sans uppercase tracking-wider text-[#C81D31] block">
                     Sucursal #1
                   </span>
                   <h3 className={`text-base font-bold font-sans mt-0.5 ${titleClass}`}>
                     Los Rosales, calle Venezuela
                   </h3>
-                  <p className={`text-xs mt-1 ${subtitleClass}`}>
+                  <p className={`text-xs mt-1 font-sans ${subtitleClass}`}>
                     Santo Domingo de los Tsáchilas, Ecuador
                   </p>
                 </div>
-                <div className={`p-3 rounded-xl text-xs space-y-1 font-medium ${isDarkMode ? "bg-slate-900/80 border border-slate-800 text-slate-300" : "bg-slate-50 border border-slate-100 text-slate-600"}`}>
+                <div className={`p-3 rounded-xl text-xs space-y-1 font-medium font-sans ${isDarkMode ? "bg-slate-900/80 border border-slate-800 text-slate-300" : "bg-slate-50 border border-slate-100 text-slate-600"}`}>
                   <div className="flex justify-between">
                     <span>Horario de Atención:</span>
                     <span className={`font-bold ${titleClass}`}>14:00 - 22:00</span>
@@ -1642,30 +1772,32 @@ export default function AdminPage() {
         {currentTab === "settings" && (
           <div className="space-y-6">
             <div>
-              <h1 className={`text-2xl font-bold font-sans tracking-tight flex items-center gap-2.5 ${titleClass}`}>
-                <Settings className="w-6 h-6 text-[#E4536B]" />
+              <h1 className={`text-2xl sm:text-3xl font-serif font-bold tracking-tight flex items-center gap-2.5 ${titleClass}`}>
+                <Settings className="w-6 h-6 text-[#C81D31]" />
                 Logo Oficial de la Marca
               </h1>
-              <p className={`text-xs mt-1 ${subtitleClass}`}>
+              <p className={`text-xs mt-1 font-sans ${subtitleClass}`}>
                 Gestiona el logo que se muestra en el encabezado y pie de página de toda la tienda web.
               </p>
             </div>
 
             <div className={`rounded-3xl p-6 sm:p-8 border space-y-6 max-w-2xl ${cardBgClass}`}>
               <div className="flex flex-col sm:flex-row items-center gap-6">
-                {/* Current Circular Logo Preview */}
-                <div className="relative group">
-                  <div className="w-32 h-32 rounded-full border-4 border-[#E4536B] shadow-xl overflow-hidden bg-white flex items-center justify-center p-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={logoUrl}
-                      alt="Logo Oficial"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 bg-[#E4536B] text-white p-2 rounded-full shadow-lg border-2 border-white">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
+                {/* Current Clean Logo Preview (Without red circle or extra ornaments) */}
+                <div className="w-32 h-32 rounded-2xl border border-slate-200 bg-white p-3 flex items-center justify-center shadow-xs overflow-hidden shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={logoUrl || "/images/logo.webp"}
+                    alt="Logo Oficial"
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      if (!target.dataset.fallback) {
+                        target.dataset.fallback = "true";
+                        target.src = "/images/logo.webp";
+                      }
+                    }}
+                  />
                 </div>
 
                 {/* Info & Action */}
@@ -1674,7 +1806,7 @@ export default function AdminPage() {
                     <h3 className={`text-base font-bold font-sans ${titleClass}`}>
                       Logo Actual de Dulce Tentación
                     </h3>
-                    <p className={`text-xs mt-1 leading-relaxed ${subtitleClass}`}>
+                    <p className={`text-xs mt-1 leading-relaxed font-sans ${subtitleClass}`}>
                       Este logo se sincroniza automáticamente en el <strong>Header</strong> y el <strong>Footer</strong> de la tienda pública.
                     </p>
                   </div>
@@ -1684,7 +1816,7 @@ export default function AdminPage() {
                       type="button"
                       disabled={isLogoSaving}
                       onClick={() => setIsLogoModalOpen(true)}
-                      className="px-5 py-2.5 bg-[#E4536B] text-white text-xs font-bold rounded-full shadow-md hover:bg-[#c4455a] flex items-center gap-2 transition-all hover:scale-105"
+                      className="px-5 py-2.5 bg-[#C81D31] hover:bg-[#A31627] text-white text-xs font-bold font-sans rounded-xl shadow-xs flex items-center gap-2 transition-all cursor-pointer"
                     >
                       <Edit2 className="w-4 h-4" />
                       <span>Cambiar y Recortar Logo</span>
@@ -1694,10 +1826,10 @@ export default function AdminPage() {
               </div>
 
               {/* Space Saving Info Alert */}
-              <div className={`p-4 rounded-2xl border text-xs leading-relaxed space-y-1 ${
+              <div className={`p-4 rounded-2xl border text-xs leading-relaxed space-y-1 font-sans ${
                 isDarkMode ? "bg-slate-900/60 border-slate-800 text-slate-300" : "bg-rose-50/60 border-rose-200/60 text-slate-700"
               }`}>
-                <div className="flex items-center gap-2 font-bold text-[#E4536B]">
+                <div className="flex items-center gap-2 font-bold text-[#C81D31]">
                   <CheckCircle2 className="w-4 h-4" />
                   Optimización de Almacenamiento Automático
                 </div>
@@ -1711,7 +1843,7 @@ export default function AdminPage() {
             <div className={`rounded-3xl p-6 sm:p-8 border space-y-6 max-w-2xl ${cardBgClass}`}>
               <div>
                 <h2 className={`text-lg font-bold font-sans flex items-center gap-2 ${titleClass}`}>
-                  <Sparkles className="w-5 h-5 text-[#E4536B]" />
+                  <Sparkles className="w-5 h-5 text-amber-500" />
                   Foto Principal de la Portada (Hero Showcase)
                 </h2>
                 <p className={`text-xs mt-1 ${subtitleClass}`}>
@@ -1732,7 +1864,7 @@ export default function AdminPage() {
 
                 <div className="flex-1 space-y-3">
                   <div className="space-y-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#E4536B] block">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#C81D31] block">
                       Subir y Cambiar Foto con Eliminación de Fondo
                     </span>
                     <p className={`text-xs ${subtitleClass}`}>
@@ -1748,6 +1880,94 @@ export default function AdminPage() {
                   />
                 </div>
               </div>
+            </div>
+
+            {/* 3. CARD SEGURIDAD & CONTRASEÑA DE ADMINISTRADOR */}
+            <div className={`rounded-3xl p-6 sm:p-8 border space-y-6 max-w-2xl ${cardBgClass}`}>
+              <div>
+                <h2 className={`text-lg font-bold font-sans flex items-center gap-2 ${titleClass}`}>
+                  <Lock className="w-5 h-5 text-[#C81D31]" />
+                  Seguridad de la Cuenta y Clave de Administrador
+                </h2>
+                <p className={`text-xs mt-1 ${subtitleClass}`}>
+                  Actualiza tu contraseña de acceso para proteger el panel. Los cambios se guardan de forma encriptada y segura.
+                </p>
+              </div>
+
+              <form onSubmit={handleUpdatePassword} className="space-y-4">
+                {passwordFeedback && (
+                  <div
+                    className={`p-3.5 rounded-2xl text-xs flex items-center gap-2.5 ${
+                      passwordFeedback.type === "success"
+                        ? isDarkMode ? "bg-emerald-950/50 border border-emerald-800 text-emerald-300" : "bg-emerald-50 border border-emerald-200 text-emerald-800"
+                        : isDarkMode ? "bg-rose-950/50 border border-rose-800 text-rose-300" : "bg-rose-50 border border-rose-200 text-rose-800"
+                    }`}
+                  >
+                    {passwordFeedback.type === "success" ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    ) : (
+                      <X className="w-4 h-4 text-rose-400 shrink-0" />
+                    )}
+                    <span>{passwordFeedback.message}</span>
+                  </div>
+                )}
+
+                <div className="space-y-1">
+                  <label className={`text-xs font-bold ${titleClass}`}>Contraseña Actual *</label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={currentPass}
+                    onChange={(e) => setCurrentPass(e.target.value)}
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className={`text-xs font-bold ${titleClass}`}>Nueva Contraseña *</label>
+                    <input
+                      type="password"
+                      required
+                      placeholder="Mínimo 6 caracteres"
+                      value={newPass}
+                      onChange={(e) => setNewPass(e.target.value)}
+                      className={inputClass}
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className={`text-xs font-bold ${titleClass}`}>Confirmar Nueva Contraseña *</label>
+                    <input
+                      type="password"
+                      required
+                      placeholder="Repite la contraseña"
+                      value={confirmPass}
+                      onChange={(e) => setConfirmPass(e.target.value)}
+                      className={inputClass}
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isUpdatingPass}
+                    className="px-5 py-2.5 rounded-xl bg-[#C81D31] hover:bg-[#A31627] text-white text-xs font-bold font-sans transition-all disabled:opacity-50 flex items-center gap-2 cursor-pointer shadow-xs"
+                  >
+                    {isUpdatingPass ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" /> Guardando nueva contraseña...
+                      </>
+                    ) : (
+                      <>
+                        <Key className="w-3.5 h-3.5 text-white" /> Actualizar Contraseña
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}
@@ -1847,7 +2067,7 @@ export default function AdminPage() {
                       type="checkbox"
                       checked={formData.popular}
                       onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
-                      className="rounded text-[#E4536B] focus:ring-[#E4536B]"
+                      className="rounded text-[#C81D31] focus:ring-[#C81D31]"
                     />
                     <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                     Pop
@@ -1858,7 +2078,7 @@ export default function AdminPage() {
                       type="checkbox"
                       checked={formData.isNew}
                       onChange={(e) => setFormData({ ...formData, isNew: e.target.checked })}
-                      className="rounded text-[#E4536B] focus:ring-[#E4536B]"
+                      className="rounded text-[#C81D31] focus:ring-[#C81D31]"
                     />
                     <Sparkles className="w-3.5 h-3.5 text-rose-500" />
                     Nuevo
@@ -1902,7 +2122,7 @@ export default function AdminPage() {
               {/* Apariencia y Escala de Imagen (Estilo WordPress) */}
               <div className={`p-3.5 rounded-2xl border space-y-3 ${isDarkMode ? "bg-slate-950/70 border-slate-800" : "bg-slate-50 border-slate-200"}`}>
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#E4536B]" />
+                  <Sparkles className="w-4 h-4 text-amber-500" />
                   <span className={`text-xs font-bold font-sans ${titleClass}`}>
                     Apariencia y Tamaños de Imagen (Estilo WordPress)
                   </span>
@@ -1969,7 +2189,7 @@ export default function AdminPage() {
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-5 py-2 rounded-xl bg-[#E4536B] text-white text-xs font-bold hover:bg-[#c4455a] flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
+                  className="px-5 py-2.5 rounded-xl bg-[#C81D31] text-white text-xs font-bold font-sans hover:bg-[#A31627] flex items-center gap-1.5 disabled:opacity-50 shadow-xs cursor-pointer"
                 >
                   {isSaving ? (
                     <>
@@ -2031,7 +2251,7 @@ export default function AdminPage() {
               <div className="min-w-0 flex-1">
                 <h4 className={`text-xs font-bold font-sans truncate ${titleClass}`}>{productToDelete.name}</h4>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[10px] font-bold text-[#E4536B]">{productToDelete.price}</span>
+                  <span className="text-[10px] font-bold text-[#C81D31]">{productToDelete.price}</span>
                   <span className={`text-[10px] ${subtitleClass}`}>• {productToDelete.category}</span>
                 </div>
               </div>
@@ -2167,7 +2387,7 @@ export default function AdminPage() {
               {/* Apariencia y Escala de Imagen del Banner (Estilo WordPress) */}
               <div className={`p-3.5 rounded-2xl border space-y-3 ${isDarkMode ? "bg-slate-950/70 border-slate-800" : "bg-slate-50 border-slate-200"}`}>
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#E4536B]" />
+                  <Sparkles className="w-4 h-4 text-amber-500" />
                   <span className={`text-xs font-bold font-sans ${titleClass}`}>
                     Apariencia y Escala de Imagen del Banner (Estilo WordPress)
                   </span>
@@ -2233,7 +2453,7 @@ export default function AdminPage() {
                 <button
                   type="submit"
                   disabled={isSavingBanner}
-                  className="px-5 py-2 rounded-xl bg-[#E4536B] text-white text-xs font-bold hover:bg-[#c4455a] flex items-center gap-1.5 disabled:opacity-50 shadow-sm"
+                  className="px-5 py-2.5 rounded-xl bg-[#C81D31] text-white text-xs font-bold font-sans hover:bg-[#A31627] flex items-center gap-1.5 disabled:opacity-50 shadow-xs cursor-pointer"
                 >
                   {isSavingBanner ? (
                     <>

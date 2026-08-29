@@ -46,29 +46,39 @@ export function getAllBanners(): PromoBanner[] {
     return memoryBannersCache;
   }
 
-  try {
-    if (fs.existsSync(TMP_FILE)) {
-      const data = fs.readFileSync(TMP_FILE, "utf-8");
-      const parsed = JSON.parse(data);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        memoryBannersCache = parsed as PromoBanner[];
-        return memoryBannersCache;
-      }
-    }
+  let loadedBanners: PromoBanner[] | null = null;
+  let dataMtime = 0;
+  let tmpMtime = 0;
 
+  try {
     if (fs.existsSync(DATA_FILE)) {
+      dataMtime = fs.statSync(DATA_FILE).mtimeMs;
       const data = fs.readFileSync(DATA_FILE, "utf-8");
       const parsed = JSON.parse(data);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        memoryBannersCache = parsed as PromoBanner[];
-        return memoryBannersCache;
+        loadedBanners = parsed as PromoBanner[];
       }
     }
   } catch (error) {
-    console.error("Error reading banners file:", error);
+    console.error("Error reading data banners file:", error);
   }
 
-  memoryBannersCache = DEFAULT_BANNERS;
+  try {
+    if (fs.existsSync(TMP_FILE)) {
+      tmpMtime = fs.statSync(TMP_FILE).mtimeMs;
+      if (tmpMtime >= dataMtime) {
+        const data = fs.readFileSync(TMP_FILE, "utf-8");
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          loadedBanners = parsed as PromoBanner[];
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error reading tmp banners file:", error);
+  }
+
+  memoryBannersCache = loadedBanners || DEFAULT_BANNERS;
   return memoryBannersCache;
 }
 
@@ -82,12 +92,11 @@ export function saveAllBanners(banners: PromoBanner[]): void {
       fs.mkdirSync(dirname, { recursive: true });
     }
     fs.writeFileSync(DATA_FILE, JSON.stringify(banners, null, 2), "utf-8");
-    return;
   } catch (error) {
     // Expected on Vercel Serverless Read-Only File System
   }
 
-  // 2. Fallback to /tmp directory (Serverless environment)
+  // 2. Also write to /tmp directory (Serverless consistency)
   try {
     fs.writeFileSync(TMP_FILE, JSON.stringify(banners, null, 2), "utf-8");
   } catch (error) {

@@ -49,3 +49,10 @@ next-env.d.ts
 *.db
 *.db-journal
 dev.db
+
+# Admin Security & Credentials
+data/admin.json
+
+# Temporary root images
+image.png
+

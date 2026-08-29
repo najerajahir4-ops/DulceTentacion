@@ -102,7 +102,7 @@ export function DishImageUploader({ onUploadSuccess, isDarkMode = false }: DishI
             isDarkMode ? "text-white" : "text-slate-900"
           }`}
         >
-          <ImageIcon className="w-4 h-4 text-[#E4536B]" />
+          <ImageIcon className="w-4 h-4 text-[#C81D31]" />
           Foto del Plato
         </h3>
         <p className={`text-[11px] ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
@@ -121,9 +121,9 @@ export function DishImageUploader({ onUploadSuccess, isDarkMode = false }: DishI
             type="checkbox"
             checked={removeBg}
             onChange={(e) => setRemoveBg(e.target.checked)}
-            className="w-4 h-4 rounded text-[#E4536B] focus:ring-[#E4536B] border-slate-300 cursor-pointer"
+            className="w-4 h-4 rounded text-[#C81D31] focus:ring-[#C81D31] border-slate-300 cursor-pointer"
           />
-          <Sparkles className="w-4 h-4 text-[#E4536B]" />
+          <Sparkles className="w-4 h-4 text-amber-500" />
           <span className={isDarkMode ? "text-slate-200" : "text-slate-800"}>
             Quitar fondo automáticamente (PNG transparente)
           </span>
@@ -146,10 +146,10 @@ export function DishImageUploader({ onUploadSuccess, isDarkMode = false }: DishI
         onClick={() => !isUploading && fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center transition-all cursor-pointer ${
           isUploading
-            ? "border-[#E4536B]/40 bg-[#E4536B]/5 opacity-80 cursor-wait"
+            ? "border-[#C81D31]/40 bg-[#C81D31]/5 opacity-80 cursor-wait"
             : isDarkMode
-            ? "border-slate-800 bg-slate-950/60 hover:border-[#E4536B] hover:bg-slate-950"
-            : "border-slate-200 bg-slate-50 hover:border-[#E4536B] hover:bg-slate-100/80"
+            ? "border-slate-800 bg-slate-950/60 hover:border-[#C81D31] hover:bg-slate-950"
+            : "border-slate-200 bg-slate-50 hover:border-[#C81D31] hover:bg-slate-100/80"
         }`}
       >
         <input
@@ -177,7 +177,7 @@ export function DishImageUploader({ onUploadSuccess, isDarkMode = false }: DishI
             />
             {isUploading && (
               <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-xs flex flex-col items-center justify-center text-white space-y-2 p-3 text-center z-10">
-                <Loader2 className="w-7 h-7 animate-spin text-[#E4536B]" />
+                <Loader2 className="w-7 h-7 animate-spin text-[#C81D31]" />
                 <span className="text-xs font-bold tracking-wide">
                   {removeBg ? "Quitando fondo con IA..." : "Optimizando e instalando..."}
                 </span>
@@ -186,7 +186,7 @@ export function DishImageUploader({ onUploadSuccess, isDarkMode = false }: DishI
           </div>
         ) : (
           <div className="flex flex-col items-center text-center space-y-2 py-2">
-            <div className="w-10 h-10 rounded-full bg-[#E4536B]/10 flex items-center justify-center text-[#E4536B]">
+            <div className="w-10 h-10 rounded-full bg-[#C81D31]/10 flex items-center justify-center text-[#C81D31]">
               <UploadCloud className="w-5 h-5" />
             </div>
             <div>
@@ -203,7 +203,7 @@ export function DishImageUploader({ onUploadSuccess, isDarkMode = false }: DishI
 
       {/* Auto-uploading Status indicator */}
       {isUploading && (
-        <div className="flex items-center justify-center gap-2 text-xs font-bold text-[#E4536B]">
+        <div className="flex items-center justify-center gap-2 text-xs font-bold text-[#C81D31]">
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
           <span>
             {removeBg ? "Eliminando fondo con Inteligencia Artificial..." : "Optimizando foto..."}
